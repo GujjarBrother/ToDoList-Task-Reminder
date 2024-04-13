@@ -152,7 +152,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
         allTasksArrayList = ArrayList()
         readAllTasks()
 
-//
         return binding.root
     }
 
