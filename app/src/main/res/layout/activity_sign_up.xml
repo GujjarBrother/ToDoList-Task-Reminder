@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/snowWhiteColor"
+    tools:context="com.todo.list.activities.SignUpActivity">
+
+    <ImageButton
+        android:id="@+id/first_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-100dp"
+        android:layout_marginTop="-90dp"
+        android:background="@drawable/sign_in_and_sign_up_activities_image_buttons_default_background"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/second_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-150dp"
+        android:background="@drawable/sign_in_and_sign_up_activities_image_buttons_default_background"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/third_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="-100dp"
+        android:layout_marginBottom="-90dp"
+        android:background="@drawable/sign_in_and_sign_up_activities_image_buttons_default_background"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageButton
+        android:id="@+id/fourth_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-150dp"
+        android:background="@drawable/sign_in_and_sign_up_activities_image_buttons_default_background"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/sign_up_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up_text"
+        android:textAllCaps="false"
+        android:textColor="@color/defaultColor"
+        android:textSize="@dimen/_23ssp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/second_image_button" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/sign_up_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginVertical="@dimen/_10sdp"
+        app:cardBackgroundColor="@color/whiteColor"
+        app:cardCornerRadius="@dimen/_10sdp"
+        app:cardElevation="@dimen/_1sdp"
+        app:layout_constraintBottom_toTopOf="@id/third_image_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/first_image_button">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/user_name_text_input_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:background="@android:color/transparent"
+                android:textColorHint="#9E9E9E"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="@null"
+                app:errorEnabled="true"
+                app:startIconDrawable="@drawable/user_name_edit_text_icon"
+                app:startIconTint="@color/defaultColor">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/user_name_text_input_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/username_e_mail_text"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    android:textAllCaps="false"
+                    android:textColor="@color/blackColor"
+                    android:textCursorDrawable="@null" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/password_text_input_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:background="@android:color/transparent"
+                android:textColorHint="#9E9E9E"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="@null"
+                app:boxStrokeErrorColor="@color/defaultColor"
+                app:counterEnabled="true"
+                app:counterMaxLength="10"
+                app:counterTextColor="@color/defaultColor"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/defaultColor"
+                app:errorEnabled="true"
+                app:errorTextColor="#9E9E9E"
+                app:startIconDrawable="@drawable/password_icon"
+                app:startIconTint="@color/defaultColor">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password_text_input_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password_text"
+                    android:imeOptions="actionGo"
+                    android:inputType="textPassword"
+                    android:textAllCaps="false"
+                    android:textColor="@color/blackColor"
+                    android:textCursorDrawable="@null" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/genderSelectionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_5sdp"
+                android:padding="@dimen/_13sdp"
+                android:background="@drawable/sign_up_spinner_background">
+
+                <TextView
+                    android:id="@+id/selectGenderTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/select_gender_text"
+                    android:textAllCaps="false"
+                    android:textColor="#9E9E9E"
+                    android:textSize="@dimen/_13ssp" />
+
+                <ImageView
+                    android:id="@+id/dropDownImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/drop_down_arrow"
+                    app:tint="@color/defaultColor" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/security_questions_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="@dimen/_3sdp"
+                android:layout_marginVertical="@dimen/_5sdp"
+                android:background="?attr/selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/security_questions_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/security_questions_text"
+                    android:textAllCaps="false"
+                    android:textColor="#9E9E9E"
+                    android:textSize="@dimen/_10ssp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/asterik_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/asterik"
+                    android:textAllCaps="false"
+                    android:textColor="@color/defaultColor"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/sign_up_button"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:background="@drawable/buttons_default_background"
+                android:minWidth="@dimen/_200sdp"
+                android:padding="@dimen/_10ssp"
+                android:stateListAnimator="@null"
+                android:text="@string/sign_up_text"
+                android:textAllCaps="false"
+                android:textColor="@color/whiteColor"
+                android:textSize="@dimen/_15ssp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/already_have_an_account_and_sign_in_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/_5sdp">
+
+                <TextView
+                    android:id="@+id/already_have_an_account_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/already_have_an_account_text"
+                    android:textAllCaps="false"
+                    android:textColor="#9E9E9E"
+                    android:textSize="@dimen/_10ssp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/sign_in_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:text="@string/sign_in_text"
+                    android:textAllCaps="false"
+                    android:textColor="@color/defaultColor"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold"
+                    android:padding="@dimen/_3sdp"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

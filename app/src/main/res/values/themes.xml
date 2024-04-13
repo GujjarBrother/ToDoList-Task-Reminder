@@ -1,0 +1,38 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Application application theme. -->
+    <style name="Theme.ToDoList" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <!--Here, We Apply Customization On 'Popup Menu'...!-->
+    <style name="popUpMenuDayModeCustomization" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:textSize">@dimen/_15ssp</item>
+        <item name="android:popupBackground">@drawable/pop_up_menu_day_background</item>
+    </style>
+
+    <style name="popUpMenuDarkModeCustomization" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:textSize">@dimen/_15ssp</item>
+        <item name="android:popupBackground">@drawable/pop_up_menu_dark_background</item>
+    </style>
+
+    <style name="roundedImageView">
+        <item name="cornerSize">10%</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
+
+<!--    Here, We Set Style For Dialog Boxes Animation...-->
+    <style name="dialogBoxesAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_boxes_in_animation</item>
+    </style>
+
+</resources>
