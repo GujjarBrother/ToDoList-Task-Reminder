@@ -29,10 +29,8 @@ import android.widget.PopupMenu
 import android.widget.PopupWindow
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -58,8 +56,6 @@ import com.todo.list.listeners.CategorySelectionListener
 import com.todo.list.listeners.StartAndStopFABAnimationAndSwitchBetweenLightAndDarkModeListener
 import com.todo.list.listeners.TaskUpdateAndDeleteListener
 import com.todo.list.listeners.ToDoTaskDetailListener
-import com.todo.list.livedata.AllTasksListLiveData
-import com.todo.list.livedata.CompletedTasksListLiveData
 import com.todo.list.utils.CommonFunctions.DEFAULT_CATEGORY
 import com.todo.list.utils.CommonFunctions.PERSONAL_CATEGORY
 import com.todo.list.utils.CommonFunctions.WORK_CATEGORY
@@ -73,8 +69,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
     TaskUpdateAndDeleteListener, CategorySelectionListener {
 
     private lateinit var binding: FragmentAllTasksBinding
-    private lateinit var completedTasksListLiveData: CompletedTasksListLiveData
-    private lateinit var allTasksListLiveData: AllTasksListLiveData
     private var category = 0
     private lateinit var errorColorStateList: ColorStateList
     private var aboveTempValue = 1
@@ -91,7 +85,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
     private lateinit var popupWindow: PopupWindow
     private lateinit var addAndUpdateTasksDialogLayoutBinding: AddAndUpdateTasksDialogLayoutBinding
     private lateinit var toDoTask: ToDoTask
-    private var toUpdateAndDeleteItemPosition = 0
     private lateinit var updatedToDoTask: ToDoTask
 
     override fun onCreateView(
@@ -99,6 +92,11 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAllTasksBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
 //        Here, We Stop FAB Animation By Clicking SignOut ImageView From DashBoardActivity...
         (requireActivity() as DashBoardActivity).initializeStopFABAnimationFromToDosFragmentListener(
@@ -145,14 +143,8 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
             stylesCardView.setOnClickListener(this@AllTasksFragment)
         }
 
-        completedTasksListLiveData =
-            ViewModelProvider(requireActivity())[CompletedTasksListLiveData::class.java]
-        allTasksListLiveData =
-            ViewModelProvider(requireActivity())[AllTasksListLiveData::class.java]
         allTasksArrayList = ArrayList()
         readAllTasks()
-
-        return binding.root
     }
 
     private fun startFABAnimation() =
@@ -170,12 +162,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
             if (::adapter.isInitialized) {
                 adapter.isTextSizeChanged = true
                 adapter.notifyDataSetChanged()
-            }
-        }
-
-        allTasksListLiveData.mutableLiveData.observe(viewLifecycleOwner) { aBoolean: Boolean ->
-            if (aBoolean) {
-                readAllTasks()
             }
         }
     }
@@ -308,7 +294,9 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
 
     private fun readAllTasks() {
         with(binding) {
-            allTasksArrayList.clear()
+            if (allTasksArrayList.isNotEmpty()) {
+                allTasksArrayList.clear()
+            }
             allTasksArrayList = toDosDatabase.dao().getAllTasks() as ArrayList<ToDoTask>
             if (allTasksArrayList.size > 0) {
                 group1.visibility = GONE
@@ -402,6 +390,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                 colorsSchemeArray, true
             )
         }
+
         val layoutManager: RecyclerView.LayoutManager = if (prefs.allTasksStyleValue) {
             GridLayoutManager(fragmentContext, 2, GridLayoutManager.VERTICAL, false)
         } else {
@@ -446,8 +435,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
     }
 
     private fun showAddNewAndUpdateTaskDialog(fromWhereInvoked: Int) {
-        addAndUpdateTasksDialogLayoutBinding =
-            AddAndUpdateTasksDialogLayoutBinding.inflate(layoutInflater)
+        addAndUpdateTasksDialogLayoutBinding = AddAndUpdateTasksDialogLayoutBinding.inflate(layoutInflater)
 
         val addTasksDialogBuilder = AlertDialog.Builder(fragmentContext)
         addTasksDialogBuilder.setView(addAndUpdateTasksDialogLayoutBinding.root)
@@ -593,19 +581,12 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                             toDoTask = ToDoTask(0, dayOfWeek, dateOfMonth, month, year, title, description,
                                 time, category)
                             val isTaskAlreadySaved = toDosDatabase.dao().isTaskAlreadySaved(
-                                toDoTask.day,
-                                toDoTask.date,
-                                toDoTask.month,
-                                toDoTask.year,
-                                toDoTask.title,
-                                toDoTask.description,
-                                toDoTask.time,
-                                toDoTask.category
+                                toDoTask.day, toDoTask.date, toDoTask.month, toDoTask.year, toDoTask.title,
+                                toDoTask.description, toDoTask.time, toDoTask.category
                             )
                             if (isTaskAlreadySaved >= 1) {
-                                Toasty.info(fragmentContext,
-                                    getString(R.string.this_task_is_already_saved_toast_text), Toasty.LENGTH_LONG)
-                                    .show()
+                                Toasty.info(fragmentContext, getString(R.string.this_task_is_already_saved_toast_text),
+                                    Toasty.LENGTH_LONG).show()
                             } else {
                                 val newlyAddedTaskID = toDosDatabase.dao().saveTask(toDoTask)
                                 if (newlyAddedTaskID >= 1) {
@@ -618,8 +599,10 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                                             { it.date },
                                             { it.month },
                                             { it.year },
-                                            { it.time })
+                                            { it.time }
+                                        )
                                     )
+
                                     val insertionIndex = if (searchingIndex < 0) {
                                         -(searchingIndex + 1)
                                     } else {
@@ -628,13 +611,19 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
 
                                     toDoTask.id = newlyAddedTaskID.toInt()
                                     allTasksArrayList.add(insertionIndex, toDoTask)
-                                    adapter.notifyItemInserted(insertionIndex)
-                                    binding.allTasksRecyclerView.smoothScrollToPosition(insertionIndex)
+                                    if (::adapter.isInitialized) {
+                                        adapter.notifyItemInserted(insertionIndex)
+                                    } else {
+                                        readAllTasks()
+                                    }
+                                    with(binding) {
+                                        allTasksRecyclerView.smoothScrollToPosition(insertionIndex)
+                                    }
 
                                     dateOfMonth = ""
                                     month = ""
                                     year = ""
-                                    Toasty.success(requireContext(), R.string.task_is_saved_successfully_toast_text,
+                                    Toasty.success(requireContext(), getString(R.string.task_is_saved_successfully_toast_text),
                                         Toasty.LENGTH_LONG).show()
                                     titleTextInputLayout.editText?.text = null
                                     descriptionTextInputLayout.editText?.text = null
@@ -648,7 +637,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                                     }
                                     startFABAnimation()
                                 } else {
-                                    Toasty.error(requireContext(), R.string.task_is_not_saved_successfully_toast_text,
+                                    Toasty.error(requireContext(), getString(R.string.task_is_not_saved_successfully_toast_text),
                                         Toasty.LENGTH_LONG).show()
                                 }
                             }
@@ -680,13 +669,14 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                                 dateOfMonth = ""
                                 month = ""
                                 year = ""
-                                Toasty.success(fragmentContext, R.string.updated_successfully_toast_text,
+                                Toasty.success(fragmentContext, getString(R.string.updated_successfully_toast_text),
                                     Toasty.LENGTH_LONG).show()
                                 prefs.category = category
 
-                                allTasksArrayList[toUpdateAndDeleteItemPosition] = updatedToDoTask
-                                adapter.notifyItemChanged(toUpdateAndDeleteItemPosition)
+                                val updatableObjectIndex = allTasksArrayList.indexOf(toDoTask)
+                                allTasksArrayList[updatableObjectIndex] = updatedToDoTask
                                 sortAnArrayList()
+                                adapter.notifyDataSetChanged()
 
                                 if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
                                     addTasksAlertDialog.dismiss()
@@ -694,7 +684,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                                 startFABAnimation()
                                 category = 0
                             } else {
-                                Toasty.success(fragmentContext, R.string.not_updated_successfully_toast_text,
+                                Toasty.success(fragmentContext, getString(R.string.not_updated_successfully_toast_text),
                                     Toasty.LENGTH_LONG).show()
                             }
                         } else if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
@@ -1707,10 +1697,8 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
             val itemId = item.itemId
             if (itemId == R.id.update_item) {
                 this.toDoTask = toDoTask
-                toUpdateAndDeleteItemPosition = position
                 showAddNewAndUpdateTaskDialog(2)
             } else if (itemId == R.id.delete_item) {
-                toUpdateAndDeleteItemPosition = position
                 showDeleteTaskDialog(toDoTask)
             }
             false
@@ -1755,8 +1743,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
             deleteTaskAlertDialog.show()
         }
 
-        Toast.makeText(fragmentContext, "${toDoTask.id}, Pos: $toUpdateAndDeleteItemPosition", Toast.LENGTH_LONG).show()
-
         with(deleteTaskDialogLayoutBinding) {
             deleteImageView.startAnimation(applyAnimation(fragmentContext))
             stopFABAnimation()
@@ -1775,10 +1761,16 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                 if (isDeleted == 1) {
                     Toasty.success(fragmentContext, R.string.deleted_successfully_toast_text, Toasty.LENGTH_LONG)
                         .show()
-//                    readAllTasks()
                     if (allTasksArrayList.contains(toDoTask)) {
-                        allTasksArrayList.removeAt(toUpdateAndDeleteItemPosition)
-                        adapter.notifyItemRemoved(toUpdateAndDeleteItemPosition)
+                        val removableObjectIndex = allTasksArrayList.indexOf(toDoTask)
+                        allTasksArrayList.removeAt(removableObjectIndex)
+                        adapter.notifyItemRemoved(removableObjectIndex)
+                        if (allTasksArrayList.isEmpty()) {
+                            with(binding) {
+                                group1.visibility = VISIBLE
+                                group2.visibility = GONE
+                            }
+                        }
                     }
                     if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
                         deleteTaskAlertDialog.dismiss()

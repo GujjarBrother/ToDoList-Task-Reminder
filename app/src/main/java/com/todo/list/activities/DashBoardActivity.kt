@@ -36,6 +36,9 @@ import com.todo.list.utils.CommonFunctions.TASKS_TAB
 import com.todo.list.utils.CommonFunctions.applyAnimation
 import com.todo.list.utils.CommonFunctions.changeStatusBarColor
 import com.todo.list.utils.CommonFunctions.keepActivityOn
+import com.todo.list.utils.CommonFunctions.openAppInPlayStore
+import com.todo.list.utils.CommonFunctions.openGoogleAppStore
+import com.todo.list.utils.CommonFunctions.openPrivacyPolicyActivity
 
 class DashBoardActivity : BaseActivity(), View.OnClickListener {
 
@@ -93,6 +96,9 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
             settingsImageView.setOnClickListener(this@DashBoardActivity)
             openAndCloseDrawerImageView.setOnClickListener(this@DashBoardActivity)
             navigationDrawerInclude.settingsOuterLayout.setOnClickListener(this@DashBoardActivity)
+            navigationDrawerInclude.visitOurAppStoreOuterLayout.setOnClickListener(this@DashBoardActivity)
+            navigationDrawerInclude.privacyPolicyOuterLayout.setOnClickListener(this@DashBoardActivity)
+            navigationDrawerInclude.checkUpdateOuterLayout.setOnClickListener(this@DashBoardActivity)
             navigationDrawerInclude.lightAndDarkModeSwitch.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
                 prefs.dayAndNightModeSwitchValue = isChecked
                 applyColorSchemeORLightAndDarkModeOnDashboardActivity()
@@ -143,7 +149,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                     screensNightModeColor, PorterDuff.Mode.SRC_IN)
                 navigationDrawerInclude.appNameTextView.setTextColor(whiteColor)
                 navigationDrawerInclude.featuresTextView.setBackgroundColor(cardsNightModeColor)
-                navigationDrawerInclude.featuresTextView.setTextColor(whiteColor)
                 navigationDrawerInclude.lightAndDarkImageView.setImageResource(R.drawable.sun_image)
                 navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
                     whiteColor, PorterDuff.Mode.SRC_IN)
@@ -202,13 +207,11 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
                         navigationDrawerInclude.featuresTextView.setBackgroundColor(defaultTransparentColor)
-                        navigationDrawerInclude.featuresTextView.setTextColor(defaultColor)
                         navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
                             defaultColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
                         navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
                         navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(defaultTransparentColor)
-                        navigationDrawerInclude.generalSettingsTextView.setTextColor(defaultColor)
                         navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
                             defaultColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
@@ -246,13 +249,11 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
                         navigationDrawerInclude.featuresTextView.setBackgroundColor(darkYellowTransparentColor)
-                        navigationDrawerInclude.featuresTextView.setTextColor(darkYellowColor)
                         navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
                             darkYellowColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
                         navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
                         navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(darkYellowTransparentColor)
-                        navigationDrawerInclude.generalSettingsTextView.setTextColor(darkYellowColor)
                         navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
                             darkYellowColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
@@ -290,13 +291,11 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
                         navigationDrawerInclude.featuresTextView.setBackgroundColor(orangeTransparentColor)
-                        navigationDrawerInclude.featuresTextView.setTextColor(orangeColor)
                         navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
                             orangeColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
                         navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
                         navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(orangeTransparentColor)
-                        navigationDrawerInclude.generalSettingsTextView.setTextColor(orangeColor)
                         navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
                             orangeColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
@@ -334,13 +333,11 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
                         navigationDrawerInclude.featuresTextView.setBackgroundColor(lightGreenTransparentColor)
-                        navigationDrawerInclude.featuresTextView.setTextColor(lightGreenColor)
                         navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
                             lightGreenColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
                         navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
                         navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(lightGreenTransparentColor)
-                        navigationDrawerInclude.generalSettingsTextView.setTextColor(lightGreenColor)
                         navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
                             lightGreenColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
@@ -378,13 +375,11 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
                         navigationDrawerInclude.featuresTextView.setBackgroundColor(blueTransparentColor)
-                        navigationDrawerInclude.featuresTextView.setTextColor(blueColor)
                         navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
                             blueColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
                         navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
                         navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(blueTransparentColor)
-                        navigationDrawerInclude.generalSettingsTextView.setTextColor(blueColor)
                         navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
                             blueColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
@@ -422,13 +417,11 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
                         navigationDrawerInclude.featuresTextView.setBackgroundColor(cyanTransparentColor)
-                        navigationDrawerInclude.featuresTextView.setTextColor(cyanColor)
                         navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
                             cyanColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
                         navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
                         navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(cyanTransparentColor)
-                        navigationDrawerInclude.generalSettingsTextView.setTextColor(cyanColor)
                         navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
                             cyanColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
@@ -466,13 +459,11 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
                         navigationDrawerInclude.featuresTextView.setBackgroundColor(pinkTransparentColor)
-                        navigationDrawerInclude.featuresTextView.setTextColor(pinkColor)
                         navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
                             pinkColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
                         navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
                         navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(pinkTransparentColor)
-                        navigationDrawerInclude.generalSettingsTextView.setTextColor(pinkColor)
                         navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
                             pinkColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
@@ -510,13 +501,11 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
                         navigationDrawerInclude.featuresTextView.setBackgroundColor(darkBlueTransparentColor)
-                        navigationDrawerInclude.featuresTextView.setTextColor(darkBlueColor)
                         navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
                             darkBlueColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
                         navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
                         navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(darkBlueTransparentColor)
-                        navigationDrawerInclude.generalSettingsTextView.setTextColor(darkBlueColor)
                         navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
                             darkBlueColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
@@ -554,13 +543,11 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
                         navigationDrawerInclude.featuresTextView.setBackgroundColor(redTransparentColor)
-                        navigationDrawerInclude.featuresTextView.setTextColor(redColor)
                         navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
                             redColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
                         navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
                         navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(redTransparentColor)
-                        navigationDrawerInclude.generalSettingsTextView.setTextColor(redColor)
                         navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
                             redColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
@@ -598,13 +585,11 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
                         navigationDrawerInclude.featuresTextView.setBackgroundColor(lightPurpleTransparentColor)
-                        navigationDrawerInclude.featuresTextView.setTextColor(lightPurpleColor)
                         navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
                             lightPurpleColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
                         navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
                         navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(lightPurpleTransparentColor)
-                        navigationDrawerInclude.generalSettingsTextView.setTextColor(lightPurpleColor)
                         navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
                             lightPurpleColor, PorterDuff.Mode.SRC_IN)
                         navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
@@ -642,7 +627,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    //    Here, We Set 'Custom Font' On An Activity View's...
     private fun applyCustomFont() {
         with(binding) {
             toolbarTextView.typeface = typeface
@@ -694,6 +678,24 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
 
                 R.id.settingsOuterLayout -> {
                     openSettingsActivity()
+                    dashBoardActivityDrawerLayout.closeDrawer(GravityCompat.START)
+                }
+
+                R.id.visitOurAppStoreOuterLayout -> {
+                    openGoogleAppStore(activityContext)
+                    dashBoardActivityDrawerLayout.closeDrawer(GravityCompat.START)
+                }
+
+                R.id.privacyPolicyOuterLayout -> {
+                    openPrivacyPolicyActivity(
+                        activityContext,
+                        isInternetConnectedORNot((getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager))
+                    )
+                    dashBoardActivityDrawerLayout.closeDrawer(GravityCompat.START)
+                }
+
+                R.id.checkUpdateOuterLayout -> {
+                    openAppInPlayStore(activityContext, BuildConfig.APPLICATION_ID)
                     dashBoardActivityDrawerLayout.closeDrawer(GravityCompat.START)
                 }
             }

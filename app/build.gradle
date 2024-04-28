@@ -19,12 +19,31 @@ android {
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+
+        def appName = "To-Do-List-Task-Reminder"
+        def versionCode = android.defaultConfig.versionCode.toString().trim()
+        def versionName = android.defaultConfig.versionName
+        setProperty("archivesBaseName", "$appName-VC-$versionCode-VN-$versionName")
     }
 
     buildTypes {
         release {
+
+            resValue "string", "app_id", "ca-app-pub-3940256099942544~3347511713"
+            resValue "string", "dashboard_banner_id", "ca-app-pub-3342111410257125/9943801959"
+
             minifyEnabled true
             shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+
+            resValue "string", "app_id", "ca-app-pub-3342111410257125~8073205135"
+            resValue "string", "dashboard_banner_id", "ca-app-pub-3940256099942544/9214589741"
+            
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -46,10 +65,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
 //    'sdp' dependency...
-    api 'com.intuit.sdp:sdp-android:1.1.0'
+    api 'com.intuit.sdp:sdp-android:1.1.1'
 
 //    'ssp' dependency...
-    api 'com.intuit.ssp:ssp-android:1.1.0'
+    api 'com.intuit.ssp:ssp-android:1.1.1'
 
 //    'Toasty Toast' dependency...
     api 'com.github.GrenderG:Toasty:1.5.2'
