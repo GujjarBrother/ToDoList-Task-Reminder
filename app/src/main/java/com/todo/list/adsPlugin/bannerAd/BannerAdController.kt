@@ -9,7 +9,7 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
-import com.todo.list.adsPlugin.allAdUnitIds.AdsUnitIds.BANNER_ID
+import com.todo.list.R
 
 class BannerAdController {
     companion object {
@@ -28,7 +28,7 @@ class BannerAdController {
             } else {
                 AdSize.BANNER
             })
-            adView.adUnitId = BANNER_ID
+            adView.adUnitId = activity.getString(R.string.dashboard_banner_id)
             containerLayout.addView(adView)
             val adRequest = AdRequest.Builder().build()
             adView.loadAd(adRequest)

@@ -143,5 +143,6 @@
     <string name="to_do_list_task_reminder_app_text">To Do List: Task Reminder App</string>
     <string name="check_our_more_app_s_on_play_store_text">Check our more app\'s on play store</string>
     <string name="this_task_is_already_saved_toast_text">This task is already saved...</string>
+    <string name="your_data_will_be_deleted_permanently_after_24_hours_text">Your data will be deleted permanently after 24 hours</string>
 
 </resources>

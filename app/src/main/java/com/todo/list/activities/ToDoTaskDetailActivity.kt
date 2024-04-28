@@ -36,7 +36,6 @@ class ToDoTaskDetailActivity : BaseActivity(), View.OnClickListener {
                 activity = activityContext,
                 containerLayout = adLayout,
                 loadingLayout = adLoadingInclude.rootLayout,
-                isLargeBanner = true,
                 isInternetConnected = isInternetConnectedORNot((getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager))
             )
             if (toDoTask != null) {

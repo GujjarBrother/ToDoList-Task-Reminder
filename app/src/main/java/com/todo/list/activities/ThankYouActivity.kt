@@ -21,7 +21,7 @@ class ThankYouActivity : BaseActivity() {
         keepActivityOn(activityContext)
         makeFullScreenActivity(activityContext)
         applyCustomFont()
-        handler.postDelayed({ finishAffinity() }, 3000)
+        handler.postDelayed({ finishAffinity() }, 2000)
     }
 
     private fun applyCustomFont() {

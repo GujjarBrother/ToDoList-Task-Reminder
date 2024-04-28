@@ -140,7 +140,7 @@
                 app:layout_constraintBottom_toTopOf="@id/addNewTasksFloatingActionButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/nothingInHereTextView"
+                app:layout_constraintTop_toTopOf="parent"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
                 app:lottie_rawRes="@raw/to_do_list_is_blank" />
@@ -155,10 +155,11 @@
                 android:textColor="@color/defaultColor"
                 android:textSize="@dimen/_15ssp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/allTasksLottieAnimationView"
+                app:layout_constraintBottom_toBottomOf="@id/allTasksLottieAnimationView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@id/allTasksLottieAnimationView"
+                app:layout_constraintVertical_bias="0.9" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/addNewTasksFloatingActionButton"

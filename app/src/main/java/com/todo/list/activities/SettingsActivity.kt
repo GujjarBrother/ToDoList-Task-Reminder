@@ -39,6 +39,9 @@ import com.todo.list.utils.CommonFunctions
 import com.todo.list.utils.CommonFunctions.changeStatusBarColor
 import com.todo.list.utils.CommonFunctions.isSomethingChanged
 import com.todo.list.utils.CommonFunctions.keepActivityOn
+import com.todo.list.utils.CommonFunctions.openAppInPlayStore
+import com.todo.list.utils.CommonFunctions.openGoogleAppStore
+import com.todo.list.utils.CommonFunctions.openPrivacyPolicyActivity
 import es.dmoral.toasty.Toasty
 
 class SettingsActivity : BaseActivity(), View.OnClickListener, ColorSchemeListener {
@@ -686,23 +689,23 @@ class SettingsActivity : BaseActivity(), View.OnClickListener, ColorSchemeListen
             }
 
             R.id.photo_editor_app_layout -> {
-                openAppInPlayStore(sa10PhotoEditorAppPackage)
+                openAppInPlayStore(activityContext, sa10PhotoEditorAppPackage)
             }
 
             R.id.ramadan_app_layout -> {
-                openAppInPlayStore(ramadanAppPackage)
+                openAppInPlayStore(activityContext, ramadanAppPackage)
             }
 
             R.id.note_pad_app_layout -> {
-                openAppInPlayStore(notePadAppPackage)
+                openAppInPlayStore(activityContext, notePadAppPackage)
             }
 
             R.id.daily_expense_manager_app_layout -> {
-                openAppInPlayStore(dailyExpenseManagerAppPackage)
+                openAppInPlayStore(activityContext, dailyExpenseManagerAppPackage)
             }
 
             R.id.visit_our_app_store_layout -> {
-                openGoogleAppStore()
+                openGoogleAppStore(activityContext)
             }
 
             R.id.rate_us_layout -> {
@@ -718,28 +721,20 @@ class SettingsActivity : BaseActivity(), View.OnClickListener, ColorSchemeListen
             }
 
             R.id.privacy_policy_layout -> {
-                if (isInternetConnectedORNot((getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager))) {
-                    openPrivacyPolicyActivity()
-                } else {
-                    Toasty.error(
-                        activityContext,
-                        R.string.check_your_internet_connection_toast_text,
-                        Toasty.LENGTH_LONG
-                    ).show()
-                }
+                openPrivacyPolicyActivity(
+                    activityContext,
+                    isInternetConnectedORNot((getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager))
+                )
             }
 
             R.id.checkUpdateLayout -> {
-                openAppInPlayStore(BuildConfig.APPLICATION_ID)
+                openAppInPlayStore(activityContext, BuildConfig.APPLICATION_ID)
             }
         }
     }
 
     private fun openFeedbackActivity() =
         startActivity(Intent(activityContext, FeedbackActivity::class.java))
-
-    private fun openPrivacyPolicyActivity() =
-        startActivity(Intent(activityContext, PrivacyPolicyActivity::class.java))
 
     private fun showRateUsDialog() {
         val rateUsDialogLayoutBinding = RateUsDialogLayoutBinding.inflate(layoutInflater)
@@ -776,7 +771,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener, ColorSchemeListen
                         2000
                     )
                 } else if (rating >= 4.0) {
-                    openAppInPlayStore(BuildConfig.APPLICATION_ID)
+                    openAppInPlayStore(activityContext, BuildConfig.APPLICATION_ID)
                     if (!activityContext.isFinishing && !activityContext.isDestroyed) rateUsAlertDialog.dismiss()
                 } else {
                     Toasty.error(
@@ -912,24 +907,6 @@ class SettingsActivity : BaseActivity(), View.OnClickListener, ColorSchemeListen
                     Toasty.LENGTH_LONG
                 ).show()
             }
-        }
-    }
-
-    private fun openAppInPlayStore(appPackageName: String) {
-        val openAppInPlayStoreIntent = Intent()
-        with(openAppInPlayStoreIntent) {
-            action = Intent.ACTION_VIEW
-            data = Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")
-            startActivity(this)
-        }
-    }
-
-    private fun openGoogleAppStore() {
-        val openGoogleAppStoreIntent = Intent()
-        with(openGoogleAppStoreIntent) {
-            action = Intent.ACTION_VIEW
-            data = Uri.parse("https://play.google.com/store/apps/developer?id=SAG+Inc.")
-            startActivity(this)
         }
     }
 

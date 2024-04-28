@@ -43,7 +43,6 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
                 activity = activityContext,
                 containerLayout = adLayout,
                 loadingLayout = adLoadingInclude.rootLayout,
-                isLargeBanner = true,
                 isInternetConnected = isInternetConnectedORNot((getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager))
             )
             backArrowImageView.setOnClickListener(this@FeedbackActivity)

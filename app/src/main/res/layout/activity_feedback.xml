@@ -57,9 +57,9 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/_5sdp"
         android:overScrollMode="never"
         android:scrollbarThumbVertical="@android:color/transparent"
-        android:layout_marginBottom="@dimen/_5sdp"
         app:layout_constraintBottom_toTopOf="@id/adLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -245,15 +245,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <include
             android:id="@+id/adLoadingInclude"
+            layout="@layout/ad_loading_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/ad_loading_layout"/>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
