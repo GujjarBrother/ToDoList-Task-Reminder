@@ -200,14 +200,16 @@
 
             </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/sign_up_button"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/_45sdp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/_5sdp"
-                android:background="@drawable/buttons_default_background"
+                android:layout_height="wrap_content"
                 android:minWidth="@dimen/_200sdp"
+                android:minHeight="@dimen/_55sdp"
+                app:cornerRadius="@dimen/_7sdp"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/defaultColor"
                 android:padding="@dimen/_10ssp"
                 android:stateListAnimator="@null"
                 android:text="@string/sign_up_text"

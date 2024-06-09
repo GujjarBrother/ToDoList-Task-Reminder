@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
+import java.util.Date
 
 @Entity(tableName = "ToDosTasks")
 data class ToDoTask(
@@ -32,5 +33,11 @@ data class ToDoTask(
         val time: String,
 
         @ColumnInfo(name = "Tasks_Category")
-        val category: Int
+        val category: Int,
+
+        @ColumnInfo(name = "Date_And_Time_In_Millis")
+        val dateAndTimeInMillis: Date,
+
+        @ColumnInfo(name = "Is_Task_Completed_OR_TimeUp")
+        val isTaskCompletedORTimeUp: Boolean
 ) : Serializable

@@ -12,13 +12,13 @@
         android:id="@+id/delete_image_view"
         android:layout_width="@dimen/_60sdp"
         android:layout_height="@dimen/_60sdp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/delete_icon"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/delete_image"
+        android:layout_marginTop="@dimen/_15sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/defaultColor"
-        android:contentDescription="@string/app_name" />
+        app:tint="@color/defaultColor" />
 
     <TextView
         android:id="@+id/delete_message_text_view"

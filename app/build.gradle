@@ -29,7 +29,6 @@ android {
 
     buildTypes {
         release {
-
             resValue "string", "app_id", "ca-app-pub-3940256099942544~3347511713"
             resValue "string", "dashboard_banner_id", "ca-app-pub-3342111410257125/9943801959"
 
@@ -38,10 +37,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-
             resValue "string", "app_id", "ca-app-pub-3342111410257125~8073205135"
             resValue "string", "dashboard_banner_id", "ca-app-pub-3940256099942544/9214589741"
-            
+
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -57,8 +55,8 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -77,8 +75,8 @@ dependencies {
     api 'com.airbnb.android:lottie:6.4.0'
 
 //    'ViewModel & LiveData' dependency...
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.1'
 
 //    'CircularImageView' dependency...
     api 'com.github.AtifSayings:CircularImageView:1.0.2'
@@ -87,7 +85,7 @@ dependencies {
     implementation "androidx.multidex:multidex:2.0.1"
 
 //    'ShapeableImageView' dependency...
-    api 'com.google.android.material:material:1.11.0'
+    api 'com.google.android.material:material:1.12.0'
 
 //    'ROOM database' dependency...
     def room_version = "2.6.1"
@@ -96,5 +94,5 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
 
 //    'Ads' dependency...
-    api "com.google.android.gms:play-services-ads:23.0.0"
+    api "com.google.android.gms:play-services-ads:23.1.0"
 }

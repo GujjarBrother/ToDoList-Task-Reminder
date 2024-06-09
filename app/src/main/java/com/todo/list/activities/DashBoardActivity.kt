@@ -83,6 +83,8 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                 })
             }.attach()
 
+            dashBoardViewPager.offscreenPageLimit = 1
+
             dashBoardViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     if (position == 0) {
@@ -664,7 +666,7 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         with(binding) {
             when (view?.id) {
-                R.id.sign_out_image_view -> {
+                R.id.signOutImageView -> {
                     showSignOutDialog()
                 }
 
@@ -762,7 +764,8 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
     ) {
         with(signOutDialogLayoutBinding) {
             if (prefs.dayAndNightModeSwitchValue) {
-                signOutDialogRootLayout.setBackgroundResource(dialogBoxesDarkModeBackground)
+                signOutDialogRootLayout.background.colorFilter =
+                    PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
                 signOutImageView.setColorFilter(whiteColor)
                 signOutMessageTextView.setTextColor(whiteColor)
                 noButton.background.colorFilter = PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
@@ -893,7 +896,8 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
     ) {
         with(exitFromAnAppDialogLayoutBinding) {
             if (prefs.dayAndNightModeSwitchValue) {
-                exitDialogRootLayout.setBackgroundResource(dialogBoxesDarkModeBackground)
+                exitDialogRootLayout.background.colorFilter =
+                    PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
                 exitFromAnAppImageView.setColorFilter(whiteColor)
                 exitFromAnAppMessageTextView.setTextColor(whiteColor)
                 yesButton.background.colorFilter = PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)

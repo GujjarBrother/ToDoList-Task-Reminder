@@ -34,10 +34,6 @@ open class BaseFragment : Fragment() {
     protected var blackColor = 0
     protected var fragmentsCardViewsColor = 0
 
-    private var dialogBoxesLightModeBackground = 0
-    protected var dialogBoxesDarkModeBackground = 0
-
-    protected var spinnerLayoutNightModeBackground = 0
 
     protected lateinit var editTextsCursorDarkModeColor: Drawable
     protected lateinit var listViewStyleImage: Drawable
@@ -47,13 +43,12 @@ open class BaseFragment : Fragment() {
     protected lateinit var textInputLayoutBoxStrokeDarkModeColor: ColorStateList
 
     protected val simpleDateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-    protected val monthSimpleDateFormat = SimpleDateFormat("MMM", Locale.getDefault())
-    protected val dateOfMonthSimpleDateFormat = SimpleDateFormat("dd", Locale.getDefault())
-    protected val yearSimpleDateFormat = SimpleDateFormat("yyyy", Locale.getDefault())
     protected val simpleTimeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+    protected val simpleDateAndTimeFormat = SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.getDefault())
+
     protected var calendar: Calendar = Calendar.getInstance()
 
-    protected lateinit var handler: Handler
+    private lateinit var handler: Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,10 +72,6 @@ open class BaseFragment : Fragment() {
         whiteColor = ContextCompat.getColor(fragmentContext, R.color.whiteColor)
         blackColor = ContextCompat.getColor(fragmentContext, R.color.blackColor)
         fragmentsCardViewsColor = ContextCompat.getColor(fragmentContext, R.color.fragmentsCardViewsColor)
-
-        dialogBoxesLightModeBackground = R.drawable.dialog_boxes_light_mode_background
-        dialogBoxesDarkModeBackground = R.drawable.dialog_boxes_dark_mode_background
-        spinnerLayoutNightModeBackground = R.drawable.spinner_layout_dark_mode_background
 
         editTextsCursorDarkModeColor = ContextCompat.getDrawable(fragmentContext, R.drawable.edittexts_cursor_dark_mode_color) as Drawable
         listViewStyleImage = ContextCompat.getDrawable(fragmentContext, R.drawable.list_view_style_image) as Drawable

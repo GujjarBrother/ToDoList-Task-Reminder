@@ -88,14 +88,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/message_text_view" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/rate_us_button"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/_45sdp"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/_55sdp"
                 android:layout_marginTop="@dimen/_15sdp"
-                android:background="@drawable/buttons_default_background"
+                app:cornerRadius="@dimen/_7sdp"
+                android:backgroundTint="@color/defaultColor"
                 android:gravity="center"
-                android:minWidth="@dimen/_150sdp"
+                android:minWidth="@dimen/_200sdp"
                 android:stateListAnimator="@null"
                 android:text="@string/rate_us_text"
                 android:textAllCaps="false"

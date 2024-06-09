@@ -46,18 +46,18 @@ open class BaseActivity : AppCompatActivity() {
     protected var screensNightModeColor = 0
     protected var cardsNightModeColor = 0
     protected var whiteColor = 0
+    protected var lightBlueColor = 0
+    protected var darkModeTextColor = 0
     protected var blackColor = 0
     protected var tabLayoutUnSelectedTabTextColor = 0
 
     protected var dialogBoxesLightModeBackground = 0
-    protected var dialogBoxesDarkModeBackground = 0
 
     protected lateinit var editTextsCursorDarkModeColor: Drawable
 
     protected lateinit var whiteColorStateList: ColorStateList
     protected lateinit var textInputLayoutBoxStrokeDarkModeColor: ColorStateList
 
-    private var spinnerLayoutNightModeBackground = 0
     private var feedbackEditTextCardViewLightModeColor = 0
 
     protected lateinit var handler: Handler
@@ -99,13 +99,13 @@ open class BaseActivity : AppCompatActivity() {
         cardsNightModeColor = ContextCompat.getColor(activityContext, R.color.cardsNightModeColor)
         whiteColor = ContextCompat.getColor(activityContext, R.color.whiteColor)
         blackColor = ContextCompat.getColor(activityContext, R.color.blackColor)
+        lightBlueColor = ContextCompat.getColor(activityContext, R.color.lightBlueColor)
+        darkModeTextColor = ContextCompat.getColor(activityContext, R.color.purple_500)
         feedbackEditTextCardViewLightModeColor = ContextCompat.getColor(activityContext, R.color.feedbackEditTextCardViewLightModeColor)
         tabLayoutUnSelectedTabTextColor = ContextCompat.getColor(activityContext, R.color.tabLayoutUnSelectedTabTextColor)
 
         editTextsCursorDarkModeColor = ContextCompat.getDrawable(activityContext, R.drawable.edittexts_cursor_dark_mode_color) as Drawable
         dialogBoxesLightModeBackground = R.drawable.dialog_boxes_light_mode_background
-        dialogBoxesDarkModeBackground = R.drawable.dialog_boxes_dark_mode_background
-        spinnerLayoutNightModeBackground = R.drawable.spinner_layout_dark_mode_background
 
         whiteColorStateList = ColorStateList.valueOf(whiteColor)
 

@@ -9,7 +9,6 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -798,7 +797,8 @@ class SettingsActivity : BaseActivity(), View.OnClickListener, ColorSchemeListen
     ) {
         with(rateUsDialogLayoutBinding) {
             if (prefs.dayAndNightModeSwitchValue) {
-                rateUsDialogRootLayout.setBackgroundResource(dialogBoxesDarkModeBackground)
+                rateUsDialogRootLayout.background.colorFilter =
+                    PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
                 dismissRateUsDialogImageView.setColorFilter(whiteColor)
                 rateOurAppTextView.setTextColor(whiteColor)
                 messageTextView.setTextColor(whiteColor)
@@ -901,11 +901,8 @@ class SettingsActivity : BaseActivity(), View.OnClickListener, ColorSchemeListen
             if (this.resolveActivity(packageManager) != null) {
                 startActivity(chooserIntent)
             } else {
-                Toasty.error(
-                    activityContext,
-                    R.string.there_is_no_activity_available_to_handle_this_action_toast_text,
-                    Toasty.LENGTH_LONG
-                ).show()
+                Toasty.error(activityContext, R.string.there_is_no_activity_available_to_handle_this_action_toast_text,
+                    Toasty.LENGTH_LONG).show()
             }
         }
     }
