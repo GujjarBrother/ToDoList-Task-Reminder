@@ -22,16 +22,16 @@ import com.todo.list.R
 import com.todo.list.activities.ToDoTaskDetailActivity
 import com.todo.list.adapters.TasksRecyclerViewAdapter
 import com.todo.list.application.Application.Companion.prefs
-import com.todo.list.application.Application.Companion.toDosDatabase
 import com.todo.list.application.Application.Companion.typeface
 import com.todo.list.base.BaseFragment
 import com.todo.list.databinding.DeleteTaskDialogLayoutBinding
 import com.todo.list.databinding.FragmentCompletedTasksBinding
 import com.todo.list.databinding.SortingDialogLayoutBinding
 import com.todo.list.db.ToDoTask
+import com.todo.list.db.ToDosDatabase
 import com.todo.list.listeners.ToDoTaskDetailListener
+import com.todo.list.utils.CommonFunctions.COMPLETED_TAB
 import com.todo.list.utils.CommonFunctions.applyAnimation
-import com.todo.list.utils.CommonFunctions.isSomethingChanged
 import es.dmoral.toasty.Toasty
 import java.util.Collections
 
@@ -58,9 +58,6 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        completedTasksArrayList = ArrayList()
-        readCompletedTasks()
-
         with(binding) {
             if (prefs.completedTasksStyleValue) {
                 listAndGridViewStylesImageView.setImageDrawable(listViewStyleImage)
@@ -73,6 +70,9 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
             sortingCardView.setOnClickListener(this@CompletedTasksFragment)
             stylesCardView.setOnClickListener(this@CompletedTasksFragment)
         }
+
+        completedTasksArrayList = ArrayList()
+        readCompletedTasks()
     }
 
     override fun onResume() {
@@ -80,13 +80,13 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
 
         applyColorSchemeOrLightAndDarkModeOnCompletedTasksFragment()
 
-        if (isSomethingChanged) {
+        /*if (isSomethingChanged) {
             isSomethingChanged = false
             if (::adapter.isInitialized) {
                 adapter.isTextSizeChanged = true
                 adapter.notifyDataSetChanged()
             }
-        }
+        }*/
     }
 
     private fun applyCustomFont() {
@@ -126,55 +126,64 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
                     1 -> {
                         sortingImageView.setColorFilter(darkYellowColor)
                         listAndGridViewStylesImageView.setColorFilter(darkYellowColor)
-                        nothingInHereTextView.setTextColor(defaultColor)
+                        nothingInHereTextView.setTextColor(darkYellowColor)
+                        deletedPermanentlyTextView.setBackgroundColor(darkYellowColor)
                     }
 
                     2 -> {
                         sortingImageView.setColorFilter(orangeColor)
                         listAndGridViewStylesImageView.setColorFilter(orangeColor)
-                        nothingInHereTextView.setTextColor(defaultColor)
+                        nothingInHereTextView.setTextColor(orangeColor)
+                        deletedPermanentlyTextView.setBackgroundColor(orangeColor)
                     }
 
                     3 -> {
                         sortingImageView.setColorFilter(lightGreenColor)
                         listAndGridViewStylesImageView.setColorFilter(lightGreenColor)
-                        nothingInHereTextView.setTextColor(defaultColor)
+                        nothingInHereTextView.setTextColor(lightGreenColor)
+                        deletedPermanentlyTextView.setBackgroundColor(lightGreenColor)
                     }
 
                     4 -> {
                         sortingImageView.setColorFilter(blueColor)
                         listAndGridViewStylesImageView.setColorFilter(blueColor)
-                        nothingInHereTextView.setTextColor(defaultColor)
+                        nothingInHereTextView.setTextColor(blueColor)
+                        deletedPermanentlyTextView.setBackgroundColor(blueColor)
                     }
 
                     5 -> {
                         sortingImageView.setColorFilter(cyanColor)
                         listAndGridViewStylesImageView.setColorFilter(cyanColor)
-                        nothingInHereTextView.setTextColor(defaultColor)
+                        nothingInHereTextView.setTextColor(cyanColor)
+                        deletedPermanentlyTextView.setBackgroundColor(cyanColor)
                     }
 
                     6 -> {
                         sortingImageView.setColorFilter(pinkColor)
                         listAndGridViewStylesImageView.setColorFilter(pinkColor)
-                        nothingInHereTextView.setTextColor(defaultColor)
+                        nothingInHereTextView.setTextColor(pinkColor)
+                        deletedPermanentlyTextView.setBackgroundColor(pinkColor)
                     }
 
                     7 -> {
                         sortingImageView.setColorFilter(darkBlueColor)
                         listAndGridViewStylesImageView.setColorFilter(darkBlueColor)
-                        nothingInHereTextView.setTextColor(defaultColor)
+                        nothingInHereTextView.setTextColor(darkBlueColor)
+                        deletedPermanentlyTextView.setBackgroundColor(darkBlueColor)
                     }
 
                     8 -> {
                         sortingImageView.setColorFilter(redColor)
                         listAndGridViewStylesImageView.setColorFilter(redColor)
-                        nothingInHereTextView.setTextColor(defaultColor)
+                        nothingInHereTextView.setTextColor(redColor)
+                        deletedPermanentlyTextView.setBackgroundColor(redColor)
                     }
 
                     9 -> {
                         sortingImageView.setColorFilter(lightPurpleColor)
                         listAndGridViewStylesImageView.setColorFilter(lightPurpleColor)
-                        nothingInHereTextView.setTextColor(defaultColor)
+                        nothingInHereTextView.setTextColor(lightPurpleColor)
+                        deletedPermanentlyTextView.setBackgroundColor(lightPurpleColor)
                     }
                 }
             }
@@ -183,8 +192,10 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
 
     private fun readCompletedTasks() {
         with(binding) {
-            completedTasksArrayList.clear()
-            completedTasksArrayList = toDosDatabase.dao().getAllTasks() as ArrayList<ToDoTask>
+            if (completedTasksArrayList.isNotEmpty()) {
+                completedTasksArrayList.clear()
+            }
+            completedTasksArrayList = ToDosDatabase.getDatabase(fragmentContext.applicationContext).dao().getAllTasks(true) as ArrayList<ToDoTask>
             if (completedTasksArrayList.size > 0) {
                 group1.visibility = GONE
                 group2.visibility = VISIBLE
@@ -268,10 +279,10 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
         )
 
         if (!::adapter.isInitialized) {
-            /*adapter = TasksRecyclerViewAdapter(
-                this, this,
-                colorsSchemeArray, true
-            )*/
+            adapter = TasksRecyclerViewAdapter(
+                this, colorsSchemeArray = colorsSchemeArray, isAppColorChanged = true,
+                fromWhereInvoked = COMPLETED_TAB
+            )
         }
         val layoutManager: RecyclerView.LayoutManager = if (prefs.completedTasksStyleValue) {
                 GridLayoutManager(fragmentContext, 2, GridLayoutManager.VERTICAL, false)
@@ -324,7 +335,7 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
             }
 
             yesButton.setOnClickListener { _: View? ->
-                val isDeleted = toDosDatabase.dao().deleteTask(toDoTask)
+                val isDeleted = ToDosDatabase.getDatabase(fragmentContext.applicationContext).dao().deleteTask(toDoTask)
                 if (isDeleted == 1) {
                     Toasty.success(fragmentContext, R.string.deleted_successfully_toast_text, Toasty.LENGTH_LONG).show()
                     readCompletedTasks()
@@ -343,7 +354,8 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
     ) {
         with(deleteTaskDialogLayoutBinding) {
             if (prefs.dayAndNightModeSwitchValue) {
-                deleteTaskDialogRootLayout.setBackgroundResource(dialogBoxesDarkModeBackground)
+                deleteTaskDialogRootLayout.background.colorFilter =
+                    PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
                 deleteImageView.setColorFilter(whiteColor)
                 deleteMessageTextView.setTextColor(whiteColor)
                 noButton.background.colorFilter =
@@ -651,7 +663,8 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
     ) {
         with(sortingDialogLayoutBinding) {
             if (prefs.dayAndNightModeSwitchValue) {
-                sortingDialogRootLayout.setBackgroundResource(dialogBoxesDarkModeBackground)
+                sortingDialogRootLayout.background.colorFilter =
+                    PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
                 sortByTextView.setTextColor(whiteColor)
                 titleRadioButton.buttonTintList = ColorStateList.valueOf(whiteColor)
                 titleRadioButton.setTextColor(whiteColor)

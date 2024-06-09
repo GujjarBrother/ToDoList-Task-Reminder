@@ -153,8 +153,8 @@
                     android:layout_height="wrap_content"
                     android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
                     android:hint="@string/day_of_week_hint"
-                    android:imeOptions="actionGo"
                     android:inputType="textCapWords"
+                    android:imeOptions="actionGo"
                     android:maxLength="9"
                     android:textAllCaps="false"
                     android:textColor="@color/blackColor"
@@ -260,23 +260,26 @@
 
             </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/saveAndUpdateButton"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp"
-                android:layout_marginTop="@dimen/_14sdp"
-                android:background="@drawable/buttons_default_background"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/_200sdp"
+                android:minHeight="@dimen/_55sdp"
+                app:cornerRadius="@dimen/_7sdp"
                 android:gravity="center"
+                android:backgroundTint="@color/defaultColor"
                 android:padding="@dimen/_12ssp"
                 android:stateListAnimator="@null"
                 android:text="@string/save_button_text"
                 android:textAllCaps="false"
+                android:layout_marginTop="@dimen/_14sdp"
                 android:textColor="@color/whiteColor"
                 android:textSize="@dimen/_15ssp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/selectCategoryLayout" />
+                app:layout_constraintTop_toBottomOf="@id/selectCategoryLayout"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

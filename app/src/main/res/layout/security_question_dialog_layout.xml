@@ -97,14 +97,16 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/save_security_question_button"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/_45sdp"
+        android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_5sdp"
-        android:background="@drawable/buttons_default_background"
+        android:backgroundTint="@color/defaultColor"
         android:gravity="center"
         android:minWidth="@dimen/_200sdp"
+        android:minHeight="@dimen/_55sdp"
+        app:cornerRadius="@dimen/_7sdp"
         android:padding="@dimen/_10ssp"
         android:stateListAnimator="@null"
         android:text="@string/save_button_text"

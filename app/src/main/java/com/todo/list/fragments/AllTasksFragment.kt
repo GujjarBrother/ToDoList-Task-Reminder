@@ -43,7 +43,6 @@ import com.todo.list.activities.ToDoTaskDetailActivity
 import com.todo.list.adapters.CategoryAdapter
 import com.todo.list.adapters.TasksRecyclerViewAdapter
 import com.todo.list.application.Application.Companion.prefs
-import com.todo.list.application.Application.Companion.toDosDatabase
 import com.todo.list.application.Application.Companion.typeface
 import com.todo.list.base.BaseFragment
 import com.todo.list.databinding.AddAndUpdateTasksDialogLayoutBinding
@@ -52,18 +51,23 @@ import com.todo.list.databinding.DeleteTaskDialogLayoutBinding
 import com.todo.list.databinding.FragmentAllTasksBinding
 import com.todo.list.databinding.SortingDialogLayoutBinding
 import com.todo.list.db.ToDoTask
+import com.todo.list.db.ToDosDatabase
 import com.todo.list.listeners.CategorySelectionListener
 import com.todo.list.listeners.StartAndStopFABAnimationAndSwitchBetweenLightAndDarkModeListener
 import com.todo.list.listeners.TaskUpdateAndDeleteListener
 import com.todo.list.listeners.ToDoTaskDetailListener
 import com.todo.list.utils.CommonFunctions.DEFAULT_CATEGORY
 import com.todo.list.utils.CommonFunctions.PERSONAL_CATEGORY
+import com.todo.list.utils.CommonFunctions.TASKS_TAB
 import com.todo.list.utils.CommonFunctions.WORK_CATEGORY
 import com.todo.list.utils.CommonFunctions.applyAnimation
 import com.todo.list.utils.CommonFunctions.isSomethingChanged
 import es.dmoral.toasty.Toasty
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Collections
+import java.util.Date
+import java.util.Locale
 
 class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailListener,
     TaskUpdateAndDeleteListener, CategorySelectionListener {
@@ -79,13 +83,9 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
     private var isAboveSortingValueSelected = false
     private var isBelowSortingValueSelected = false
     private lateinit var adapter: TasksRecyclerViewAdapter
-    private var dateOfMonth: String = ""
-    private var month: String = ""
-    private var year: String = ""
     private lateinit var popupWindow: PopupWindow
     private lateinit var addAndUpdateTasksDialogLayoutBinding: AddAndUpdateTasksDialogLayoutBinding
     private lateinit var toDoTask: ToDoTask
-    private lateinit var updatedToDoTask: ToDoTask
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -178,8 +178,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
             if (prefs.dayAndNightModeSwitchValue) {
                 allTasksFragmentCardView.setCardBackgroundColor(screensNightModeColor)
                 nothingInHereTextView.setTextColor(whiteColor)
-                addNewTasksFloatingActionButton.backgroundTintList =
-                    ColorStateList.valueOf(whiteColor)
+                addNewTasksFloatingActionButton.backgroundTintList = ColorStateList.valueOf(whiteColor)
                 addNewTasksFloatingActionButton.setColorFilter(blackColor)
                 sortingCardView.setCardBackgroundColor(cardsNightModeColor)
                 sortingImageView.setColorFilter(whiteColor)
@@ -210,8 +209,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                         listAndGridViewStylesImageView.setColorFilter(darkYellowColor)
                         sortingImageView.setColorFilter(darkYellowColor)
                         nothingInHereTextView.setTextColor(darkYellowColor)
-                        addNewTasksFloatingActionButton.backgroundTintList =
-                            darkYellowColorStateList
+                        addNewTasksFloatingActionButton.backgroundTintList = darkYellowColorStateList
                     }
 
                     2 -> {
@@ -229,8 +227,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                         listAndGridViewStylesImageView.setColorFilter(lightGreenColor)
                         sortingImageView.setColorFilter(lightGreenColor)
                         nothingInHereTextView.setTextColor(lightGreenColor)
-                        addNewTasksFloatingActionButton.backgroundTintList =
-                            lightGreenColorStateList
+                        addNewTasksFloatingActionButton.backgroundTintList = lightGreenColorStateList
                     }
 
                     4 -> {
@@ -284,8 +281,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                         listAndGridViewStylesImageView.setColorFilter(lightPurpleColor)
                         sortingImageView.setColorFilter(lightPurpleColor)
                         nothingInHereTextView.setTextColor(lightPurpleColor)
-                        addNewTasksFloatingActionButton.backgroundTintList =
-                            lightPurpleColorStateList
+                        addNewTasksFloatingActionButton.backgroundTintList = lightPurpleColorStateList
                     }
                 }
             }
@@ -297,7 +293,9 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
             if (allTasksArrayList.isNotEmpty()) {
                 allTasksArrayList.clear()
             }
-            allTasksArrayList = toDosDatabase.dao().getAllTasks() as ArrayList<ToDoTask>
+            ToDosDatabase.getDatabase(fragmentContext.applicationContext)
+                .dao().updateCompletedAndTimeUpTasks(true, Date(System.currentTimeMillis()))
+            allTasksArrayList = ToDosDatabase.getDatabase(fragmentContext.applicationContext).dao().getAllTasks(false) as ArrayList<ToDoTask>
             if (allTasksArrayList.size > 0) {
                 group1.visibility = GONE
                 group2.visibility = VISIBLE
@@ -387,7 +385,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
         if (!::adapter.isInitialized) {
             adapter = TasksRecyclerViewAdapter(
                 this, this,
-                colorsSchemeArray, true
+                colorsSchemeArray, true, TASKS_TAB
             )
         }
 
@@ -438,8 +436,10 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
         addAndUpdateTasksDialogLayoutBinding = AddAndUpdateTasksDialogLayoutBinding.inflate(layoutInflater)
 
         val addTasksDialogBuilder = AlertDialog.Builder(fragmentContext)
-        addTasksDialogBuilder.setView(addAndUpdateTasksDialogLayoutBinding.root)
-        addTasksDialogBuilder.setCancelable(false)
+        with(addTasksDialogBuilder) {
+            setView(addAndUpdateTasksDialogLayoutBinding.root)
+            setCancelable(true)
+        }
         val addTasksAlertDialog = addTasksDialogBuilder.create()
 
         if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed && !addTasksAlertDialog.isShowing) {
@@ -457,19 +457,24 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                 addAndUpdateToDoTaskTextView.text = getString(R.string.update_todo_task_text)
                 infoTextView.text = getString(R.string.update_info_message_text)
                 titleTextInputLayout.editText?.setText(toDoTask.title)
+                titleTextInputLayout.editText?.setSelection(toDoTask.title.length)
                 descriptionTextInputLayout.editText?.setText(toDoTask.description)
+                descriptionTextInputLayout.editText?.setSelection(toDoTask.description.length)
                 dayOfWeekTextInputLayout.editText?.setText(toDoTask.day)
+                dayOfWeekTextInputLayout.editText?.setSelection(toDoTask.day.length)
                 dateTextInputLayout.editText?.setText(
                     String.format("%s %s, %s", toDoTask.month, toDoTask.date, toDoTask.year)
                 )
                 timeTextInputLayout.editText?.setText(toDoTask.time)
-                timeTextInputLayout.editText!!.setText(toDoTask.time)
                 if (toDoTask.category == DEFAULT_CATEGORY || toDoTask.category == PERSONAL_CATEGORY) {
                     selectCategoryTextView.text = getString(R.string.personal_text)
                 } else if (toDoTask.category == WORK_CATEGORY) {
                     selectCategoryTextView.text = getString(R.string.work_text)
                 }
-                selectCategoryTextView.setTextColor(blackColor)
+                when(prefs.dayAndNightModeSwitchValue) {
+                    true -> selectCategoryTextView.setTextColor(whiteColor)
+                    false -> selectCategoryTextView.setTextColor(blackColor)
+                }
                 saveAndUpdateButton.text = getString(R.string.update_text)
             }
 
@@ -517,15 +522,13 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                         descriptionTextInputLayout.boxStrokeErrorColor = whiteColorStateList
                         descriptionTextInputLayout.setErrorIconTintList(whiteColorStateList)
                         descriptionTextInputLayout.setErrorTextColor(whiteColorStateList)
-                        descriptionTextInputLayout.error =
-                            getString(R.string.description_error_text)
+                        descriptionTextInputLayout.error = getString(R.string.description_error_text)
                     } else {
                         titleTextInputLayout.error = null
                         descriptionTextInputLayout.boxStrokeErrorColor = errorColorStateList
                         descriptionTextInputLayout.setErrorIconTintList(errorColorStateList)
                         descriptionTextInputLayout.setErrorTextColor(errorColorStateList)
-                        descriptionTextInputLayout.error =
-                            getString(R.string.description_error_text)
+                        descriptionTextInputLayout.error = getString(R.string.description_error_text)
                     }
                 } else if (TextUtils.isEmpty(dayOfWeek)) {
                     if (prefs.dayAndNightModeSwitchValue) {
@@ -575,20 +578,33 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                     dayOfWeekTextInputLayout.error = null
                     dateTextInputLayout.error = null
                     timeTextInputLayout.error = null
+
+                    val parse = simpleDateFormat.parse(date) as Date
+                    val dateSDF = SimpleDateFormat("dd", Locale.getDefault())
+                    val monthSDF = SimpleDateFormat("MMM", Locale.getDefault())
+                    val yearSDF = SimpleDateFormat("yyyy", Locale.getDefault())
+                    val completeDateAndTime = "${monthSDF.format(parse)} ${dateSDF.format(parse)}, ${yearSDF.format(parse)} $time"
+                    val completeDateAndTimeDate = simpleDateAndTimeFormat.parse(completeDateAndTime) as Date
+
                     if (fromWhereInvoked == 1) {
                         val toDoTask: ToDoTask
-                        if (dateOfMonth.isNotEmpty() && month.isNotEmpty() && year.isNotEmpty()) {
-                            toDoTask = ToDoTask(0, dayOfWeek, dateOfMonth, month, year, title, description,
-                                time, category)
-                            val isTaskAlreadySaved = toDosDatabase.dao().isTaskAlreadySaved(
+                        if (dateSDF.format(parse).isNotEmpty() && monthSDF.format(parse).isNotEmpty()
+                            && yearSDF.format(parse).isNotEmpty()) {
+                            toDoTask = ToDoTask(0, dayOfWeek, dateSDF.format(parse), monthSDF.format(parse),
+                                yearSDF.format(parse), title, description, time, category, completeDateAndTimeDate, false
+                            )
+                            val isTaskAlreadySaved = ToDosDatabase.getDatabase(fragmentContext.applicationContext).dao().isTaskAlreadySaved(
                                 toDoTask.day, toDoTask.date, toDoTask.month, toDoTask.year, toDoTask.title,
                                 toDoTask.description, toDoTask.time, toDoTask.category
                             )
                             if (isTaskAlreadySaved >= 1) {
                                 Toasty.info(fragmentContext, getString(R.string.this_task_is_already_saved_toast_text),
                                     Toasty.LENGTH_LONG).show()
+                            } else if (parse.time <= System.currentTimeMillis()) {
+                                Toasty.error(fragmentContext, getString(R.string.please_select_future_date_time_toast_text),
+                                    Toasty.LENGTH_LONG).show()
                             } else {
-                                val newlyAddedTaskID = toDosDatabase.dao().saveTask(toDoTask)
+                                val newlyAddedTaskID = ToDosDatabase.getDatabase(fragmentContext.applicationContext).dao().saveTask(toDoTask)
                                 if (newlyAddedTaskID >= 1) {
                                     prefs.category = category
 
@@ -620,9 +636,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                                         allTasksRecyclerView.smoothScrollToPosition(insertionIndex)
                                     }
 
-                                    dateOfMonth = ""
-                                    month = ""
-                                    year = ""
                                     Toasty.success(requireContext(), getString(R.string.task_is_saved_successfully_toast_text),
                                         Toasty.LENGTH_LONG).show()
                                     titleTextInputLayout.editText?.text = null
@@ -643,32 +656,14 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                             }
                         }
                     } else if (fromWhereInvoked == 2) {
-                        if (!((title.equals(toDoTask.title, ignoreCase = true)
-                                    && description.equals(toDoTask.description, ignoreCase = true)
-                                    && dayOfWeek.equals(toDoTask.day, ignoreCase = true)
-                                    && month.equals(toDoTask.month, ignoreCase = true)
-                                    && dateOfMonth.equals(toDoTask.date, ignoreCase = true)
-                                    && year.equals(toDoTask.year, ignoreCase = true)
-                                    && time.equals(toDoTask.time, ignoreCase = true)
-                                    && (category == toDoTask.category)))
-                            ) {
-                            if ((dateOfMonth.equals("", ignoreCase = true)
-                                        && month.equals("", ignoreCase = true)
-                                        && year.equals("", ignoreCase = true))
-                            ) {
-                                dateOfMonth = toDoTask.date
-                                month = toDoTask.month
-                                year = toDoTask.year
-                            }
-                            updatedToDoTask = ToDoTask(
-                                toDoTask.id, dayOfWeek, dateOfMonth, month, year,
-                                title, description, time, category
-                            )
-                            val isUpdated = toDosDatabase.dao().updateTask(updatedToDoTask)
+                        val updatedToDoTask = ToDoTask(
+                            toDoTask.id, dayOfWeek, dateSDF.format(parse), monthSDF.format(parse),
+                            yearSDF.format(parse), title, description, time, category,
+                            completeDateAndTimeDate, false
+                        )
+                        if (updatedToDoTask != toDoTask) {
+                            val isUpdated = ToDosDatabase.getDatabase(fragmentContext.applicationContext).dao().updateTask(updatedToDoTask)
                             if (isUpdated == 1) {
-                                dateOfMonth = ""
-                                month = ""
-                                year = ""
                                 Toasty.success(fragmentContext, getString(R.string.updated_successfully_toast_text),
                                     Toasty.LENGTH_LONG).show()
                                 prefs.category = category
@@ -910,7 +905,8 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
     ) {
         with(sortingDialogLayoutBinding) {
             if (prefs.dayAndNightModeSwitchValue) {
-                sortingDialogRootLayout.setBackgroundResource(dialogBoxesDarkModeBackground)
+                sortingDialogRootLayout.background.colorFilter =
+                    PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
                 sortByTextView.setTextColor(whiteColor)
                 titleRadioButton.buttonTintList = ColorStateList.valueOf(whiteColor)
                 titleRadioButton.setTextColor(whiteColor)
@@ -1199,7 +1195,8 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
     ) {
         with(addAndUpdateTasksDialogLayoutBinding) {
             if (prefs.dayAndNightModeSwitchValue) {
-                addToDoTaskDialogRootLayout.setBackgroundResource(dialogBoxesDarkModeBackground)
+                addToDoTaskDialogRootLayout.background.colorFilter =
+                    PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
 
                 dismissDialogImageView.setColorFilter(whiteColor)
                 addAndEditImageView.setColorFilter(whiteColor)
@@ -1207,406 +1204,178 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
                 infoTextView.setTextColor(whiteColor)
 
 //            Here, We Change The Box Stroke Color Of TextInputLayout When That is Un-Focused...
-                titleTextInputLayout.setBoxStrokeColorStateList(
-                    textInputLayoutBoxStrokeDarkModeColor
-                )
-                descriptionTextInputLayout.setBoxStrokeColorStateList(
-                    textInputLayoutBoxStrokeDarkModeColor
-                )
-                dayOfWeekTextInputLayout.setBoxStrokeColorStateList(
-                    textInputLayoutBoxStrokeDarkModeColor
-                )
-                dateTextInputLayout.setBoxStrokeColorStateList(
-                    textInputLayoutBoxStrokeDarkModeColor
-                )
-                timeTextInputLayout.setBoxStrokeColorStateList(
-                    textInputLayoutBoxStrokeDarkModeColor
-                )
+                titleTextInputLayout.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
+                descriptionTextInputLayout.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
+                dayOfWeekTextInputLayout.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
+                dateTextInputLayout.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
+                timeTextInputLayout.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
                 titleTextInputLayout.boxStrokeColor = whiteColor
-                titleTextInputLayout.setStartIconTintList(
-                    whiteColorStateList
-                )
-                titleTextInputLayout.hintTextColor =
-                    whiteColorStateList
-                titleTextInputLayout.boxStrokeErrorColor =
-                    whiteColorStateList
+                titleTextInputLayout.setStartIconTintList(whiteColorStateList)
+                titleTextInputLayout.hintTextColor = whiteColorStateList
+                titleTextInputLayout.boxStrokeErrorColor = whiteColorStateList
                 titleTextInputEditText.setTextColor(whiteColor)
-                descriptionTextInputLayout.boxStrokeColor =
-                    whiteColor
-                descriptionTextInputLayout.setStartIconTintList(
-                    whiteColorStateList
-                )
-                descriptionTextInputLayout.hintTextColor =
-                    whiteColorStateList
-                descriptionTextInputLayout.boxStrokeErrorColor =
-                    whiteColorStateList
-                descriptionTextInputEditText.setTextColor(
-                    whiteColor
-                )
-                dayOfWeekTextInputLayout.boxStrokeColor =
-                    whiteColor
-                dayOfWeekTextInputLayout.setStartIconTintList(
-                    whiteColorStateList
-                )
-                dayOfWeekTextInputLayout.hintTextColor =
-                    whiteColorStateList
-                dayOfWeekTextInputLayout.boxStrokeErrorColor =
-                    whiteColorStateList
-                dayOfWeekTextInputEditText.setTextColor(
-                    whiteColor
-                )
+                descriptionTextInputLayout.boxStrokeColor = whiteColor
+                descriptionTextInputLayout.setStartIconTintList(whiteColorStateList)
+                descriptionTextInputLayout.hintTextColor = whiteColorStateList
+                descriptionTextInputLayout.boxStrokeErrorColor = whiteColorStateList
+                descriptionTextInputEditText.setTextColor(whiteColor)
+                dayOfWeekTextInputLayout.boxStrokeColor = whiteColor
+                dayOfWeekTextInputLayout.setStartIconTintList(whiteColorStateList)
+                dayOfWeekTextInputLayout.hintTextColor = whiteColorStateList
+                dayOfWeekTextInputLayout.boxStrokeErrorColor = whiteColorStateList
+                dayOfWeekTextInputEditText.setTextColor(whiteColor)
                 dateTextInputLayout.boxStrokeColor = whiteColor
-                dateTextInputLayout.setStartIconTintList(
-                    whiteColorStateList
-                )
-                dateTextInputLayout.hintTextColor =
-                    whiteColorStateList
-                dateTextInputLayout.boxStrokeErrorColor =
-                    whiteColorStateList
+                dateTextInputLayout.setStartIconTintList(whiteColorStateList)
+                dateTextInputLayout.hintTextColor = whiteColorStateList
+                dateTextInputLayout.boxStrokeErrorColor = whiteColorStateList
                 dateTextInputEditText.setTextColor(whiteColor)
                 timeTextInputLayout.boxStrokeColor = whiteColor
-                timeTextInputLayout.setStartIconTintList(
-                    whiteColorStateList
-                )
-                timeTextInputLayout.hintTextColor =
-                    whiteColorStateList
-                timeTextInputLayout.boxStrokeErrorColor =
-                    whiteColorStateList
+                timeTextInputLayout.setStartIconTintList(whiteColorStateList)
+                timeTextInputLayout.hintTextColor = whiteColorStateList
+                timeTextInputLayout.boxStrokeErrorColor = whiteColorStateList
                 timeTextInputEditText.setTextColor(whiteColor)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    titleTextInputEditText.textCursorDrawable =
-                        editTextsCursorDarkModeColor
-                    descriptionTextInputEditText.textCursorDrawable =
-                        editTextsCursorDarkModeColor
-                    dayOfWeekTextInputEditText.textCursorDrawable =
-                        editTextsCursorDarkModeColor
-                    dateTextInputEditText.textCursorDrawable =
-                        editTextsCursorDarkModeColor
-                    timeTextInputEditText.textCursorDrawable =
-                        editTextsCursorDarkModeColor
+                    titleTextInputEditText.textCursorDrawable = editTextsCursorDarkModeColor
+                    descriptionTextInputEditText.textCursorDrawable = editTextsCursorDarkModeColor
+                    dayOfWeekTextInputEditText.textCursorDrawable = editTextsCursorDarkModeColor
+                    dateTextInputEditText.textCursorDrawable = editTextsCursorDarkModeColor
+                    timeTextInputEditText.textCursorDrawable = editTextsCursorDarkModeColor
                 }
-                selectCategoryLayout.setBackgroundResource(
-                    spinnerLayoutNightModeBackground
-                )
-                selectCategoryTextView.setTextColor(whiteColor)
+                selectCategoryLayout.background.colorFilter =
+                    PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
                 dropDownImageView.setColorFilter(whiteColor)
-                saveAndUpdateButton.background.colorFilter =
-                    PorterDuffColorFilter(
-                        whiteColor, PorterDuff.Mode.SRC_IN
-                    )
+                saveAndUpdateButton.background.colorFilter = PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
                 saveAndUpdateButton.setTextColor(blackColor)
             } else {
                 when (prefs.colorSchemeValue) {
                     0 -> {
-                        val defaultColorStateList = ColorStateList.valueOf(defaultColor)
-                        dismissDialogImageView.setColorFilter(
-                            defaultColor
-                        )
-                        addAndEditImageView.setColorFilter(
-                            defaultColor
-                        )
-                        addAndUpdateToDoTaskTextView.setTextColor(
-                            defaultColor
-                        )
-                        titleTextInputLayout.setStartIconTintList(
-                            defaultColorStateList
-                        )
-                        descriptionTextInputLayout.setStartIconTintList(
-                            defaultColorStateList
-                        )
-                        dayOfWeekTextInputLayout.setStartIconTintList(
-                            defaultColorStateList
-                        )
-                        dateTextInputLayout.setStartIconTintList(
-                            defaultColorStateList
-                        )
-                        timeTextInputLayout.setStartIconTintList(
-                            defaultColorStateList
-                        )
-                        dropDownImageView.setColorFilter(
-                            defaultColor
-                        )
-                        saveAndUpdateButton.background.colorFilter =
-                            PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
+                        dismissDialogImageView.setColorFilter(defaultColor)
+                        addAndEditImageView.setColorFilter(defaultColor)
+                        addAndUpdateToDoTaskTextView.setTextColor(defaultColor)
+                        titleTextInputLayout.setStartIconTintList(ColorStateList.valueOf(defaultColor))
+                        descriptionTextInputLayout.setStartIconTintList(ColorStateList.valueOf(defaultColor))
+                        dayOfWeekTextInputLayout.setStartIconTintList(ColorStateList.valueOf(defaultColor))
+                        dateTextInputLayout.setStartIconTintList(ColorStateList.valueOf(defaultColor))
+                        timeTextInputLayout.setStartIconTintList(ColorStateList.valueOf(defaultColor))
+                        dropDownImageView.setColorFilter(defaultColor)
+                        saveAndUpdateButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
                     }
 
                     1 -> {
-                        val darkYellowColorStateList = ColorStateList.valueOf(darkYellowColor)
-                        dismissDialogImageView.setColorFilter(
-                            darkYellowColor
-                        )
-                        addAndEditImageView.setColorFilter(
-                            darkYellowColor
-                        )
-                        addAndUpdateToDoTaskTextView.setTextColor(
-                            darkYellowColor
-                        )
-                        titleTextInputLayout.setStartIconTintList(
-                            darkYellowColorStateList
-                        )
-                        descriptionTextInputLayout.setStartIconTintList(
-                            darkYellowColorStateList
-                        )
-                        dayOfWeekTextInputLayout.setStartIconTintList(
-                            darkYellowColorStateList
-                        )
-                        dateTextInputLayout.setStartIconTintList(
-                            darkYellowColorStateList
-                        )
-                        timeTextInputLayout.setStartIconTintList(
-                            darkYellowColorStateList
-                        )
-                        dropDownImageView.setColorFilter(
-                            darkYellowColor
-                        )
-                        saveAndUpdateButton.background.colorFilter =
-                            PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
+                        dismissDialogImageView.setColorFilter(darkYellowColor)
+                        addAndEditImageView.setColorFilter(darkYellowColor)
+                        addAndUpdateToDoTaskTextView.setTextColor(darkYellowColor)
+                        titleTextInputLayout.setStartIconTintList(ColorStateList.valueOf(darkYellowColor))
+                        descriptionTextInputLayout.setStartIconTintList(ColorStateList.valueOf(darkYellowColor))
+                        dayOfWeekTextInputLayout.setStartIconTintList(ColorStateList.valueOf(darkYellowColor))
+                        dateTextInputLayout.setStartIconTintList(ColorStateList.valueOf(darkYellowColor))
+                        timeTextInputLayout.setStartIconTintList(ColorStateList.valueOf(darkYellowColor))
+                        dropDownImageView.setColorFilter(darkYellowColor)
+                        saveAndUpdateButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
                     }
 
                     2 -> {
-                        val orangeColorStateList = ColorStateList.valueOf(orangeColor)
-                        dismissDialogImageView.setColorFilter(
-                            orangeColor
-                        )
-                        addAndEditImageView.setColorFilter(
-                            orangeColor
-                        )
-                        addAndUpdateToDoTaskTextView.setTextColor(
-                            orangeColor
-                        )
-                        titleTextInputLayout.setStartIconTintList(
-                            orangeColorStateList
-                        )
-                        descriptionTextInputLayout.setStartIconTintList(
-                            orangeColorStateList
-                        )
-                        dayOfWeekTextInputLayout.setStartIconTintList(
-                            orangeColorStateList
-                        )
-                        dateTextInputLayout.setStartIconTintList(
-                            orangeColorStateList
-                        )
-                        timeTextInputLayout.setStartIconTintList(
-                            orangeColorStateList
-                        )
+                        dismissDialogImageView.setColorFilter(orangeColor)
+                        addAndEditImageView.setColorFilter(orangeColor)
+                        addAndUpdateToDoTaskTextView.setTextColor(orangeColor)
+                        titleTextInputLayout.setStartIconTintList(ColorStateList.valueOf(orangeColor))
+                        descriptionTextInputLayout.setStartIconTintList(ColorStateList.valueOf(orangeColor))
+                        dayOfWeekTextInputLayout.setStartIconTintList(ColorStateList.valueOf(orangeColor))
+                        dateTextInputLayout.setStartIconTintList(ColorStateList.valueOf(orangeColor))
+                        timeTextInputLayout.setStartIconTintList(ColorStateList.valueOf(orangeColor))
                         dropDownImageView.setColorFilter(orangeColor)
-                        saveAndUpdateButton.background.colorFilter =
-                            PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
+                        saveAndUpdateButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
                     }
 
                     3 -> {
-                        val lightGreenColorStateList = ColorStateList.valueOf(lightGreenColor)
-                        dismissDialogImageView.setColorFilter(
-                            lightGreenColor
-                        )
-                        addAndEditImageView.setColorFilter(
-                            lightGreenColor
-                        )
-                        addAndUpdateToDoTaskTextView.setTextColor(
-                            lightGreenColor
-                        )
-                        titleTextInputLayout.setStartIconTintList(
-                            lightGreenColorStateList
-                        )
-                        descriptionTextInputLayout.setStartIconTintList(
-                            lightGreenColorStateList
-                        )
-                        dayOfWeekTextInputLayout.setStartIconTintList(
-                            lightGreenColorStateList
-                        )
-                        dateTextInputLayout.setStartIconTintList(
-                            lightGreenColorStateList
-                        )
-                        timeTextInputLayout.setStartIconTintList(
-                            lightGreenColorStateList
-                        )
-                        dropDownImageView.setColorFilter(
-                            lightGreenColor
-                        )
-                        saveAndUpdateButton.background.colorFilter =
-                            PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
+                        dismissDialogImageView.setColorFilter(lightGreenColor)
+                        addAndEditImageView.setColorFilter(lightGreenColor)
+                        addAndUpdateToDoTaskTextView.setTextColor(lightGreenColor)
+                        titleTextInputLayout.setStartIconTintList(ColorStateList.valueOf(lightGreenColor))
+                        descriptionTextInputLayout.setStartIconTintList(ColorStateList.valueOf(lightGreenColor))
+                        dayOfWeekTextInputLayout.setStartIconTintList(ColorStateList.valueOf(lightGreenColor))
+                        dateTextInputLayout.setStartIconTintList(ColorStateList.valueOf(lightGreenColor))
+                        timeTextInputLayout.setStartIconTintList(ColorStateList.valueOf(lightGreenColor))
+                        dropDownImageView.setColorFilter(lightGreenColor)
+                        saveAndUpdateButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
                     }
 
                     4 -> {
-                        val blueColorStateList = ColorStateList.valueOf(blueColor)
-                        dismissDialogImageView.setColorFilter(
-                            blueColor
-                        )
+                        dismissDialogImageView.setColorFilter(blueColor)
                         addAndEditImageView.setColorFilter(blueColor)
-                        addAndUpdateToDoTaskTextView.setTextColor(
-                            blueColor
-                        )
-                        titleTextInputLayout.setStartIconTintList(
-                            blueColorStateList
-                        )
-                        descriptionTextInputLayout.setStartIconTintList(
-                            blueColorStateList
-                        )
-                        dayOfWeekTextInputLayout.setStartIconTintList(
-                            blueColorStateList
-                        )
-                        dateTextInputLayout.setStartIconTintList(
-                            blueColorStateList
-                        )
-                        timeTextInputLayout.setStartIconTintList(
-                            blueColorStateList
-                        )
+                        addAndUpdateToDoTaskTextView.setTextColor(blueColor)
+                        titleTextInputLayout.setStartIconTintList(ColorStateList.valueOf(blueColor))
+                        descriptionTextInputLayout.setStartIconTintList(ColorStateList.valueOf(blueColor))
+                        dayOfWeekTextInputLayout.setStartIconTintList(ColorStateList.valueOf(blueColor))
+                        dateTextInputLayout.setStartIconTintList(ColorStateList.valueOf(blueColor))
+                        timeTextInputLayout.setStartIconTintList(ColorStateList.valueOf(blueColor))
                         dropDownImageView.setColorFilter(blueColor)
-                        saveAndUpdateButton.background.colorFilter =
-                            PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
+                        saveAndUpdateButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
                     }
 
                     5 -> {
-                        val cyanColorStateList = ColorStateList.valueOf(cyanColor)
-                        dismissDialogImageView.setColorFilter(
-                            cyanColor
-                        )
+                        dismissDialogImageView.setColorFilter(cyanColor)
                         addAndEditImageView.setColorFilter(cyanColor)
-                        addAndUpdateToDoTaskTextView.setTextColor(
-                            cyanColor
-                        )
-                        titleTextInputLayout.setStartIconTintList(
-                            cyanColorStateList
-                        )
-                        descriptionTextInputLayout.setStartIconTintList(
-                            cyanColorStateList
-                        )
-                        dayOfWeekTextInputLayout.setStartIconTintList(
-                            cyanColorStateList
-                        )
-                        dateTextInputLayout.setStartIconTintList(
-                            cyanColorStateList
-                        )
-                        timeTextInputLayout.setStartIconTintList(
-                            cyanColorStateList
-                        )
+                        addAndUpdateToDoTaskTextView.setTextColor(cyanColor)
+                        titleTextInputLayout.setStartIconTintList(ColorStateList.valueOf(cyanColor))
+                        descriptionTextInputLayout.setStartIconTintList(ColorStateList.valueOf(cyanColor))
+                        dayOfWeekTextInputLayout.setStartIconTintList(ColorStateList.valueOf(cyanColor))
+                        dateTextInputLayout.setStartIconTintList(ColorStateList.valueOf(cyanColor))
+                        timeTextInputLayout.setStartIconTintList(ColorStateList.valueOf(cyanColor))
                         dropDownImageView.setColorFilter(cyanColor)
-                        saveAndUpdateButton.background.colorFilter =
-                            PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
+                        saveAndUpdateButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
                     }
 
                     6 -> {
-                        val pinkColorStateList = ColorStateList.valueOf(pinkColor)
-                        dismissDialogImageView.setColorFilter(
-                            pinkColor
-                        )
+                        dismissDialogImageView.setColorFilter(pinkColor)
                         addAndEditImageView.setColorFilter(pinkColor)
-                        addAndUpdateToDoTaskTextView.setTextColor(
-                            pinkColor
-                        )
-                        titleTextInputLayout.setStartIconTintList(
-                            pinkColorStateList
-                        )
-                        descriptionTextInputLayout.setStartIconTintList(
-                            pinkColorStateList
-                        )
-                        dayOfWeekTextInputLayout.setStartIconTintList(
-                            pinkColorStateList
-                        )
-                        dateTextInputLayout.setStartIconTintList(
-                            pinkColorStateList
-                        )
-                        timeTextInputLayout.setStartIconTintList(
-                            pinkColorStateList
-                        )
+                        addAndUpdateToDoTaskTextView.setTextColor(pinkColor)
+                        titleTextInputLayout.setStartIconTintList(ColorStateList.valueOf(pinkColor))
+                        descriptionTextInputLayout.setStartIconTintList(ColorStateList.valueOf(pinkColor))
+                        dayOfWeekTextInputLayout.setStartIconTintList(ColorStateList.valueOf(pinkColor))
+                        dateTextInputLayout.setStartIconTintList(ColorStateList.valueOf(pinkColor))
+                        timeTextInputLayout.setStartIconTintList(ColorStateList.valueOf(pinkColor))
                         dropDownImageView.setColorFilter(pinkColor)
-                        saveAndUpdateButton.background.colorFilter =
-                            PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
+                        saveAndUpdateButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
                     }
 
                     7 -> {
-                        val darkBlueColorStateList = ColorStateList.valueOf(darkBlueColor)
-                        dismissDialogImageView.setColorFilter(
-                            darkBlueColor
-                        )
-                        addAndEditImageView.setColorFilter(
-                            darkBlueColor
-                        )
-                        addAndUpdateToDoTaskTextView.setTextColor(
-                            darkBlueColor
-                        )
-                        titleTextInputLayout.setStartIconTintList(
-                            darkBlueColorStateList
-                        )
-                        descriptionTextInputLayout.setStartIconTintList(
-                            darkBlueColorStateList
-                        )
-                        dayOfWeekTextInputLayout.setStartIconTintList(
-                            darkBlueColorStateList
-                        )
-                        dateTextInputLayout.setStartIconTintList(
-                            darkBlueColorStateList
-                        )
-                        timeTextInputLayout.setStartIconTintList(
-                            darkBlueColorStateList
-                        )
-                        dropDownImageView.setColorFilter(
-                            darkBlueColor
-                        )
-                        saveAndUpdateButton.background.colorFilter =
-                            PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
+                        dismissDialogImageView.setColorFilter(darkBlueColor)
+                        addAndEditImageView.setColorFilter(darkBlueColor)
+                        addAndUpdateToDoTaskTextView.setTextColor(darkBlueColor)
+                        titleTextInputLayout.setStartIconTintList(ColorStateList.valueOf(darkBlueColor))
+                        descriptionTextInputLayout.setStartIconTintList(ColorStateList.valueOf(darkBlueColor))
+                        dayOfWeekTextInputLayout.setStartIconTintList(ColorStateList.valueOf(darkBlueColor))
+                        dateTextInputLayout.setStartIconTintList(ColorStateList.valueOf(darkBlueColor))
+                        timeTextInputLayout.setStartIconTintList(ColorStateList.valueOf(darkBlueColor))
+                        dropDownImageView.setColorFilter(darkBlueColor)
+                        saveAndUpdateButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
                     }
 
                     8 -> {
-                        val redColorStateList = ColorStateList.valueOf(redColor)
-                        dismissDialogImageView.setColorFilter(
-                            redColor
-                        )
+                        dismissDialogImageView.setColorFilter(redColor)
                         addAndEditImageView.setColorFilter(redColor)
-                        addAndUpdateToDoTaskTextView.setTextColor(
-                            redColor
-                        )
-                        titleTextInputLayout.setStartIconTintList(
-                            redColorStateList
-                        )
-                        descriptionTextInputLayout.setStartIconTintList(
-                            redColorStateList
-                        )
-                        dayOfWeekTextInputLayout.setStartIconTintList(
-                            redColorStateList
-                        )
-                        dateTextInputLayout.setStartIconTintList(
-                            redColorStateList
-                        )
-                        timeTextInputLayout.setStartIconTintList(
-                            redColorStateList
-                        )
+                        addAndUpdateToDoTaskTextView.setTextColor(redColor)
+                        titleTextInputLayout.setStartIconTintList(ColorStateList.valueOf(redColor))
+                        descriptionTextInputLayout.setStartIconTintList(ColorStateList.valueOf(redColor))
+                        dayOfWeekTextInputLayout.setStartIconTintList(ColorStateList.valueOf(redColor))
+                        dateTextInputLayout.setStartIconTintList(ColorStateList.valueOf(redColor))
+                        timeTextInputLayout.setStartIconTintList(ColorStateList.valueOf(redColor))
                         dropDownImageView.setColorFilter(redColor)
-                        saveAndUpdateButton.background.colorFilter =
-                            PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
+                        saveAndUpdateButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
                     }
 
                     9 -> {
-                        val lightPurpleColorStateList = ColorStateList.valueOf(lightPurpleColor)
-                        dismissDialogImageView.setColorFilter(
-                            lightPurpleColor
-                        )
-                        addAndEditImageView.setColorFilter(
-                            lightPurpleColor
-                        )
-                        addAndUpdateToDoTaskTextView.setTextColor(
-                            lightPurpleColor
-                        )
-                        titleTextInputLayout.setStartIconTintList(
-                            lightPurpleColorStateList
-                        )
-                        descriptionTextInputLayout.setStartIconTintList(
-                            lightPurpleColorStateList
-                        )
-                        dayOfWeekTextInputLayout.setStartIconTintList(
-                            lightPurpleColorStateList
-                        )
-                        dateTextInputLayout.setStartIconTintList(
-                            lightPurpleColorStateList
-                        )
-                        timeTextInputLayout.setStartIconTintList(
-                            lightPurpleColorStateList
-                        )
-                        dropDownImageView.setColorFilter(
-                            lightPurpleColor
-                        )
-                        saveAndUpdateButton.background.colorFilter =
-                            PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
+                        dismissDialogImageView.setColorFilter(lightPurpleColor)
+                        addAndEditImageView.setColorFilter(lightPurpleColor)
+                        addAndUpdateToDoTaskTextView.setTextColor(lightPurpleColor)
+                        titleTextInputLayout.setStartIconTintList(ColorStateList.valueOf(lightPurpleColor))
+                        descriptionTextInputLayout.setStartIconTintList(ColorStateList.valueOf(lightPurpleColor))
+                        dayOfWeekTextInputLayout.setStartIconTintList(ColorStateList.valueOf(lightPurpleColor))
+                        dateTextInputLayout.setStartIconTintList(ColorStateList.valueOf(lightPurpleColor))
+                        timeTextInputLayout.setStartIconTintList(ColorStateList.valueOf(lightPurpleColor))
+                        dropDownImageView.setColorFilter(lightPurpleColor)
+                        saveAndUpdateButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
                     }
                 }
             }
@@ -1621,9 +1390,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
         val picker = datePicker.build()
         picker.show(requireActivity().supportFragmentManager, "MATERIAL_DATE_PICKER")
         picker.addOnPositiveButtonClickListener { selection: Long? ->
-            dateOfMonth = dateOfMonthSimpleDateFormat.format(selection)
-            month = monthSimpleDateFormat.format(selection)
-            year = yearSimpleDateFormat.format(selection)
             val date: String = simpleDateFormat.format(selection)
             addAndUpdateTasksDialogLayoutBinding.dateTextInputLayout.editText?.setText(date)
         }
@@ -1757,7 +1523,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
             }
 
             yesButton.setOnClickListener { _: View? ->
-                val isDeleted = toDosDatabase.dao().deleteTask(toDoTask)
+                val isDeleted = ToDosDatabase.getDatabase(fragmentContext.applicationContext).dao().deleteTask(toDoTask)
                 if (isDeleted == 1) {
                     Toasty.success(fragmentContext, R.string.deleted_successfully_toast_text, Toasty.LENGTH_LONG)
                         .show()
@@ -1789,7 +1555,8 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
     ) {
         with(deleteTaskDialogLayoutBinding) {
             if (prefs.dayAndNightModeSwitchValue) {
-                deleteTaskDialogRootLayout.setBackgroundResource(dialogBoxesDarkModeBackground)
+                deleteTaskDialogRootLayout.background.colorFilter =
+                    PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
                 deleteImageView.setColorFilter(whiteColor)
                 deleteMessageTextView.setTextColor(whiteColor)
                 noButton.background.colorFilter = PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
@@ -1888,15 +1655,20 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailLis
 
         with(addAndUpdateTasksDialogLayoutBinding) {
             if ((category == DEFAULT_CATEGORY)) {
-                selectCategoryTextView.text =
-                    fragmentContext.getString(R.string.select_category_text)
+                selectCategoryTextView.text = fragmentContext.getString(R.string.select_category_text)
                 selectCategoryTextView.setTextColor(Color.parseColor("#9E9E9E"))
             } else if ((category == PERSONAL_CATEGORY)) {
                 selectCategoryTextView.text = fragmentContext.getString(R.string.personal_text)
-                selectCategoryTextView.setTextColor(blackColor)
+                when(prefs.dayAndNightModeSwitchValue) {
+                    true -> selectCategoryTextView.setTextColor(whiteColor)
+                    false -> selectCategoryTextView.setTextColor(blackColor)
+                }
             } else if ((category == WORK_CATEGORY)) {
                 selectCategoryTextView.text = fragmentContext.getString(R.string.work_text)
-                selectCategoryTextView.setTextColor(blackColor)
+                when(prefs.dayAndNightModeSwitchValue) {
+                    true -> selectCategoryTextView.setTextColor(whiteColor)
+                    false -> selectCategoryTextView.setTextColor(blackColor)
+                }
             }
         }
 

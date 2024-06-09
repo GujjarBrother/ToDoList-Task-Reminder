@@ -51,5 +51,6 @@
 
     <color name="subTitlesTextColor">#80343434</color>
     <color name="navigationDrawerScrimColor">#757575</color>
+    <color name="lightBlueColor">#72C0EE</color>
 
 </resources>

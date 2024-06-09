@@ -5,14 +5,16 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import java.util.Date
 
 @Dao
 interface DAO {
+
     @Insert
     fun saveTask(toDoTask: ToDoTask): Long
 
-    @Query("SELECT * FROM ToDosTasks")
-    fun getAllTasks(): List<ToDoTask>
+    @Query("SELECT * FROM ToDosTasks WHERE Is_Task_Completed_OR_TimeUp = :isCompletedAndTimeUp")
+    fun getAllTasks(isCompletedAndTimeUp: Boolean): List<ToDoTask>
 
     @Query("SELECT * FROM ToDosTasks WHERE Tasks_Category = :category")
     fun getAllSpecificTasks(category: Int): List<ToDoTask>
@@ -34,4 +36,7 @@ interface DAO {
         time: String,
         category: Int
     ): Int
+
+    @Query("UPDATE ToDosTasks SET Is_Task_Completed_OR_TimeUp = :completed WHERE Date_And_Time_In_Millis <= :taskCompletedTime")
+    fun updateCompletedAndTimeUpTasks(completed: Boolean, taskCompletedTime: Date)
 }

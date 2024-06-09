@@ -138,12 +138,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/defaultTransparentColor"
+                android:gravity="center"
                 android:padding="@dimen/_10ssp"
                 android:text="@string/your_data_will_be_deleted_permanently_after_24_hours_text"
                 android:textColor="@color/whiteColor"
                 android:textSize="@dimen/_10ssp"
                 android:textStyle="bold"
-                android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -189,9 +189,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                tools:visibility="visible"
                 app:constraint_referenced_ids="completedTasksTasksRecyclerView,
-                 sortingCardView, stylesCardView, divider" />
+                sortingCardView, stylesCardView, divider"
+                tools:visibility="visible" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

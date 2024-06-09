@@ -1,9 +1,42 @@
 package com.todo.list.db
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+import com.todo.list.converters.DateConverter
 
-@Database(entities = [ToDoTask::class], version = 1, exportSchema = false)
+@Database(entities = [ToDoTask::class], version = 2, exportSchema = false)
+@TypeConverters(DateConverter::class)
 abstract class ToDosDatabase : RoomDatabase() {
     abstract fun dao(): DAO
+
+    companion object {
+
+        @Volatile
+        private var DATABASE_INSTANCE: ToDosDatabase? = null
+
+        fun getDatabase(context: Context): ToDosDatabase {
+            if (DATABASE_INSTANCE == null) {
+                synchronized(this) {
+                    DATABASE_INSTANCE = Room.databaseBuilder(
+                        context, ToDosDatabase::class.java, "ToDos_Tasks_Database")
+                        .allowMainThreadQueries()
+                        .addMigrations(migration1to2)
+                        .build()
+                }
+            }
+            return DATABASE_INSTANCE!!
+        }
+
+        private val migration1to2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE ToDosTasks ADD COLUMN Date_And_Time_In_Millis INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE ToDosTasks ADD COLUMN Is_Task_Completed_OR_TimeUp INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+    }
 }

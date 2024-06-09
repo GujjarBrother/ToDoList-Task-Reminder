@@ -13,6 +13,7 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.CompoundButton
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import com.todo.list.R
 import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.application.Application.Companion.typeface
@@ -77,7 +78,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         with(binding) {
             when (view?.id) {
-                R.id.sign_in_button -> {
+                R.id.signInButton -> {
                     val signInEmailOrUserName = userNameTextInputLayout.editText?.text.toString().trim()
                     val signInPassword = passwordTextInputLayout.editText?.text.toString().trim()
                     if (TextUtils.isEmpty(signInEmailOrUserName)) {
@@ -110,13 +111,13 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
 
-                R.id.forgot_password_text_view -> {
+                R.id.forgotPasswordTextView -> {
                     if (securityQuestion != "") {
                         showRecoverPasswordDialog()
                     }
                 }
 
-                R.id.sign_up_text_view -> {
+                R.id.signUpTextView -> {
                     openSignUpActivity()
                 }
             }
@@ -127,7 +128,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
         with(binding) {
             if (prefs.dayAndNightModeSwitchValue) {
                 userNameTextInputLayout.boxStrokeErrorColor = whiteColorStateList
-                userNameTextInputLayout.setErrorIconTintList(whiteColorStateList)
+                userNameTextInputLayout.setErrorIconTintList(ColorStateList.valueOf(lightBlueColor))
                 userNameTextInputLayout.setErrorTextColor(whiteColorStateList)
             } else {
                 userNameTextInputLayout.boxStrokeErrorColor = errorColorStateList
@@ -165,13 +166,14 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
         val recoverPasswordDialogLayoutBinding = RecoverPasswordDialogLayoutBinding.inflate(layoutInflater)
 
         val recoverPasswordDialogBuilder = AlertDialog.Builder(activityContext)
-        recoverPasswordDialogBuilder.setView(recoverPasswordDialogLayoutBinding.root)
-        recoverPasswordDialogBuilder.setCancelable(false)
+        with(recoverPasswordDialogBuilder) {
+            setView(recoverPasswordDialogLayoutBinding.root)
+            setCancelable(true)
+        }
         val recoverPasswordAlertDialog = recoverPasswordDialogBuilder.create()
         if (!activityContext.isFinishing && !activityContext.isDestroyed && !recoverPasswordAlertDialog.isShowing) {
-            val window = recoverPasswordAlertDialog.window
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            window?.setWindowAnimations(R.style.dialogBoxesAnimation)
+            recoverPasswordAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            recoverPasswordAlertDialog.window?.setWindowAnimations(R.style.dialogBoxesAnimation)
             recoverPasswordAlertDialog.show()
         }
 
@@ -181,7 +183,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
             securityQuestionAnswerTextInputLayout.hint = securityQuestion
             showSoftKeyboard()
             securityQuestionAnswerTextInputEditText.requestFocus()
-            dismissDialogImageView.setOnClickListener { _: View? ->
+            dismissDialogIV.setOnClickListener { _: View? ->
                 hideSoftKeyboard(recoverPasswordDialogLayoutBinding.securityQuestionAnswerTextInputEditText)
                 if (!activityContext.isFinishing && !activityContext.isDestroyed) {
                     recoverPasswordAlertDialog.dismiss()
@@ -199,7 +201,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                     securityQuestionAnswerTextInputLayout.error = null
                     group1.visibility = View.GONE
                     passwordTextView.visibility = View.VISIBLE
-                    passwordTextView.text = "${getString(R.string.your_password_is_text)} $password"
+                    passwordTextView.text = String.format("%s %s", getString(R.string.your_password_is_text), password)
                 } else {
                     recoverPasswordTextInputLayoutClickColor(this)
                     securityQuestionAnswerTextInputLayout.error = getString(R.string.enter_right_answer_error_text)
@@ -229,96 +231,103 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
     ) {
         with(recoverPasswordDialogLayoutBinding) {
             if (prefs.dayAndNightModeSwitchValue) {
-                recoverPasswordDialogRootLayout.setBackgroundResource(dialogBoxesDarkModeBackground)
-                dismissDialogImageView.setColorFilter(whiteColor)
-                recoverPasswordTitleTextView.setTextColor(whiteColor)
-                recoverPasswordButton.background.colorFilter = PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
+                rootLayout.background.colorFilter = PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
+                dismissDialogIV.setColorFilter(lightBlueColor)
+                recoverPasswordTitleTV.setTextColor(whiteColor)
+                recoverPasswordButton.setBackgroundColor(lightBlueColor)
                 recoverPasswordButton.setTextColor(blackColor)
                 securityQuestionAnswerTextInputLayout.boxStrokeColor = whiteColor
-                securityQuestionAnswerTextInputLayout.setStartIconTintList(whiteColorStateList)
+                securityQuestionAnswerTextInputLayout.setStartIconTintList(ColorStateList.valueOf(lightBlueColor))
                 securityQuestionAnswerTextInputLayout.hintTextColor = whiteColorStateList
                 securityQuestionAnswerTextInputLayout.boxStrokeErrorColor = whiteColorStateList
                 securityQuestionAnswerTextInputEditText.setTextColor(whiteColor)
             } else {
                 when (prefs.colorSchemeValue) {
                     0 -> {
-                        dismissDialogImageView.setColorFilter(defaultColor)
-                        recoverPasswordTitleTextView.setTextColor(defaultColor)
+                        dismissDialogIV.setColorFilter(defaultColor)
+                        recoverPasswordTitleTV.setTextColor(defaultColor)
                         securityQuestionAnswerTextInputLayout.setStartIconTintList(
                             ColorStateList.valueOf(defaultColor))
-                        recoverPasswordButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
+                        recoverPasswordButton.setBackgroundColor(defaultColor)
                     }
 
                     1 -> {
-                        dismissDialogImageView.setColorFilter(darkYellowColor)
-                        recoverPasswordTitleTextView.setTextColor(darkYellowColor)
+                        dismissDialogIV.setColorFilter(darkYellowColor)
+                        recoverPasswordTitleTV.setTextColor(darkYellowColor)
                         securityQuestionAnswerTextInputLayout.setStartIconTintList(
                             ColorStateList.valueOf(darkYellowColor))
-                        recoverPasswordButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
+                        recoverPasswordButton.setBackgroundColor(darkYellowColor)
                     }
 
                     2 -> {
-                        dismissDialogImageView.setColorFilter(orangeColor)
-                        recoverPasswordTitleTextView.setTextColor(orangeColor)
+                        dismissDialogIV.setColorFilter(orangeColor)
+                        recoverPasswordTitleTV.setTextColor(orangeColor)
                         securityQuestionAnswerTextInputLayout.setStartIconTintList(
                             ColorStateList.valueOf(orangeColor))
-                        recoverPasswordButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
+                        recoverPasswordButton.setBackgroundColor(orangeColor)
                     }
 
                     3 -> {
-                        dismissDialogImageView.setColorFilter(lightGreenColor)
-                        recoverPasswordTitleTextView.setTextColor(lightGreenColor)
+                        dismissDialogIV.setColorFilter(lightGreenColor)
+                        recoverPasswordTitleTV.setTextColor(lightGreenColor)
                         securityQuestionAnswerTextInputLayout.setStartIconTintList(
                             ColorStateList.valueOf(lightGreenColor))
                         recoverPasswordButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
+                        recoverPasswordButton.setBackgroundColor(lightGreenColor)
                     }
 
                     4 -> {
-                        dismissDialogImageView.setColorFilter(blueColor)
-                        recoverPasswordTitleTextView.setTextColor(blueColor)
+                        dismissDialogIV.setColorFilter(blueColor)
+                        recoverPasswordTitleTV.setTextColor(blueColor)
                         securityQuestionAnswerTextInputLayout.setStartIconTintList(
                             ColorStateList.valueOf(blueColor))
                         recoverPasswordButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
+                        recoverPasswordButton.setBackgroundColor(blueColor)
                     }
 
                     5 -> {
-                        dismissDialogImageView.setColorFilter(cyanColor)
-                        recoverPasswordTitleTextView.setTextColor(cyanColor)
+                        dismissDialogIV.setColorFilter(cyanColor)
+                        recoverPasswordTitleTV.setTextColor(cyanColor)
                         securityQuestionAnswerTextInputLayout.setStartIconTintList(
                             ColorStateList.valueOf(cyanColor))
                         recoverPasswordButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
+                        recoverPasswordButton.setBackgroundColor(cyanColor)
                     }
 
                     6 -> {
-                        dismissDialogImageView.setColorFilter(pinkColor)
-                        recoverPasswordTitleTextView.setTextColor(pinkColor)
+                        dismissDialogIV.setColorFilter(pinkColor)
+                        recoverPasswordTitleTV.setTextColor(pinkColor)
                         securityQuestionAnswerTextInputLayout.setStartIconTintList(
                             ColorStateList.valueOf(pinkColor))
                         recoverPasswordButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
+                        recoverPasswordButton.setBackgroundColor(pinkColor)
                     }
 
                     7 -> {
-                        dismissDialogImageView.setColorFilter(darkBlueColor)
-                        recoverPasswordTitleTextView.setTextColor(darkBlueColor)
+                        dismissDialogIV.setColorFilter(darkBlueColor)
+                        recoverPasswordTitleTV.setTextColor(darkBlueColor)
                         securityQuestionAnswerTextInputLayout.setStartIconTintList(
                             ColorStateList.valueOf(darkBlueColor))
                         recoverPasswordButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
+                        recoverPasswordButton.setBackgroundColor(darkBlueColor)
                     }
 
                     8 -> {
-                        dismissDialogImageView.setColorFilter(redColor)
-                        recoverPasswordTitleTextView.setTextColor(redColor)
+                        dismissDialogIV.setColorFilter(redColor)
+                        recoverPasswordTitleTV.setTextColor(redColor)
                         securityQuestionAnswerTextInputLayout.setStartIconTintList(
                             ColorStateList.valueOf(redColor))
                         recoverPasswordButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
+                        recoverPasswordButton.setBackgroundColor(redColor)
                     }
 
                     9 -> {
-                        dismissDialogImageView.setColorFilter(lightPurpleColor)
-                        recoverPasswordTitleTextView.setTextColor(lightPurpleColor)
+                        dismissDialogIV.setColorFilter(lightPurpleColor)
+                        recoverPasswordTitleTV.setTextColor(lightPurpleColor)
                         securityQuestionAnswerTextInputLayout.setStartIconTintList(
                             ColorStateList.valueOf(lightPurpleColor))
                         recoverPasswordButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
+                        recoverPasswordButton.setBackgroundColor(lightPurpleColor)
                     }
                 }
             }
@@ -327,7 +336,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
 
     private fun applyCustomFontOnRecoverPasswordDialogViews(recoverPasswordDialogLayoutBinding: RecoverPasswordDialogLayoutBinding) {
         with(recoverPasswordDialogLayoutBinding) {
-            recoverPasswordTitleTextView.typeface = typeface
+            recoverPasswordTitleTV.typeface = typeface
             securityQuestionAnswerTextInputLayout.typeface = typeface
             securityQuestionAnswerTextInputEditText.typeface = typeface
             recoverPasswordButton.typeface = typeface
@@ -363,37 +372,37 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
         with(binding) {
             if (prefs.dayAndNightModeSwitchValue) {
                 changeStatusBarColor(activityContext, screensNightModeColor)
-                signInActivityRootLayout.setBackgroundColor(screensNightModeColor)
+                rootLayout.setBackgroundColor(screensNightModeColor)
                 firstImageButton.background.colorFilter = PorterDuffColorFilter(cardsNightModeColor, PorterDuff.Mode.SRC_IN)
                 secondImageButton.background.colorFilter = PorterDuffColorFilter(cardsNightModeColor, PorterDuff.Mode.SRC_IN)
                 thirdImageButton.background.colorFilter = PorterDuffColorFilter(cardsNightModeColor, PorterDuff.Mode.SRC_IN)
                 fourthImageButton.background.colorFilter = PorterDuffColorFilter(cardsNightModeColor, PorterDuff.Mode.SRC_IN)
-                signInTextView.setTextColor(whiteColor)
+                signInTextView.setTextColor(darkModeTextColor)
                 signInCardView.setCardBackgroundColor(cardsNightModeColor)
 
 //            Here, We Change The Box Stroke Color Of TextInputLayout When That is Un-Focused...
                 userNameTextInputLayout.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
                 passwordTextInputLayout.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
                 userNameTextInputLayout.boxStrokeColor = whiteColor
-                userNameTextInputLayout.setStartIconTintList(whiteColorStateList)
-                userNameTextInputLayout.setEndIconTintList(whiteColorStateList)
+                userNameTextInputLayout.setStartIconTintList(ColorStateList.valueOf(lightBlueColor))
+                userNameTextInputLayout.setEndIconTintList(ColorStateList.valueOf(lightBlueColor))
                 userNameTextInputLayout.hintTextColor = whiteColorStateList
                 userNameTextInputLayout.boxStrokeErrorColor = whiteColorStateList
                 userNameTextInputEditText.setTextColor(whiteColor)
                 passwordTextInputLayout.boxStrokeColor = whiteColor
-                passwordTextInputLayout.setStartIconTintList(whiteColorStateList)
-                passwordTextInputLayout.setEndIconTintList(whiteColorStateList)
+                passwordTextInputLayout.setStartIconTintList(ColorStateList.valueOf(lightBlueColor))
+                passwordTextInputLayout.setEndIconTintList(ColorStateList.valueOf(lightBlueColor))
                 passwordTextInputLayout.hintTextColor = whiteColorStateList
                 passwordTextInputLayout.boxStrokeErrorColor = whiteColorStateList
-                passwordTextInputLayout.counterTextColor = whiteColorStateList
+                passwordTextInputLayout.counterTextColor = ColorStateList.valueOf(lightBlueColor)
                 passwordTextInputEditText.setTextColor(whiteColor)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     userNameTextInputEditText.textCursorDrawable = editTextsCursorDarkModeColor
                     passwordTextInputEditText.textCursorDrawable = editTextsCursorDarkModeColor
                 }
-                rememberMeCheckBox.buttonTintList = whiteColorStateList
-                rememberMeCheckBox.setTextColor(whiteColor)
-                signInButton.background.colorFilter = PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
+                rememberMeCheckBox.buttonTintList = ColorStateList.valueOf(lightBlueColor)
+                rememberMeCheckBox.setTextColor(darkModeTextColor)
+                signInButton.setBackgroundColor(lightBlueColor)
                 signInButton.setTextColor(blackColor)
                 signUpTextView.setTextColor(whiteColor)
             } else {
@@ -406,7 +415,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                         secondImageButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
                         thirdImageButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
                         fourthImageButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
-                        signInButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
+                        signInButton.setBackgroundColor(defaultColor)
                         signInTextView.setTextColor(defaultColor)
                         userNameTextInputLayout.setStartIconTintList(defaultColorStateList)
                         passwordTextInputLayout.setStartIconTintList(defaultColorStateList)
@@ -424,7 +433,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                         secondImageButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
                         thirdImageButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
                         fourthImageButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
-                        signInButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
+                        signInButton.setBackgroundColor(darkYellowColor)
                         signInTextView.setTextColor(darkYellowColor)
                         userNameTextInputLayout.setStartIconTintList(darkYellowColorStateList)
                         passwordTextInputLayout.setStartIconTintList(darkYellowColorStateList)
@@ -442,7 +451,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                         secondImageButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
                         thirdImageButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
                         fourthImageButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
-                        signInButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
+                        signInButton.setBackgroundColor(orangeColor)
                         signInTextView.setTextColor(orangeColor)
                         userNameTextInputLayout.setStartIconTintList(orangeColorStateList)
                         passwordTextInputLayout.setStartIconTintList(orangeColorStateList)
@@ -460,7 +469,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                         secondImageButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
                         thirdImageButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
                         fourthImageButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
-                        signInButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
+                        signInButton.setBackgroundColor(lightGreenColor)
                         signInTextView.setTextColor(lightGreenColor)
                         userNameTextInputLayout.setStartIconTintList(lightGreenColorStateList)
                         passwordTextInputLayout.setStartIconTintList(lightGreenColorStateList)
@@ -478,7 +487,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                         secondImageButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
                         thirdImageButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
                         fourthImageButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
-                        signInButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
+                        signInButton.setBackgroundColor(blueColor)
                         signInTextView.setTextColor(blueColor)
                         userNameTextInputLayout.setStartIconTintList(blueColorStateList)
                         passwordTextInputLayout.setStartIconTintList(blueColorStateList)
@@ -496,7 +505,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                         secondImageButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
                         thirdImageButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
                         fourthImageButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
-                        signInButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
+                        signInButton.setBackgroundColor(cyanColor)
                         signInTextView.setTextColor(cyanColor)
                         userNameTextInputLayout.setStartIconTintList(cyanColorStateList)
                         passwordTextInputLayout.setStartIconTintList(cyanColorStateList)
@@ -514,7 +523,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                         secondImageButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
                         thirdImageButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
                         fourthImageButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
-                        signInButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
+                        signInButton.setBackgroundColor(pinkColor)
                         signInTextView.setTextColor(pinkColor)
                         userNameTextInputLayout.setStartIconTintList(pinkColorStateList)
                         passwordTextInputLayout.setStartIconTintList(pinkColorStateList)
@@ -532,7 +541,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                         secondImageButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
                         thirdImageButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
                         fourthImageButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
-                        signInButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
+                        signInButton.setBackgroundColor(darkBlueColor)
                         signInTextView.setTextColor(darkBlueColor)
                         userNameTextInputLayout.setStartIconTintList(darkBlueColorStateList)
                         passwordTextInputLayout.setStartIconTintList(darkBlueColorStateList)
@@ -550,7 +559,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                         secondImageButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
                         thirdImageButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
                         fourthImageButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
-                        signInButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
+                        signInButton.setBackgroundColor(redColor)
                         signInTextView.setTextColor(redColor)
                         userNameTextInputLayout.setStartIconTintList(redColorStateList)
                         passwordTextInputLayout.setStartIconTintList(redColorStateList)
@@ -568,7 +577,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                         secondImageButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
                         thirdImageButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
                         fourthImageButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                        signInButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
+                        signInButton.setBackgroundColor(lightPurpleColor)
                         signInTextView.setTextColor(lightPurpleColor)
                         userNameTextInputLayout.setStartIconTintList(lightPurpleColorStateList)
                         passwordTextInputLayout.setStartIconTintList(lightPurpleColorStateList)
