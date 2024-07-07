@@ -2,14 +2,12 @@ package com.todo.list.utils
 
 import android.app.Activity
 import android.content.Intent
-import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.appcompat.app.AppCompatActivity
 import com.todo.list.R
 import com.todo.list.activities.PrivacyPolicyActivity
 import es.dmoral.toasty.Toasty
@@ -17,12 +15,6 @@ import es.dmoral.toasty.Toasty
 object CommonFunctions {
 
     var isSomethingChanged = false
-    const val DEFAULT_CATEGORY = 0
-    const val PERSONAL_CATEGORY = 1
-    const val WORK_CATEGORY = 2
-
-    const val TASKS_TAB = 0
-    const val COMPLETED_TAB = 1
 
     fun openGoogleAppStore(activity: Activity) {
         val openGoogleAppStoreIntent = Intent()

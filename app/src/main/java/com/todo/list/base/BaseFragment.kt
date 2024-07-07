@@ -16,8 +16,8 @@ import java.util.Locale
 open class BaseFragment : Fragment() {
 
     protected lateinit var fragmentContext: Activity
-
     protected var defaultColor = 0
+
     protected var darkYellowColor = 0
     protected var orangeColor = 0
     protected var lightGreenColor = 0
@@ -32,10 +32,10 @@ open class BaseFragment : Fragment() {
     protected var cardsNightModeColor = 0
     protected var whiteColor = 0
     protected var blackColor = 0
+    protected var lightBlueColor = 0
     protected var fragmentsCardViewsColor = 0
+    protected var darkModeTextColor = 0
 
-
-    protected lateinit var editTextsCursorDarkModeColor: Drawable
     protected lateinit var listViewStyleImage: Drawable
     protected lateinit var gridViewStyleImage: Drawable
 
@@ -71,15 +71,21 @@ open class BaseFragment : Fragment() {
         cardsNightModeColor = ContextCompat.getColor(fragmentContext, R.color.cardsNightModeColor)
         whiteColor = ContextCompat.getColor(fragmentContext, R.color.whiteColor)
         blackColor = ContextCompat.getColor(fragmentContext, R.color.blackColor)
+        lightBlueColor = ContextCompat.getColor(fragmentContext, R.color.lightBlueColor)
         fragmentsCardViewsColor = ContextCompat.getColor(fragmentContext, R.color.fragmentsCardViewsColor)
+        darkModeTextColor = ContextCompat.getColor(fragmentContext, R.color.purple_500)
 
-        editTextsCursorDarkModeColor = ContextCompat.getDrawable(fragmentContext, R.drawable.edittexts_cursor_dark_mode_color) as Drawable
         listViewStyleImage = ContextCompat.getDrawable(fragmentContext, R.drawable.list_view_style_image) as Drawable
         gridViewStyleImage = ContextCompat.getDrawable(fragmentContext, R.drawable.grid_view_style_image) as Drawable
 
         whiteColorStateList = ColorStateList.valueOf(whiteColor)
-        textInputLayoutBoxStrokeDarkModeColor = ColorStateList(arrayOf(intArrayOf(android.R.attr.state_focused), intArrayOf(-android.R.attr.state_focused)), intArrayOf( // Color when focused
-                whiteColor,  // Color when not focused
-                whiteColor))
+        textInputLayoutBoxStrokeDarkModeColor = ColorStateList(
+            arrayOf(intArrayOf(android.R.attr.state_focused), intArrayOf(-android.R.attr.state_focused)),
+            intArrayOf(
+                // Color when focused
+                darkModeTextColor,
+                // Color when not focused
+                darkModeTextColor)
+        )
     }
 }

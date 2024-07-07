@@ -4,11 +4,11 @@
     <item
         android:id="@+id/update_item"
         android:icon="@drawable/update_image"
-        android:title="@string/update_text" />
+        android:title="@string/update_text"/>
 
     <item
         android:id="@+id/delete_item"
         android:icon="@drawable/delete_image"
-        android:title="@string/delete_text" />
+        android:title="@string/delete_text"/>
 
 </menu>

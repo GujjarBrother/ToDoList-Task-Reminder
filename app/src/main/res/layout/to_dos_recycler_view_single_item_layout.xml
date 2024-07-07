@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cardView"
+    android:id="@+id/rootCV"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/whiteColor"
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:id="@+id/day_date_and_month_linear_layout"
+            android:id="@+id/dayDateAndMonthLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_10sdp"
@@ -24,24 +24,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/day_text_view"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/dayTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"
                 android:textColor="@color/lightBlackColor"
                 android:textSize="@dimen/_15ssp" />
 
-            <TextView
-                android:id="@+id/date_text_view"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/dateTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"
                 android:textColor="@color/defaultColor"
                 android:textSize="@dimen/_15ssp" />
 
-            <TextView
-                android:id="@+id/month_text_view"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/monthTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"
@@ -58,22 +58,22 @@
             android:layout_marginStart="@dimen/_10sdp"
             android:background="@color/recyclerViewsDividerColor"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/day_date_and_month_linear_layout"
+            app:layout_constraintStart_toEndOf="@id/dayDateAndMonthLayout"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:id="@+id/title_description_and_time_linear_layout"
+            android:id="@+id/titleDescriptionAndTimeLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_5sdp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/update_and_delete_options_image_view"
+            app:layout_constraintEnd_toStartOf="@id/updateAndDeleteOptionsIV"
             app:layout_constraintStart_toEndOf="@id/view"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/to_do_task_title_text_view"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/toDoTaskTitleTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -82,8 +82,8 @@
                 android:textColor="@color/blackColor"
                 android:textSize="@dimen/_15ssp" />
 
-            <TextView
-                android:id="@+id/to_do_task_description_text_view"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/toDoTaskDescriptionTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -92,8 +92,8 @@
                 android:textColor="@color/lightBlackColor"
                 android:textSize="@dimen/_15ssp" />
 
-            <TextView
-                android:id="@+id/to_do_task_time_text_view"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/toDoTaskTimeTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"
@@ -102,34 +102,32 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/update_and_delete_options_image_view"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/updateAndDeleteOptionsIV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/app_name"
+            android:clickable="false"
             android:padding="@dimen/_5sdp"
             android:src="@drawable/to_do_task_options_icon"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/defaultColor"
-            android:visibility="invisible"
-            tools:visibility="visible"
-            android:clickable="false"/>
+            tools:visibility="visible" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/deleteFromCompletedFragmentImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/app_name"
             android:padding="@dimen/_10sdp"
             android:src="@drawable/delete_image"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/defaultColor"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

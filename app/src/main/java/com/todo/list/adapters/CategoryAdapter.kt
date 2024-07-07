@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.todo.list.R
@@ -13,27 +12,14 @@ import com.todo.list.adapters.CategoryAdapter.CustomViewHolder
 import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.application.Application.Companion.typeface
 import com.todo.list.databinding.CustomPopupMenuRecyclerviewSingleItemLayoutBinding
-import com.todo.list.listeners.CategorySelectionListener
-import com.todo.list.listeners.SignUpActivityCategorySelectionListener
-import com.todo.list.utils.CommonFunctions.DEFAULT_CATEGORY
-import com.todo.list.utils.CommonFunctions.PERSONAL_CATEGORY
-import com.todo.list.utils.CommonFunctions.WORK_CATEGORY
+import com.todo.list.enums.GenderEnum
+import com.todo.list.enums.SecurityQuestionsEnum
+import com.todo.list.enums.TasksCategoriesEnum
 
-class CategoryAdapter : ListAdapter<Int, CustomViewHolder> {
-    private lateinit var categorySelectionListener: CategorySelectionListener
-    private lateinit var signUpActivityCategorySelectionListener: SignUpActivityCategorySelectionListener
-    private val forWhich: String
-
-    constructor(categorySelectionListener: CategorySelectionListener, forWhich: String) : super(DIFF_CALLBACK) {
-        this.categorySelectionListener = categorySelectionListener
-        this.forWhich = forWhich
-    }
-
-    constructor(signUpActivityCategorySelectionListener: SignUpActivityCategorySelectionListener,
-                forWhich: String) : super(DIFF_CALLBACK) {
-        this.signUpActivityCategorySelectionListener = signUpActivityCategorySelectionListener
-        this.forWhich = forWhich
-    }
+class CategoryAdapter(
+    private val forWhichInvoked: String,
+    private val callback: (Int, String?) -> Unit
+) : ListAdapter<Int, CustomViewHolder>(DiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
         return CustomViewHolder(CustomPopupMenuRecyclerviewSingleItemLayoutBinding.inflate(
@@ -43,74 +29,74 @@ class CategoryAdapter : ListAdapter<Int, CustomViewHolder> {
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
         val item = getItem(position)
         with(holder.binding) {
-            if (forWhich.equals("Category", ignoreCase = true)) {
+            if (forWhichInvoked.equals(other = "Category", ignoreCase = true)) {
                 when (item) {
-                    DEFAULT_CATEGORY -> {
-                        categoryNameTextView.text = root.context.getString(R.string.select_category_text)
-                        categoryNameTextView.textSize = 16f
-                        categoryNameTextView.setTextColor(Color.parseColor("#9E9E9E"))
+                    TasksCategoriesEnum.DEFAULT_CATEGORY.ordinal -> {
+                        categoryNameTV.text = root.context.getString(R.string.select_category_text)
+                        categoryNameTV.textSize = 16f
+                        categoryNameTV.setTextColor(Color.parseColor("#9E9E9E"))
                     }
 
-                    PERSONAL_CATEGORY -> {
-                        categoryNameTextView.text = root.context.getString(R.string.personal_text)
+                    TasksCategoriesEnum.PERSONAL_CATEGORY.ordinal -> {
+                        categoryNameTV.text = root.context.getString(R.string.personal_text)
                     }
 
-                    WORK_CATEGORY -> {
-                        categoryNameTextView.text = root.context.getString(R.string.work_text)
+                    TasksCategoriesEnum.WORK_CATEGORY.ordinal -> {
+                        categoryNameTV.text = root.context.getString(R.string.work_text)
                     }
                 }
-            } else if (forWhich.equals("Gender", ignoreCase = true)) {
+            } else if (forWhichInvoked.equals(other = "Gender", ignoreCase = true)) {
                 when (item) {
-                    0 -> {
-                        categoryNameTextView.text = root.context.getString(R.string.select_gender_text)
-                        categoryNameTextView.textSize = 16f
-                        categoryNameTextView.setTextColor(Color.parseColor("#9E9E9E"))
+                    GenderEnum.NONE.ordinal -> {
+                        categoryNameTV.text = root.context.getString(R.string.select_gender_text)
+                        categoryNameTV.textSize = 16f
+                        categoryNameTV.setTextColor(Color.parseColor("#9E9E9E"))
                     }
 
-                    1 -> {
-                        categoryNameTextView.text = root.context.getString(R.string.male_text)
+                    GenderEnum.MALE.ordinal -> {
+                        categoryNameTV.text = root.context.getString(R.string.male_text)
                     }
 
-                    2 -> {
-                        categoryNameTextView.text = root.context.getString(R.string.fe_male_text)
+                    GenderEnum.FEMALE.ordinal -> {
+                        categoryNameTV.text = root.context.getString(R.string.fe_male_text)
                     }
 
-                    3 -> {
-                        categoryNameTextView.text = root.context.getString(R.string.transgender_text)
+                    GenderEnum.TRANSGENDER.ordinal -> {
+                        categoryNameTV.text = root.context.getString(R.string.transgender_text)
                     }
                 }
-            } else if (forWhich.equals("Security Questions", ignoreCase = true)) {
+            } else if (forWhichInvoked.equals(other = "Security Questions", ignoreCase = true)) {
                 when (item) {
-                    0 -> {
-                        categoryNameTextView.text = root.context.getString(R.string.select_security_question_text)
-                        categoryNameTextView.textSize = 16f
-                        categoryNameTextView.setTextColor(Color.parseColor("#9E9E9E"))
+                    SecurityQuestionsEnum.SELECT_SECURITY_QUESTION.ordinal -> {
+                        categoryNameTV.text = root.context.getString(R.string.select_security_question_text)
+                        categoryNameTV.textSize = 16f
+                        categoryNameTV.setTextColor(Color.parseColor("#9E9E9E"))
                     }
 
-                    1 -> {
-                        categoryNameTextView.text = root.context
+                    SecurityQuestionsEnum.QUESTION_1.ordinal -> {
+                        categoryNameTV.text = root.context
                             .getString(R.string.what_is_your_favourite_book_question)
                     }
 
-                    2 -> {
-                        categoryNameTextView.text = root.context
+                    SecurityQuestionsEnum.QUESTION_2.ordinal -> {
+                        categoryNameTV.text = root.context
                             .getString(R.string.what_is_your_favourite_teacher_name_question)
                     }
 
-                    3 -> {
-                        categoryNameTextView.text = root.context
+                    SecurityQuestionsEnum.QUESTION_3.ordinal -> {
+                        categoryNameTV.text = root.context
                             .getString(R.string.what_is_your_school_name_question)
                     }
 
-                    4 -> {
-                        categoryNameTextView.text = root.context
+                    SecurityQuestionsEnum.QUESTION_4.ordinal -> {
+                        categoryNameTV.text = root.context
                             .getString(R.string.what_is_your_favourite_game_question)
                     }
                 }
             }
-            if (prefs.dayAndNightModeSwitchValue) {
-                if (item != DEFAULT_CATEGORY) {
-                    categoryNameTextView.setTextColor(ContextCompat.getColor(
+            if (prefs.isDarkModeEnable) {
+                if (item != TasksCategoriesEnum.DEFAULT_CATEGORY.ordinal) {
+                    categoryNameTV.setTextColor(ContextCompat.getColor(
                         root.context, R.color.whiteColor))
                 }
             }
@@ -120,18 +106,16 @@ class CategoryAdapter : ListAdapter<Int, CustomViewHolder> {
     inner class CustomViewHolder(val binding: CustomPopupMenuRecyclerviewSingleItemLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             with(binding) {
-                categoryNameTextView.typeface = typeface
+                categoryNameTV.typeface = typeface
 
                 root.setOnClickListener { _: View? ->
                     if (adapterPosition != -1) {
-                        if (forWhich.equals("Category", ignoreCase = true)) {
-                            categorySelectionListener.selectCategory(getItem(adapterPosition))
-                        } else if (forWhich.equals("Gender", ignoreCase = true)) {
-                            signUpActivityCategorySelectionListener.selectCategory(getItem(adapterPosition),
-                                "Gender")
-                        } else if (forWhich.equals("Security Questions", ignoreCase = true)) {
-                            signUpActivityCategorySelectionListener.selectCategory(getItem(adapterPosition),
-                                "Security Questions")
+                        if (forWhichInvoked.equals(other = "Category", ignoreCase = true)) {
+                            callback.invoke(getItem(adapterPosition), null)
+                        } else if (forWhichInvoked.equals(other = "Gender", ignoreCase = true)) {
+                            callback.invoke(getItem(adapterPosition), "Gender")
+                        } else if (forWhichInvoked.equals(other = "Security Questions", ignoreCase = true)) {
+                            callback.invoke(getItem(adapterPosition), "Security Questions")
                         }
                     }
                 }
@@ -139,15 +123,14 @@ class CategoryAdapter : ListAdapter<Int, CustomViewHolder> {
         }
     }
 
-    companion object {
-        private val DIFF_CALLBACK: DiffUtil.ItemCallback<Int> = object : DiffUtil.ItemCallback<Int>() {
-            override fun areItemsTheSame(oldItem: Int, newItem: Int): Boolean {
-                return oldItem == newItem
-            }
-
-            override fun areContentsTheSame(oldItem: Int, newItem: Int): Boolean {
-                return oldItem == newItem
-            }
+    class DiffUtil : androidx.recyclerview.widget.DiffUtil.ItemCallback<Int>() {
+        override fun areItemsTheSame(oldItem: Int, newItem: Int): Boolean {
+            return oldItem == newItem
         }
+
+        override fun areContentsTheSame(oldItem: Int, newItem: Int): Boolean {
+            return oldItem == newItem
+        }
+
     }
 }

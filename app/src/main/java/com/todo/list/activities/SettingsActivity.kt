@@ -32,7 +32,6 @@ import com.todo.list.application.Application.Companion.typeface
 import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivitySettingsBinding
 import com.todo.list.databinding.RateUsDialogLayoutBinding
-import com.todo.list.listeners.ColorSchemeListener
 import com.todo.list.models.ColorSchemeModel
 import com.todo.list.utils.CommonFunctions
 import com.todo.list.utils.CommonFunctions.changeStatusBarColor
@@ -43,7 +42,7 @@ import com.todo.list.utils.CommonFunctions.openGoogleAppStore
 import com.todo.list.utils.CommonFunctions.openPrivacyPolicyActivity
 import es.dmoral.toasty.Toasty
 
-class SettingsActivity : BaseActivity(), View.OnClickListener, ColorSchemeListener {
+class SettingsActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivitySettingsBinding
     private val colorSchemeArrayList = ArrayList<ColorSchemeModel>()
@@ -78,7 +77,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener, ColorSchemeListen
             versionNumberTextView.text = String.format("%s%s", "v", BuildConfig.VERSION_NAME)
             textSizeValueTextView.text = prefs.textSizeValue.toString()
             textSizeSeekBar.progress = prefs.textSizeValue
-            dayAndNightModeSwitch.isChecked = prefs.dayAndNightModeSwitchValue
+            dayAndNightModeSwitch.isChecked = prefs.isDarkModeEnable
 
             backArrowImageView.setOnClickListener(this@SettingsActivity)
             photoEditorAppLayout.setOnClickListener(this@SettingsActivity)
@@ -117,7 +116,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener, ColorSchemeListen
                     colorSchemeCardView.visibility = VISIBLE
                 }
                 isSomethingChanged = true
-                prefs.dayAndNightModeSwitchValue = isChecked
+                prefs.isDarkModeEnable = isChecked
                 applyColorSchemeORDayAndNightMode()
                 applyColorSchemeORDayAndNightModeOnSwitch()
             }
@@ -134,7 +133,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener, ColorSchemeListen
     private fun applyColorSchemeORDayAndNightModeOnSwitch() {
         with(binding) {
             val switchTrackDrawable = dayAndNightModeSwitch.trackDrawable
-            if (prefs.dayAndNightModeSwitchValue) {
+            if (prefs.isDarkModeEnable) {
                 include.root.visibility = VISIBLE
                 dayAndNightModeImageView.setImageResource(R.drawable.sun_image)
                 dayAndNightModeTextView.setText(R.string.light_mode_text)
@@ -197,7 +196,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener, ColorSchemeListen
 
     private fun applyColorSchemeORDayAndNightMode() {
         with(binding) {
-            if (prefs.dayAndNightModeSwitchValue) {
+            if (prefs.isDarkModeEnable) {
                 colorSchemeCardView.visibility = GONE
                 changeStatusBarColor(activityContext, screensNightModeColor)
                 toolbar.setBackgroundColor(screensNightModeColor)
@@ -643,7 +642,17 @@ class SettingsActivity : BaseActivity(), View.OnClickListener, ColorSchemeListen
             add(ColorSchemeModel(9, lightPurpleColor, false))
         }
         colorSchemeArrayList[prefs.colorSchemeValue].isSelected = true
-        colorSchemeAdapter = ColorSchemeAdapter(colorSchemeArrayList, this)
+        colorSchemeAdapter = ColorSchemeAdapter(colorSchemeArrayList) { id ->
+            isSomethingChanged = true
+            for (i in colorSchemeArrayList.indices) {
+                val colorSchemeModel = colorSchemeArrayList[i]
+                colorSchemeModel.isSelected = id == colorSchemeModel.id
+                prefs.colorSchemeValue = id
+                colorSchemeAdapter.notifyDataSetChanged()
+            }
+            applyColorSchemeORDayAndNightMode()
+            applyColorSchemeORDayAndNightModeOnSwitch()
+        }
         val gridLayoutManager = GridLayoutManager(activityContext, 5, RecyclerView.VERTICAL, false)
         with(binding) {
             colorSchemeRecyclerView.layoutManager = gridLayoutManager
@@ -796,7 +805,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener, ColorSchemeListen
         rateUsDialogLayoutBinding: RateUsDialogLayoutBinding
     ) {
         with(rateUsDialogLayoutBinding) {
-            if (prefs.dayAndNightModeSwitchValue) {
+            if (prefs.isDarkModeEnable) {
                 rateUsDialogRootLayout.background.colorFilter =
                     PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
                 dismissRateUsDialogImageView.setColorFilter(whiteColor)
@@ -951,17 +960,4 @@ class SettingsActivity : BaseActivity(), View.OnClickListener, ColorSchemeListen
             }
         }
     }
-
-    override fun changeColorScheme(position: Int) {
-        isSomethingChanged = true
-        for (i in colorSchemeArrayList.indices) {
-            val colorSchemeModel = colorSchemeArrayList[i]
-            colorSchemeModel.isSelected = position == colorSchemeModel.id
-            prefs.colorSchemeValue = position
-            colorSchemeAdapter.notifyDataSetChanged()
-        }
-        applyColorSchemeORDayAndNightMode()
-        applyColorSchemeORDayAndNightModeOnSwitch()
-    }
-
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/sortingDialogRootLayout"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_boxes_light_mode_background">
@@ -18,8 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/sort_by_text_view"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/sortByTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sort_by_text"
@@ -31,16 +31,16 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <RadioGroup
-                android:id="@+id/sort_radio_group"
+                android:id="@+id/sortRG"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/_10sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sort_by_text_view">
+                app:layout_constraintTop_toBottomOf="@id/sortByTV">
 
-                <RadioButton
-                    android:id="@+id/title_radio_button"
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/titleRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/defaultColor"
@@ -51,8 +51,8 @@
                     android:textColor="@color/blackColor"
                     android:textSize="@dimen/_12ssp" />
 
-                <RadioButton
-                    android:id="@+id/day_of_week_radio_button"
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/dayOfWeekRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/defaultColor"
@@ -63,8 +63,8 @@
                     android:textColor="@color/blackColor"
                     android:textSize="@dimen/_12ssp" />
 
-                <RadioButton
-                    android:id="@+id/date_radio_button"
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/dateRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/defaultColor"
@@ -75,8 +75,8 @@
                     android:textColor="@color/blackColor"
                     android:textSize="@dimen/_12ssp" />
 
-                <RadioButton
-                    android:id="@+id/month_radio_button"
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/monthRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/defaultColor"
@@ -87,8 +87,8 @@
                     android:textColor="@color/blackColor"
                     android:textSize="@dimen/_12ssp" />
 
-                <RadioButton
-                    android:id="@+id/year_radio_button"
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/yearRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/defaultColor"
@@ -99,8 +99,8 @@
                     android:textColor="@color/blackColor"
                     android:textSize="@dimen/_12ssp" />
 
-                <RadioButton
-                    android:id="@+id/time_radio_button"
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/timeRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/defaultColor"
@@ -120,10 +120,10 @@
                 android:background="#80E0E0E0"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sort_radio_group" />
+                app:layout_constraintTop_toBottomOf="@id/sortRG" />
 
             <RadioGroup
-                android:id="@+id/ascending_descending_radio_group"
+                android:id="@+id/ascendingDescendingRG"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/_10sdp"
@@ -131,8 +131,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider">
 
-                <RadioButton
-                    android:id="@+id/ascending_a_to_z_radio_button"
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/ascendingAToZRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/defaultColor"
@@ -143,8 +143,8 @@
                     android:textColor="@color/blackColor"
                     android:textSize="@dimen/_12ssp" />
 
-                <RadioButton
-                    android:id="@+id/descending_z_to_a_radio_button"
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/descendingZToARB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/defaultColor"
@@ -157,33 +157,54 @@
 
             </RadioGroup>
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/sort_button"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/buttonsLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/dialog_boxes_buttons_light_mode_default_background"
-                android:text="@string/sort_text"
-                android:textAllCaps="false"
-                android:textColor="@color/blackColor"
-                android:textSize="@dimen/_11ssp"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/_15sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ascending_descending_radio_group" />
+                app:layout_constraintTop_toBottomOf="@id/ascendingDescendingRG">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/cancel_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_3sdp"
-                android:background="@drawable/dialog_boxes_buttons_light_mode_default_background"
-                android:text="@string/cancel_text"
-                android:textAllCaps="false"
-                android:textColor="@color/blackColor"
-                android:textSize="@dimen/_11ssp"
-                app:layout_constraintBottom_toBottomOf="@id/sort_button"
-                app:layout_constraintEnd_toStartOf="@id/sort_button"
-                app:layout_constraintTop_toTopOf="@id/sort_button" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cancelButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@android:color/transparent"
+                    android:minHeight="@dimen/_50sdp"
+                    android:stateListAnimator="@null"
+                    android:text="@string/cancel_text"
+                    android:textAllCaps="false"
+                    android:textColor="@color/defaultColor"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold"
+                    app:cornerRadius="@dimen/_5sdp"
+                    app:strokeColor="@color/defaultColor"
+                    app:strokeWidth="@dimen/_1sdp" />
 
+                <View
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="match_parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/sortButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/defaultColor"
+                    android:minHeight="@dimen/_50sdp"
+                    android:stateListAnimator="@null"
+                    android:text="@string/sort_text"
+                    android:textAllCaps="false"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold"
+                    app:cornerRadius="@dimen/_5sdp" />
+
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

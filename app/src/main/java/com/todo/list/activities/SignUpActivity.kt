@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -22,13 +23,14 @@ import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivitySignUpBinding
 import com.todo.list.databinding.CustomPopupMenuLayoutBinding
 import com.todo.list.databinding.SecurityQuestionDialogLayoutBinding
-import com.todo.list.listeners.SignUpActivityCategorySelectionListener
+import com.todo.list.enums.GenderEnum
+import com.todo.list.enums.SecurityQuestionsEnum
 import com.todo.list.utils.CommonFunctions.changeStatusBarColor
 import com.todo.list.utils.CommonFunctions.keepActivityOn
 import com.todo.list.utils.CommonFunctions.makeFullScreenActivity
 import es.dmoral.toasty.Toasty
 
-class SignUpActivity : BaseActivity(), View.OnClickListener, SignUpActivityCategorySelectionListener {
+class SignUpActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivitySignUpBinding
     private var gender = ""
@@ -43,7 +45,7 @@ class SignUpActivity : BaseActivity(), View.OnClickListener, SignUpActivityCateg
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        applyColorScheme(prefs.colorSchemeValue)
+        applyLightAndDarkMode()
         signUpCardViewAnimation()
         makeFullScreenActivity(activityContext)
         keepActivityOn(activityContext)
@@ -54,7 +56,7 @@ class SignUpActivity : BaseActivity(), View.OnClickListener, SignUpActivityCateg
             genderSelectionLayout.setOnClickListener(this@SignUpActivity)
             securityQuestionsLayout.setOnClickListener(this@SignUpActivity)
             signUpButton.setOnClickListener(this@SignUpActivity)
-            signInTextView.setOnClickListener(this@SignUpActivity)
+            signInTV.setOnClickListener(this@SignUpActivity)
         }
 
         val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -67,21 +69,21 @@ class SignUpActivity : BaseActivity(), View.OnClickListener, SignUpActivityCateg
 
     private fun applyCustomFont() {
         with(binding) {
-            signUpTextView.typeface = typeface
-            userNameTextInputLayout.typeface = typeface
-            userNameTextInputEditText.typeface = typeface
-            passwordTextInputLayout.typeface = typeface
-            passwordTextInputEditText.typeface = typeface
-            selectGenderTextView.typeface = typeface
-            securityQuestionsTextView.typeface = typeface
+            signUpTV.typeface = typeface
+            userNameTIL.typeface = typeface
+            userNameTIET.typeface = typeface
+            passwordTIL.typeface = typeface
+            passwordTIET.typeface = typeface
+            selectGenderTV.typeface = typeface
+            securityQuestionsTV.typeface = typeface
             signUpButton.typeface = typeface
-            alreadyHaveAnAccountTextView.typeface = typeface
-            signInTextView.typeface = typeface
+            alreadyHaveAnAccountTV.typeface = typeface
+            signInTV.typeface = typeface
         }
     }
 
     private fun signUpCardViewAnimation() =
-        binding.signUpCardView.startAnimation(AnimationUtils.loadAnimation(activityContext, R.anim.sign_in_and_sign_up_card_views_animation))
+        binding.signUpCV.startAnimation(AnimationUtils.loadAnimation(activityContext, R.anim.sign_in_and_sign_up_card_views_animation))
 
     private fun switchToSignInActivity() = startActivity(Intent(activityContext, SignInActivity::class.java))
 
@@ -92,53 +94,45 @@ class SignUpActivity : BaseActivity(), View.OnClickListener, SignUpActivityCateg
                     showCustomPopup(view, 1)
                 }
 
-                R.id.sign_up_button -> {
-                    val emailOrUserName = userNameTextInputLayout.editText?.text.toString().trim()
-                    val password = passwordTextInputLayout.editText?.text.toString().trim()
+                R.id.signUpButton -> {
+                    val emailOrUserName = userNameTIL.editText?.text.toString().trim()
+                    val password = passwordTIL.editText?.text.toString().trim()
                     if (TextUtils.isEmpty(emailOrUserName)) {
-                        passwordTextInputLayout.error = null
-                        userNameTextInputLayout.boxStrokeErrorColor = errorColorStateList
-                        userNameTextInputLayout.setErrorIconTintList(errorColorStateList)
-                        userNameTextInputLayout.setErrorTextColor(errorColorStateList)
-                        userNameTextInputLayout.error = getString(R.string.fill_this_field_text)
+                        passwordTIL.error = null
+                        userNameTIL.error = getString(R.string.fill_this_field_text)
                     } else if (TextUtils.isEmpty(password)) {
-                        userNameTextInputLayout.error = null
-                        passwordTextInputLayout.boxStrokeErrorColor = errorColorStateList
-                        passwordTextInputLayout.setErrorIconTintList(errorColorStateList)
-                        passwordTextInputLayout.setErrorTextColor(errorColorStateList)
-                        passwordTextInputLayout.error = getString(R.string.fill_this_field_text)
+                        userNameTIL.error = null
+                        passwordTIL.error = getString(R.string.fill_this_field_text)
                     } else if (password.length > 10) {
-                        userNameTextInputLayout.error = null
-                        passwordTextInputLayout.error = null
-                        passwordTextInputLayout.boxStrokeErrorColor = errorColorStateList
-                        passwordTextInputLayout.setErrorIconTintList(errorColorStateList)
-                        passwordTextInputLayout.setErrorTextColor(errorColorStateList)
-                        passwordTextInputLayout.error = getString(R.string.password_is_too_long_text)
+                        userNameTIL.error = null
+                        passwordTIL.error = null
+                        passwordTIL.error = getString(R.string.password_is_too_long_text)
                     } else if (TextUtils.isEmpty(gender)) {
-                        userNameTextInputLayout.error = null
-                        passwordTextInputLayout.error = null
+                        userNameTIL.error = null
+                        passwordTIL.error = null
                         Toasty.error(activityContext, getString(R.string.select_gender_text), Toasty.LENGTH_LONG).show()
                     } else if (TextUtils.isEmpty(securityAnswer)) {
-                        userNameTextInputLayout.error = null
-                        passwordTextInputLayout.error = null
+                        userNameTIL.error = null
+                        passwordTIL.error = null
                         Toasty.error(activityContext, getString(R.string.select_security_question_text), Toasty.LENGTH_LONG).show()
                     } else {
-                        userNameTextInputLayout.error = null
-                        passwordTextInputLayout.error = null
-                        userNameTextInputLayout.editText!!.text = null
-                        passwordTextInputLayout.editText!!.text = null
+                        userNameTIL.error = null
+                        passwordTIL.error = null
+                        userNameTIL.editText!!.text = null
+                        passwordTIL.editText!!.text = null
                         prefs.saveUserCredentials(emailOrUserName, password, gender, securityQuestion, securityAnswer, true)
+                        prefs.rememberMe = false
                         Toasty.success(activityContext, getString(R.string.sign_up_successfully_toast_message_text), Toasty.LENGTH_LONG).show()
                         switchToSignInActivity()
                         finish()
                     }
                 }
 
-                R.id.sign_in_text_view -> {
+                R.id.signInTV -> {
                     switchToSignInActivity()
                 }
 
-                R.id.security_questions_layout -> {
+                R.id.securityQuestionsLayout -> {
                     showSecurityQuestionsDialog()
                 }
             }
@@ -148,7 +142,7 @@ class SignUpActivity : BaseActivity(), View.OnClickListener, SignUpActivityCateg
     private fun showCustomPopup(view: View, fromWhereInvoked: Int) {
         val customPopupMenuLayoutBinding = CustomPopupMenuLayoutBinding.inflate(layoutInflater)
 
-        if (prefs.dayAndNightModeSwitchValue) {
+        if (prefs.isDarkModeEnable) {
             customPopupMenuLayoutBinding.root.setCardBackgroundColor(screensNightModeColor)
         } else {
             if (fromWhereInvoked == 1) {
@@ -156,38 +150,42 @@ class SignUpActivity : BaseActivity(), View.OnClickListener, SignUpActivityCateg
             }
         }
         popupWindow = PopupWindow(
-                customPopupMenuLayoutBinding.root,
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                true
+            customPopupMenuLayoutBinding.root,
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            true
         )
         popupWindow.isOutsideTouchable = true
         popupWindow.elevation = 5f
         if (fromWhereInvoked == 1) {
             val genderArrayList = ArrayList<Int>()
             with(genderArrayList) {
-                add(0)
-                add(1)
-                add(2)
-                add(3)
+                add(GenderEnum.NONE.ordinal)
+                add(GenderEnum.MALE.ordinal)
+                add(GenderEnum.FEMALE.ordinal)
+                add(GenderEnum.TRANSGENDER.ordinal)
             }
-            val categoryAdapter = CategoryAdapter(this, "Gender")
+            val categoryAdapter = CategoryAdapter("Gender") { category, forWhichInvoked ->
+                checkGenderAndSecurityQuestion(forWhichInvoked, category)
+            }
             with(customPopupMenuLayoutBinding) {
-                customPopUpMenuRecyclerView.adapter = categoryAdapter
+                customPopUpMenuRV.adapter = categoryAdapter
             }
             categoryAdapter.submitList(genderArrayList)
         } else if (fromWhereInvoked == 2) {
             val securityQuestionsArrayList = ArrayList<Int>()
             with(securityQuestionsArrayList) {
-                add(0)
-                add(1)
-                add(2)
-                add(3)
-                add(4)
+                add(SecurityQuestionsEnum.SELECT_SECURITY_QUESTION.ordinal)
+                add(SecurityQuestionsEnum.QUESTION_1.ordinal)
+                add(SecurityQuestionsEnum.QUESTION_2.ordinal)
+                add(SecurityQuestionsEnum.QUESTION_3.ordinal)
+                add(SecurityQuestionsEnum.QUESTION_4.ordinal)
             }
-            val categoryAdapter = CategoryAdapter(this, "Security Questions")
+            val categoryAdapter = CategoryAdapter("Security Questions") { category, forWhichInvoked ->
+                checkGenderAndSecurityQuestion(forWhichInvoked, category)
+            }
             with(customPopupMenuLayoutBinding) {
-                customPopUpMenuRecyclerView.adapter = categoryAdapter
+                customPopUpMenuRV.adapter = categoryAdapter
             }
             categoryAdapter.submitList(securityQuestionsArrayList)
         }
@@ -198,10 +196,11 @@ class SignUpActivity : BaseActivity(), View.OnClickListener, SignUpActivityCateg
         securityQuestionDialogLayoutBinding = SecurityQuestionDialogLayoutBinding.inflate(layoutInflater)
 
         val securityQuestionDialogBuilder = AlertDialog.Builder(activityContext)
-        securityQuestionDialogBuilder.setView(securityQuestionDialogLayoutBinding.root)
-        securityQuestionDialogBuilder.setCancelable(false)
+        with(securityQuestionDialogBuilder) {
+            setView(securityQuestionDialogLayoutBinding.root)
+            setCancelable(true)
+        }
         val securityQuestionAlertDialog = securityQuestionDialogBuilder.create()
-
         if (!activityContext.isFinishing && !activityContext.isDestroyed && !securityQuestionAlertDialog.isShowing) {
             val window = securityQuestionAlertDialog.window
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -211,132 +210,202 @@ class SignUpActivity : BaseActivity(), View.OnClickListener, SignUpActivityCateg
 
         with(securityQuestionDialogLayoutBinding) {
             applyCustomFontOnSecurityQuestionDialogViews(this)
-            applyColorSchemeOnSecurityQuestionsDialogViews(this, prefs.colorSchemeValue)
+            applyLightAndDarkModeOnSecurityQuestionsDialogViews(this)
 
             securityQuestionLayout.setOnClickListener { view: View ->
                 showCustomPopup(view, 2)
             }
 
-            dismissDialogImageView.setOnClickListener { _: View? ->
-                hideSoftKeyboard(securityQuestionAnswerTextInputEditText)
+            dismissDialogIV.setOnClickListener { _: View? ->
+                hideSoftKeyboard(securityQuestionAnswerTIET)
                 if (!activityContext.isFinishing && !activityContext.isDestroyed) {
                     securityQuestionAlertDialog.dismiss()
                 }
             }
 
-            saveSecurityQuestionButton.setOnClickListener { _: View? ->
-                val question = securityQuestionAnswerTextInputLayout.editText?.hint.toString().trim()
-                val answer = securityQuestionAnswerTextInputLayout.editText?.text.toString().trim()
-                if (TextUtils.isEmpty(answer)) {
-                    securityQuestionAnswerTextInputLayout.boxStrokeErrorColor = errorColorStateList
-                    securityQuestionAnswerTextInputLayout.setErrorIconTintList(errorColorStateList)
-                    securityQuestionAnswerTextInputLayout.setErrorTextColor(errorColorStateList)
-                    securityQuestionAnswerTextInputLayout.error = getString(R.string.please_enter_answer_here_error_text)
-                } else {
+            saveButton.setOnClickListener { _: View? ->
+                val question = securityQuestionAnswerTIL.editText?.hint.toString().trim()
+                val answer = securityQuestionAnswerTIL.editText?.text.toString().trim()
+                if (answer.isNotEmpty()) {
                     securityQuestion = question
                     securityAnswer = answer
-                    hideSoftKeyboard(securityQuestionAnswerTextInputEditText)
+                    hideSoftKeyboard(securityQuestionAnswerTIET)
                     if (!activityContext.isFinishing && !activityContext.isDestroyed) {
                         securityQuestionAlertDialog.dismiss()
                     }
+                } else {
+                    securityQuestionAnswerTIL.error = getString(R.string.please_enter_answer_here_error_text)
                 }
             }
         }
     }
 
-    private fun applyColorSchemeOnSecurityQuestionsDialogViews(
-            securityQuestionDialogLayoutBinding: SecurityQuestionDialogLayoutBinding, color: Int
+    private fun applyLightAndDarkModeOnSecurityQuestionsDialogViews(
+            securityQuestionDialogLayoutBinding: SecurityQuestionDialogLayoutBinding
     ) {
         with(securityQuestionDialogLayoutBinding) {
-            when (color) {
-                0 -> {
-                    dismissDialogImageView.setColorFilter(defaultColor)
-                    securityQuestionTitleTextView.setTextColor(defaultColor)
-                    dropDownImageView.setColorFilter(defaultColor)
-                    securityQuestionAnswerTextInputLayout.setStartIconTintList(
-                        ColorStateList.valueOf(defaultColor))
-                    saveSecurityQuestionButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
+            if (prefs.isDarkModeEnable) {
+                rootLayout.background.colorFilter = PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
+                dismissDialogIV.setColorFilter(lightBlueColor)
+                securityQuestionTitleTV.setTextColor(lightBlueColor)
+                securityQuestionLayout.background.colorFilter = PorterDuffColorFilter(darkModeTextColor, PorterDuff.Mode.SRC_IN)
+                selectSecurityQuestionTV.setTextColor(darkModeTextColor)
+                dropDownIV.setColorFilter(lightBlueColor)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    securityQuestionAnswerTIL.cursorColor = whiteColorStateList
                 }
 
-                1 -> {
-                    dismissDialogImageView.setColorFilter(darkYellowColor)
-                    securityQuestionTitleTextView.setTextColor(darkYellowColor)
-                    dropDownImageView.setColorFilter(darkYellowColor)
-                    securityQuestionAnswerTextInputLayout.setStartIconTintList(
-                        ColorStateList.valueOf(darkYellowColor))
-                    saveSecurityQuestionButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
-                }
+                securityQuestionAnswerTIL.boxStrokeColor = whiteColor
+                securityQuestionAnswerTIL.hintTextColor = whiteColorStateList
+                securityQuestionAnswerTIL.editText?.setTextColor(whiteColor)
+                securityQuestionAnswerTIL.setStartIconTintList(ColorStateList.valueOf(lightBlueColor))
+                securityQuestionAnswerTIL.boxStrokeErrorColor = whiteColorStateList
+                securityQuestionAnswerTIL.setErrorIconTintList(ColorStateList.valueOf(lightBlueColor))
+                securityQuestionAnswerTIL.setErrorTextColor(whiteColorStateList)
+                saveButton.setBackgroundColor(lightBlueColor)
+                saveButton.setTextColor(blackColor)
+            } else {
+                when (prefs.colorSchemeValue) {
+                    0 -> {
+                        dismissDialogIV.setColorFilter(defaultColor)
+                        securityQuestionTitleTV.setTextColor(defaultColor)
+                        dropDownIV.setColorFilter(defaultColor)
+                        securityQuestionAnswerTIL.setStartIconTintList(ColorStateList.valueOf(defaultColor))
+                        securityQuestionAnswerTIL.boxStrokeErrorColor = ColorStateList.valueOf(defaultColor)
+                        securityQuestionAnswerTIL.setErrorIconTintList(ColorStateList.valueOf(defaultColor))
+                        securityQuestionAnswerTIL.setErrorTextColor(ColorStateList.valueOf(defaultColor))
+                        saveButton.setBackgroundColor(defaultColor)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            securityQuestionAnswerTIL.cursorColor = ColorStateList.valueOf(defaultColor)
+                        }
+                    }
 
-                2 -> {
-                    dismissDialogImageView.setColorFilter(orangeColor)
-                    securityQuestionTitleTextView.setTextColor(orangeColor)
-                    dropDownImageView.setColorFilter(orangeColor)
-                    securityQuestionAnswerTextInputLayout.setStartIconTintList(
-                        ColorStateList.valueOf(orangeColor))
-                    saveSecurityQuestionButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
-                }
+                    1 -> {
+                        dismissDialogIV.setColorFilter(darkYellowColor)
+                        securityQuestionTitleTV.setTextColor(darkYellowColor)
+                        dropDownIV.setColorFilter(darkYellowColor)
+                        securityQuestionAnswerTIL.setStartIconTintList(ColorStateList.valueOf(darkYellowColor))
+                        securityQuestionAnswerTIL.boxStrokeErrorColor = ColorStateList.valueOf(darkYellowColor)
+                        securityQuestionAnswerTIL.setErrorIconTintList(ColorStateList.valueOf(darkYellowColor))
+                        securityQuestionAnswerTIL.setErrorTextColor(ColorStateList.valueOf(darkYellowColor))
+                        saveButton.setBackgroundColor(darkYellowColor)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            securityQuestionAnswerTIL.cursorColor = ColorStateList.valueOf(darkYellowColor)
+                        }
+                    }
 
-                3 -> {
-                    dismissDialogImageView.setColorFilter(lightGreenColor)
-                    securityQuestionTitleTextView.setTextColor(lightGreenColor)
-                    dropDownImageView.setColorFilter(lightGreenColor)
-                    securityQuestionAnswerTextInputLayout.setStartIconTintList(
-                        ColorStateList.valueOf(lightGreenColor))
-                    saveSecurityQuestionButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
-                }
+                    2 -> {
+                        dismissDialogIV.setColorFilter(orangeColor)
+                        securityQuestionTitleTV.setTextColor(orangeColor)
+                        dropDownIV.setColorFilter(orangeColor)
+                        securityQuestionAnswerTIL.setStartIconTintList(ColorStateList.valueOf(orangeColor))
+                        securityQuestionAnswerTIL.boxStrokeErrorColor = ColorStateList.valueOf(orangeColor)
+                        securityQuestionAnswerTIL.setErrorIconTintList(ColorStateList.valueOf(orangeColor))
+                        securityQuestionAnswerTIL.setErrorTextColor(ColorStateList.valueOf(orangeColor))
+                        saveButton.setBackgroundColor(orangeColor)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            securityQuestionAnswerTIL.cursorColor = ColorStateList.valueOf(orangeColor)
+                        }
+                    }
 
-                4 -> {
-                    dismissDialogImageView.setColorFilter(blueColor)
-                    securityQuestionTitleTextView.setTextColor(blueColor)
-                    dropDownImageView.setColorFilter(blueColor)
-                    securityQuestionAnswerTextInputLayout.setStartIconTintList(
-                        ColorStateList.valueOf(blueColor))
-                    saveSecurityQuestionButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
-                }
+                    3 -> {
+                        dismissDialogIV.setColorFilter(lightGreenColor)
+                        securityQuestionTitleTV.setTextColor(lightGreenColor)
+                        dropDownIV.setColorFilter(lightGreenColor)
+                        securityQuestionAnswerTIL.setStartIconTintList(ColorStateList.valueOf(lightGreenColor))
+                        securityQuestionAnswerTIL.boxStrokeErrorColor = ColorStateList.valueOf(lightGreenColor)
+                        securityQuestionAnswerTIL.setErrorIconTintList(ColorStateList.valueOf(lightGreenColor))
+                        securityQuestionAnswerTIL.setErrorTextColor(ColorStateList.valueOf(lightGreenColor))
+                        saveButton.setBackgroundColor(lightGreenColor)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            securityQuestionAnswerTIL.cursorColor = ColorStateList.valueOf(lightGreenColor)
+                        }
+                    }
 
-                5 -> {
-                    dismissDialogImageView.setColorFilter(cyanColor)
-                    securityQuestionTitleTextView.setTextColor(cyanColor)
-                    dropDownImageView.setColorFilter(cyanColor)
-                    securityQuestionAnswerTextInputLayout.setStartIconTintList(
-                        ColorStateList.valueOf(cyanColor))
-                    saveSecurityQuestionButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
-                }
+                    4 -> {
+                        dismissDialogIV.setColorFilter(blueColor)
+                        securityQuestionTitleTV.setTextColor(blueColor)
+                        dropDownIV.setColorFilter(blueColor)
+                        securityQuestionAnswerTIL.setStartIconTintList(ColorStateList.valueOf(blueColor))
+                        securityQuestionAnswerTIL.boxStrokeErrorColor = ColorStateList.valueOf(blueColor)
+                        securityQuestionAnswerTIL.setErrorIconTintList(ColorStateList.valueOf(blueColor))
+                        securityQuestionAnswerTIL.setErrorTextColor(ColorStateList.valueOf(blueColor))
+                        saveButton.setBackgroundColor(blueColor)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            securityQuestionAnswerTIL.cursorColor = ColorStateList.valueOf(blueColor)
+                        }
+                    }
 
-                6 -> {
-                    dismissDialogImageView.setColorFilter(pinkColor)
-                    securityQuestionTitleTextView.setTextColor(pinkColor)
-                    dropDownImageView.setColorFilter(pinkColor)
-                    securityQuestionAnswerTextInputLayout.setStartIconTintList(
-                        ColorStateList.valueOf(pinkColor))
-                    saveSecurityQuestionButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
-                }
+                    5 -> {
+                        dismissDialogIV.setColorFilter(cyanColor)
+                        securityQuestionTitleTV.setTextColor(cyanColor)
+                        dropDownIV.setColorFilter(cyanColor)
+                        securityQuestionAnswerTIL.setStartIconTintList(ColorStateList.valueOf(cyanColor))
+                        securityQuestionAnswerTIL.boxStrokeErrorColor = ColorStateList.valueOf(cyanColor)
+                        securityQuestionAnswerTIL.setErrorIconTintList(ColorStateList.valueOf(cyanColor))
+                        securityQuestionAnswerTIL.setErrorTextColor(ColorStateList.valueOf(cyanColor))
+                        saveButton.setBackgroundColor(cyanColor)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            securityQuestionAnswerTIL.cursorColor = ColorStateList.valueOf(cyanColor)
+                        }
+                    }
 
-                7 -> {
-                    dismissDialogImageView.setColorFilter(darkBlueColor)
-                    securityQuestionTitleTextView.setTextColor(darkBlueColor)
-                    dropDownImageView.setColorFilter(darkBlueColor)
-                    securityQuestionAnswerTextInputLayout.setStartIconTintList(
-                        ColorStateList.valueOf(darkBlueColor))
-                    saveSecurityQuestionButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
-                }
+                    6 -> {
+                        dismissDialogIV.setColorFilter(pinkColor)
+                        securityQuestionTitleTV.setTextColor(pinkColor)
+                        dropDownIV.setColorFilter(pinkColor)
+                        securityQuestionAnswerTIL.setStartIconTintList(ColorStateList.valueOf(pinkColor))
+                        securityQuestionAnswerTIL.boxStrokeErrorColor = ColorStateList.valueOf(pinkColor)
+                        securityQuestionAnswerTIL.setErrorIconTintList(ColorStateList.valueOf(pinkColor))
+                        securityQuestionAnswerTIL.setErrorTextColor(ColorStateList.valueOf(pinkColor))
+                        saveButton.setBackgroundColor(pinkColor)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            securityQuestionAnswerTIL.cursorColor = ColorStateList.valueOf(pinkColor)
+                        }
+                    }
 
-                8 -> {
-                    dismissDialogImageView.setColorFilter(redColor)
-                    securityQuestionTitleTextView.setTextColor(redColor)
-                    dropDownImageView.setColorFilter(redColor)
-                    securityQuestionAnswerTextInputLayout.setStartIconTintList(
-                        ColorStateList.valueOf(redColor))
-                    saveSecurityQuestionButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
-                }
+                    7 -> {
+                        dismissDialogIV.setColorFilter(darkBlueColor)
+                        securityQuestionTitleTV.setTextColor(darkBlueColor)
+                        dropDownIV.setColorFilter(darkBlueColor)
+                        securityQuestionAnswerTIL.setStartIconTintList(ColorStateList.valueOf(darkBlueColor))
+                        securityQuestionAnswerTIL.boxStrokeErrorColor = ColorStateList.valueOf(darkBlueColor)
+                        securityQuestionAnswerTIL.setErrorIconTintList(ColorStateList.valueOf(darkBlueColor))
+                        securityQuestionAnswerTIL.setErrorTextColor(ColorStateList.valueOf(darkBlueColor))
+                        saveButton.setBackgroundColor(darkBlueColor)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            securityQuestionAnswerTIL.cursorColor = ColorStateList.valueOf(darkBlueColor)
+                        }
+                    }
 
-                9 -> {
-                    dismissDialogImageView.setColorFilter(lightPurpleColor)
-                    securityQuestionTitleTextView.setTextColor(lightPurpleColor)
-                    dropDownImageView.setColorFilter(lightPurpleColor)
-                    securityQuestionAnswerTextInputLayout.setStartIconTintList(
-                        ColorStateList.valueOf(lightPurpleColor))
-                    saveSecurityQuestionButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
+                    8 -> {
+                        dismissDialogIV.setColorFilter(redColor)
+                        securityQuestionTitleTV.setTextColor(redColor)
+                        dropDownIV.setColorFilter(redColor)
+                        securityQuestionAnswerTIL.setStartIconTintList(ColorStateList.valueOf(redColor))
+                        securityQuestionAnswerTIL.boxStrokeErrorColor = ColorStateList.valueOf(redColor)
+                        securityQuestionAnswerTIL.setErrorIconTintList(ColorStateList.valueOf(redColor))
+                        securityQuestionAnswerTIL.setErrorTextColor(ColorStateList.valueOf(redColor))
+                        saveButton.setBackgroundColor(redColor)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            securityQuestionAnswerTIL.cursorColor = ColorStateList.valueOf(redColor)
+                        }
+                    }
+
+                    9 -> {
+                        dismissDialogIV.setColorFilter(lightPurpleColor)
+                        securityQuestionTitleTV.setTextColor(lightPurpleColor)
+                        dropDownIV.setColorFilter(lightPurpleColor)
+                        securityQuestionAnswerTIL.setStartIconTintList(ColorStateList.valueOf(lightPurpleColor))
+                        securityQuestionAnswerTIL.boxStrokeErrorColor = ColorStateList.valueOf(lightPurpleColor)
+                        securityQuestionAnswerTIL.setErrorIconTintList(ColorStateList.valueOf(lightPurpleColor))
+                        securityQuestionAnswerTIL.setErrorTextColor(ColorStateList.valueOf(lightPurpleColor))
+                        saveButton.setBackgroundColor(lightPurpleColor)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            securityQuestionAnswerTIL.cursorColor = ColorStateList.valueOf(lightPurpleColor)
+                        }
+                    }
                 }
             }
         }
@@ -346,278 +415,454 @@ class SignUpActivity : BaseActivity(), View.OnClickListener, SignUpActivityCateg
             securityQuestionDialogLayoutBinding: SecurityQuestionDialogLayoutBinding
     ) {
         with(securityQuestionDialogLayoutBinding) {
-            securityQuestionTitleTextView.typeface = typeface
-            selectSecurityQuestionTextView.typeface = typeface
-            securityQuestionAnswerTextInputLayout.typeface = typeface
-            securityQuestionAnswerTextInputEditText.typeface = typeface
-            saveSecurityQuestionButton.typeface = typeface
+            securityQuestionTitleTV.typeface = typeface
+            selectSecurityQuestionTV.typeface = typeface
+            securityQuestionAnswerTIL.typeface = typeface
+            securityQuestionAnswerTIET.typeface = typeface
+            saveButton.typeface = typeface
         }
     }
 
-    private fun applyColorScheme(color: Int) {
+    private fun applyLightAndDarkMode() {
         with(binding) {
-            when (color) {
-                0 -> {
-                    changeStatusBarColor(activityContext, defaultColor)
-                    val defaultColorStateList = ColorStateList.valueOf(defaultColor)
-                    errorColorStateList = defaultColorStateList
-                    firstImageButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
-                    secondImageButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
-                    thirdImageButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
-                    fourthImageButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
-                    signUpButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
-                    signUpTextView.setTextColor(defaultColor)
-                    userNameTextInputLayout.setStartIconTintList(defaultColorStateList)
-                    passwordTextInputLayout.setStartIconTintList(defaultColorStateList)
-                    passwordTextInputLayout.setEndIconTintList(defaultColorStateList)
-                    passwordTextInputLayout.counterTextColor = defaultColorStateList
-                    dropDownImageView.setColorFilter(defaultColor)
-                    signInTextView.setTextColor(defaultColor)
-                    asterikTextView.setTextColor(defaultColor)
+            if (prefs.isDarkModeEnable) {
+                changeStatusBarColor(activityContext, screensNightModeColor)
+                rootLayout.setBackgroundColor(screensNightModeColor)
+                firstIB.background.colorFilter = PorterDuffColorFilter(cardsNightModeColor, PorterDuff.Mode.SRC_IN)
+                secondIB.background.colorFilter = PorterDuffColorFilter(cardsNightModeColor, PorterDuff.Mode.SRC_IN)
+                thirdIB.background.colorFilter = PorterDuffColorFilter(cardsNightModeColor, PorterDuff.Mode.SRC_IN)
+                fourthIB.background.colorFilter = PorterDuffColorFilter(cardsNightModeColor, PorterDuff.Mode.SRC_IN)
+                signUpTV.setTextColor(lightBlueColor)
+                signUpCV.setCardBackgroundColor(cardsNightModeColor)
+
+                userNameTIL.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
+                userNameTIL.setStartIconTintList(ColorStateList.valueOf(lightBlueColor))
+                userNameTIL.setErrorIconTintList(ColorStateList.valueOf(lightBlueColor))
+                userNameTIL.boxStrokeColor = whiteColor
+                userNameTIL.hintTextColor = whiteColorStateList
+                userNameTIL.boxStrokeErrorColor = whiteColorStateList
+                userNameTIET.setTextColor(whiteColor)
+                userNameTIL.setErrorTextColor(whiteColorStateList)
+
+                passwordTIL.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
+                passwordTIL.setStartIconTintList(ColorStateList.valueOf(lightBlueColor))
+                passwordTIL.setErrorIconTintList(ColorStateList.valueOf(lightBlueColor))
+                passwordTIL.setEndIconTintList(ColorStateList.valueOf(lightBlueColor))
+                passwordTIL.boxStrokeColor = whiteColor
+                passwordTIL.hintTextColor = whiteColorStateList
+                passwordTIL.boxStrokeErrorColor = whiteColorStateList
+                passwordTIL.counterTextColor = ColorStateList.valueOf(lightBlueColor)
+                passwordTIET.setTextColor(whiteColor)
+                passwordTIL.setErrorTextColor(whiteColorStateList)
+
+                genderSelectionLayout.background.colorFilter = PorterDuffColorFilter(darkModeTextColor, PorterDuff.Mode.SRC_IN)
+                selectGenderTV.setTextColor(darkModeTextColor)
+                dropDownIV.setColorFilter(lightBlueColor)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    userNameTIL.cursorColor = whiteColorStateList
+                    passwordTIL.cursorColor = whiteColorStateList
                 }
 
-                1 -> {
-                    changeStatusBarColor(activityContext, darkYellowColor)
-                    val darkYellowColorStateList = ColorStateList.valueOf(darkYellowColor)
-                    errorColorStateList = darkYellowColorStateList
-                    firstImageButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
-                    secondImageButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
-                    thirdImageButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
-                    fourthImageButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
-                    signUpButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
-                    signUpTextView.setTextColor(darkYellowColor)
-                    userNameTextInputLayout.setStartIconTintList(darkYellowColorStateList)
-                    passwordTextInputLayout.setStartIconTintList(darkYellowColorStateList)
-                    passwordTextInputLayout.setEndIconTintList(darkYellowColorStateList)
-                    passwordTextInputLayout.counterTextColor = darkYellowColorStateList
-                    dropDownImageView.setColorFilter(darkYellowColor)
-                    signInTextView.setTextColor(darkYellowColor)
-                    asterikTextView.setTextColor(darkYellowColor)
-                }
+                securityQuestionsTV.setTextColor(darkModeTextColor)
+                asterikTV.setTextColor(lightBlueColor)
+                signUpButton.setBackgroundColor(lightBlueColor)
+                signUpButton.setTextColor(blackColor)
+                alreadyHaveAnAccountTV.setTextColor(darkModeTextColor)
+                signInTV.setTextColor(lightBlueColor)
+            } else {
+                when (prefs.colorSchemeValue) {
+                    0 -> {
+                        changeStatusBarColor(activityContext, defaultColor)
+                        val defaultColorStateList = ColorStateList.valueOf(defaultColor)
+                        errorColorStateList = defaultColorStateList
+                        firstIB.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
+                        secondIB.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
+                        thirdIB.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
+                        fourthIB.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
+                        signUpTV.setTextColor(defaultColor)
+                        dropDownIV.setColorFilter(defaultColor)
+                        signInTV.setTextColor(defaultColor)
+                        asterikTV.setTextColor(defaultColor)
+                        signUpButton.setBackgroundColor(defaultColor)
 
-                2 -> {
-                    changeStatusBarColor(activityContext, orangeColor)
-                    val orangeColorStateList = ColorStateList.valueOf(orangeColor)
-                    errorColorStateList = orangeColorStateList
-                    firstImageButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
-                    secondImageButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
-                    thirdImageButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
-                    fourthImageButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
-                    signUpButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
-                    signUpTextView.setTextColor(orangeColor)
-                    userNameTextInputLayout.setStartIconTintList(orangeColorStateList)
-                    passwordTextInputLayout.setStartIconTintList(orangeColorStateList)
-                    passwordTextInputLayout.setEndIconTintList(orangeColorStateList)
-                    passwordTextInputLayout.counterTextColor = orangeColorStateList
-                    dropDownImageView.setColorFilter(orangeColor)
-                    signInTextView.setTextColor(orangeColor)
-                    asterikTextView.setTextColor(orangeColor)
-                }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            userNameTIL.cursorColor = defaultColorStateList
+                            passwordTIL.cursorColor = defaultColorStateList
+                        }
 
-                3 -> {
-                    changeStatusBarColor(activityContext, lightGreenColor)
-                    val lightGreenColorStateList = ColorStateList.valueOf(lightGreenColor)
-                    errorColorStateList = lightGreenColorStateList
-                    firstImageButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
-                    secondImageButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
-                    thirdImageButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
-                    fourthImageButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
-                    signUpButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
-                    signUpTextView.setTextColor(lightGreenColor)
-                    userNameTextInputLayout.setStartIconTintList(lightGreenColorStateList)
-                    passwordTextInputLayout.setStartIconTintList(lightGreenColorStateList)
-                    passwordTextInputLayout.setEndIconTintList(lightGreenColorStateList)
-                    passwordTextInputLayout.counterTextColor = lightGreenColorStateList
-                    dropDownImageView.setColorFilter(lightGreenColor)
-                    signInTextView.setTextColor(lightGreenColor)
-                    asterikTextView.setTextColor(lightGreenColor)
-                }
+                        userNameTIL.setStartIconTintList(defaultColorStateList)
+                        userNameTIL.boxStrokeErrorColor = defaultColorStateList
+                        userNameTIL.setErrorIconTintList(defaultColorStateList)
+                        userNameTIL.setErrorTextColor(defaultColorStateList)
 
-                4 -> {
-                    changeStatusBarColor(activityContext, blueColor)
-                    val blueColorStateList = ColorStateList.valueOf(blueColor)
-                    errorColorStateList = blueColorStateList
-                    firstImageButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
-                    secondImageButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
-                    thirdImageButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
-                    fourthImageButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
-                    signUpButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
-                    signUpTextView.setTextColor(blueColor)
-                    userNameTextInputLayout.setStartIconTintList(blueColorStateList)
-                    passwordTextInputLayout.setStartIconTintList(blueColorStateList)
-                    passwordTextInputLayout.setEndIconTintList(blueColorStateList)
-                    passwordTextInputLayout.counterTextColor = blueColorStateList
-                    dropDownImageView.setColorFilter(blueColor)
-                    signInTextView.setTextColor(blueColor)
-                    asterikTextView.setTextColor(blueColor)
-                }
+                        passwordTIL.setStartIconTintList(defaultColorStateList)
+                        passwordTIL.setEndIconTintList(defaultColorStateList)
+                        passwordTIL.counterTextColor = defaultColorStateList
+                        passwordTIL.boxStrokeErrorColor = defaultColorStateList
+                        passwordTIL.setErrorIconTintList(defaultColorStateList)
+                        passwordTIL.setErrorTextColor(defaultColorStateList)
+                    }
 
-                5 -> {
-                    changeStatusBarColor(activityContext, cyanColor)
-                    val cyanColorStateList = ColorStateList.valueOf(cyanColor)
-                    errorColorStateList = cyanColorStateList
-                    firstImageButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
-                    secondImageButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
-                    thirdImageButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
-                    fourthImageButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
-                    signUpButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
-                    signUpTextView.setTextColor(cyanColor)
-                    userNameTextInputLayout.setStartIconTintList(cyanColorStateList)
-                    passwordTextInputLayout.setStartIconTintList(cyanColorStateList)
-                    passwordTextInputLayout.setEndIconTintList(cyanColorStateList)
-                    passwordTextInputLayout.counterTextColor = cyanColorStateList
-                    dropDownImageView.setColorFilter(cyanColor)
-                    signInTextView.setTextColor(cyanColor)
-                    asterikTextView.setTextColor(cyanColor)
-                }
+                    1 -> {
+                        changeStatusBarColor(activityContext, darkYellowColor)
+                        val darkYellowColorStateList = ColorStateList.valueOf(darkYellowColor)
+                        errorColorStateList = darkYellowColorStateList
+                        firstIB.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
+                        secondIB.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
+                        thirdIB.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
+                        fourthIB.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
+                        signUpTV.setTextColor(darkYellowColor)
+                        signUpButton.setBackgroundColor(darkYellowColor)
+                        dropDownIV.setColorFilter(darkYellowColor)
+                        signInTV.setTextColor(darkYellowColor)
+                        asterikTV.setTextColor(darkYellowColor)
 
-                6 -> {
-                    changeStatusBarColor(activityContext, pinkColor)
-                    val pinkColorStateList = ColorStateList.valueOf(pinkColor)
-                    errorColorStateList = pinkColorStateList
-                    firstImageButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
-                    secondImageButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
-                    thirdImageButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
-                    fourthImageButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
-                    signUpButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
-                    signUpTextView.setTextColor(pinkColor)
-                    userNameTextInputLayout.setStartIconTintList(pinkColorStateList)
-                    passwordTextInputLayout.setStartIconTintList(pinkColorStateList)
-                    passwordTextInputLayout.setEndIconTintList(pinkColorStateList)
-                    passwordTextInputLayout.counterTextColor = pinkColorStateList
-                    dropDownImageView.setColorFilter(pinkColor)
-                    signInTextView.setTextColor(pinkColor)
-                    asterikTextView.setTextColor(pinkColor)
-                }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            userNameTIL.cursorColor = darkYellowColorStateList
+                            passwordTIL.cursorColor = darkYellowColorStateList
+                        }
 
-                7 -> {
-                    changeStatusBarColor(activityContext, darkBlueColor)
-                    val darkBlueColorStateList = ColorStateList.valueOf(darkBlueColor)
-                    errorColorStateList = darkBlueColorStateList
-                    firstImageButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
-                    secondImageButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
-                    thirdImageButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
-                    fourthImageButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
-                    signUpButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
-                    signUpTextView.setTextColor(darkBlueColor)
-                    userNameTextInputLayout.setStartIconTintList(darkBlueColorStateList)
-                    passwordTextInputLayout.setStartIconTintList(darkBlueColorStateList)
-                    passwordTextInputLayout.setEndIconTintList(darkBlueColorStateList)
-                    passwordTextInputLayout.counterTextColor = darkBlueColorStateList
-                    dropDownImageView.setColorFilter(darkBlueColor)
-                    signInTextView.setTextColor(darkBlueColor)
-                    asterikTextView.setTextColor(darkBlueColor)
-                }
+                        userNameTIL.setStartIconTintList(darkYellowColorStateList)
+                        userNameTIL.boxStrokeErrorColor = darkYellowColorStateList
+                        userNameTIL.setErrorIconTintList(darkYellowColorStateList)
+                        userNameTIL.setErrorTextColor(darkYellowColorStateList)
 
-                8 -> {
-                    changeStatusBarColor(activityContext, redColor)
-                    val redColorStateList = ColorStateList.valueOf(redColor)
-                    errorColorStateList = redColorStateList
-                    firstImageButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
-                    secondImageButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
-                    thirdImageButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
-                    fourthImageButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
-                    signUpButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
-                    signUpTextView.setTextColor(redColor)
-                    userNameTextInputLayout.setStartIconTintList(redColorStateList)
-                    passwordTextInputLayout.setStartIconTintList(redColorStateList)
-                    passwordTextInputLayout.setEndIconTintList(redColorStateList)
-                    passwordTextInputLayout.counterTextColor = redColorStateList
-                    dropDownImageView.setColorFilter(redColor)
-                    signInTextView.setTextColor(redColor)
-                    asterikTextView.setTextColor(redColor)
-                }
+                        passwordTIL.setStartIconTintList(darkYellowColorStateList)
+                        passwordTIL.setEndIconTintList(darkYellowColorStateList)
+                        passwordTIL.counterTextColor = darkYellowColorStateList
+                        passwordTIL.boxStrokeErrorColor = darkYellowColorStateList
+                        passwordTIL.setErrorIconTintList(darkYellowColorStateList)
+                        passwordTIL.setErrorTextColor(darkYellowColorStateList)
+                    }
 
-                9 -> {
-                    changeStatusBarColor(activityContext, lightPurpleColor)
-                    val lightPurpleColorStateList = ColorStateList.valueOf(lightPurpleColor)
-                    errorColorStateList = lightPurpleColorStateList
-                    firstImageButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                    secondImageButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                    thirdImageButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                    fourthImageButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                    signUpButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                    signUpTextView.setTextColor(lightPurpleColor)
-                    userNameTextInputLayout.setStartIconTintList(lightPurpleColorStateList)
-                    passwordTextInputLayout.setStartIconTintList(lightPurpleColorStateList)
-                    passwordTextInputLayout.setEndIconTintList(lightPurpleColorStateList)
-                    passwordTextInputLayout.counterTextColor = lightPurpleColorStateList
-                    dropDownImageView.setColorFilter(lightPurpleColor)
-                    signInTextView.setTextColor(lightPurpleColor)
-                    asterikTextView.setTextColor(lightPurpleColor)
+                    2 -> {
+                        changeStatusBarColor(activityContext, orangeColor)
+                        val orangeColorStateList = ColorStateList.valueOf(orangeColor)
+                        errorColorStateList = orangeColorStateList
+                        firstIB.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
+                        secondIB.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
+                        thirdIB.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
+                        fourthIB.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
+                        signUpTV.setTextColor(orangeColor)
+                        signUpButton.setBackgroundColor(orangeColor)
+                        dropDownIV.setColorFilter(orangeColor)
+                        signInTV.setTextColor(orangeColor)
+                        asterikTV.setTextColor(orangeColor)
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            userNameTIL.cursorColor = orangeColorStateList
+                            passwordTIL.cursorColor = orangeColorStateList
+                        }
+
+                        userNameTIL.setStartIconTintList(orangeColorStateList)
+                        userNameTIL.boxStrokeErrorColor = orangeColorStateList
+                        userNameTIL.setErrorIconTintList(orangeColorStateList)
+                        userNameTIL.setErrorTextColor(orangeColorStateList)
+
+                        passwordTIL.setStartIconTintList(orangeColorStateList)
+                        passwordTIL.setEndIconTintList(orangeColorStateList)
+                        passwordTIL.counterTextColor = orangeColorStateList
+                        passwordTIL.boxStrokeErrorColor = orangeColorStateList
+                        passwordTIL.setErrorIconTintList(orangeColorStateList)
+                        passwordTIL.setErrorTextColor(orangeColorStateList)
+                    }
+
+                    3 -> {
+                        changeStatusBarColor(activityContext, lightGreenColor)
+                        val lightGreenColorStateList = ColorStateList.valueOf(lightGreenColor)
+                        errorColorStateList = lightGreenColorStateList
+                        firstIB.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
+                        secondIB.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
+                        thirdIB.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
+                        fourthIB.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
+                        signUpTV.setTextColor(lightGreenColor)
+                        signUpButton.setBackgroundColor(lightGreenColor)
+                        dropDownIV.setColorFilter(lightGreenColor)
+                        signInTV.setTextColor(lightGreenColor)
+                        asterikTV.setTextColor(lightGreenColor)
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            userNameTIL.cursorColor = lightGreenColorStateList
+                            passwordTIL.cursorColor = lightGreenColorStateList
+                        }
+
+                        userNameTIL.setStartIconTintList(lightGreenColorStateList)
+                        userNameTIL.boxStrokeErrorColor = lightGreenColorStateList
+                        userNameTIL.setErrorIconTintList(lightGreenColorStateList)
+                        userNameTIL.setErrorTextColor(lightGreenColorStateList)
+
+                        passwordTIL.setStartIconTintList(lightGreenColorStateList)
+                        passwordTIL.setEndIconTintList(lightGreenColorStateList)
+                        passwordTIL.counterTextColor = lightGreenColorStateList
+                        passwordTIL.boxStrokeErrorColor = lightGreenColorStateList
+                        passwordTIL.setErrorIconTintList(lightGreenColorStateList)
+                        passwordTIL.setErrorTextColor(lightGreenColorStateList)
+                    }
+
+                    4 -> {
+                        changeStatusBarColor(activityContext, blueColor)
+                        val blueColorStateList = ColorStateList.valueOf(blueColor)
+                        errorColorStateList = blueColorStateList
+                        firstIB.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
+                        secondIB.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
+                        thirdIB.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
+                        fourthIB.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
+                        signUpTV.setTextColor(blueColor)
+                        signUpButton.setBackgroundColor(blueColor)
+                        dropDownIV.setColorFilter(blueColor)
+                        signInTV.setTextColor(blueColor)
+                        asterikTV.setTextColor(blueColor)
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            userNameTIL.cursorColor = blueColorStateList
+                            passwordTIL.cursorColor = blueColorStateList
+                        }
+
+                        userNameTIL.setStartIconTintList(blueColorStateList)
+                        userNameTIL.boxStrokeErrorColor = blueColorStateList
+                        userNameTIL.setErrorIconTintList(blueColorStateList)
+                        userNameTIL.setErrorTextColor(blueColorStateList)
+
+                        passwordTIL.setStartIconTintList(blueColorStateList)
+                        passwordTIL.setEndIconTintList(blueColorStateList)
+                        passwordTIL.counterTextColor = blueColorStateList
+                        passwordTIL.boxStrokeErrorColor = blueColorStateList
+                        passwordTIL.setErrorIconTintList(blueColorStateList)
+                        passwordTIL.setErrorTextColor(blueColorStateList)
+                    }
+
+                    5 -> {
+                        changeStatusBarColor(activityContext, cyanColor)
+                        val cyanColorStateList = ColorStateList.valueOf(cyanColor)
+                        errorColorStateList = cyanColorStateList
+                        firstIB.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
+                        secondIB.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
+                        thirdIB.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
+                        fourthIB.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
+                        signUpTV.setTextColor(cyanColor)
+                        signUpButton.setBackgroundColor(cyanColor)
+                        dropDownIV.setColorFilter(cyanColor)
+                        signInTV.setTextColor(cyanColor)
+                        asterikTV.setTextColor(cyanColor)
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            userNameTIL.cursorColor = cyanColorStateList
+                            passwordTIL.cursorColor = cyanColorStateList
+                        }
+
+                        userNameTIL.setStartIconTintList(cyanColorStateList)
+                        userNameTIL.boxStrokeErrorColor = cyanColorStateList
+                        userNameTIL.setErrorIconTintList(cyanColorStateList)
+                        userNameTIL.setErrorTextColor(cyanColorStateList)
+
+                        passwordTIL.setStartIconTintList(cyanColorStateList)
+                        passwordTIL.setEndIconTintList(cyanColorStateList)
+                        passwordTIL.counterTextColor = cyanColorStateList
+                        passwordTIL.boxStrokeErrorColor = cyanColorStateList
+                        passwordTIL.setErrorIconTintList(cyanColorStateList)
+                        passwordTIL.setErrorTextColor(cyanColorStateList)
+                    }
+
+                    6 -> {
+                        changeStatusBarColor(activityContext, pinkColor)
+                        val pinkColorStateList = ColorStateList.valueOf(pinkColor)
+                        errorColorStateList = pinkColorStateList
+                        firstIB.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
+                        secondIB.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
+                        thirdIB.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
+                        fourthIB.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
+                        signUpTV.setTextColor(pinkColor)
+                        signUpButton.setBackgroundColor(pinkColor)
+                        dropDownIV.setColorFilter(pinkColor)
+                        signInTV.setTextColor(pinkColor)
+                        asterikTV.setTextColor(pinkColor)
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            userNameTIL.cursorColor = pinkColorStateList
+                            passwordTIL.cursorColor = pinkColorStateList
+                        }
+
+                        userNameTIL.setStartIconTintList(pinkColorStateList)
+                        userNameTIL.boxStrokeErrorColor = pinkColorStateList
+                        userNameTIL.setErrorIconTintList(pinkColorStateList)
+                        userNameTIL.setErrorTextColor(pinkColorStateList)
+
+                        passwordTIL.setStartIconTintList(pinkColorStateList)
+                        passwordTIL.setEndIconTintList(pinkColorStateList)
+                        passwordTIL.counterTextColor = pinkColorStateList
+                        passwordTIL.boxStrokeErrorColor = pinkColorStateList
+                        passwordTIL.setErrorIconTintList(pinkColorStateList)
+                        passwordTIL.setErrorTextColor(pinkColorStateList)
+                    }
+
+                    7 -> {
+                        changeStatusBarColor(activityContext, darkBlueColor)
+                        val darkBlueColorStateList = ColorStateList.valueOf(darkBlueColor)
+                        errorColorStateList = darkBlueColorStateList
+                        firstIB.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
+                        secondIB.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
+                        thirdIB.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
+                        fourthIB.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
+                        signUpTV.setTextColor(darkBlueColor)
+                        signUpButton.setBackgroundColor(darkBlueColor)
+                        dropDownIV.setColorFilter(darkBlueColor)
+                        signInTV.setTextColor(darkBlueColor)
+                        asterikTV.setTextColor(darkBlueColor)
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            userNameTIL.cursorColor = darkBlueColorStateList
+                            passwordTIL.cursorColor = darkBlueColorStateList
+                        }
+
+                        userNameTIL.setStartIconTintList(darkBlueColorStateList)
+                        userNameTIL.boxStrokeErrorColor = darkBlueColorStateList
+                        userNameTIL.setErrorIconTintList(darkBlueColorStateList)
+                        userNameTIL.setErrorTextColor(darkBlueColorStateList)
+
+                        passwordTIL.setStartIconTintList(darkBlueColorStateList)
+                        passwordTIL.setEndIconTintList(darkBlueColorStateList)
+                        passwordTIL.counterTextColor = darkBlueColorStateList
+                        passwordTIL.boxStrokeErrorColor = darkBlueColorStateList
+                        passwordTIL.setErrorIconTintList(darkBlueColorStateList)
+                        passwordTIL.setErrorTextColor(darkBlueColorStateList)
+                    }
+
+                    8 -> {
+                        changeStatusBarColor(activityContext, redColor)
+                        val redColorStateList = ColorStateList.valueOf(redColor)
+                        errorColorStateList = redColorStateList
+                        firstIB.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
+                        secondIB.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
+                        thirdIB.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
+                        fourthIB.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
+                        signUpTV.setTextColor(redColor)
+                        signUpButton.setBackgroundColor(redColor)
+                        dropDownIV.setColorFilter(redColor)
+                        signInTV.setTextColor(redColor)
+                        asterikTV.setTextColor(redColor)
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            userNameTIL.cursorColor = redColorStateList
+                            passwordTIL.cursorColor = redColorStateList
+                        }
+
+                        userNameTIL.setStartIconTintList(redColorStateList)
+                        userNameTIL.boxStrokeErrorColor = redColorStateList
+                        userNameTIL.setErrorIconTintList(redColorStateList)
+                        userNameTIL.setErrorTextColor(redColorStateList)
+
+                        passwordTIL.setStartIconTintList(redColorStateList)
+                        passwordTIL.setEndIconTintList(redColorStateList)
+                        passwordTIL.counterTextColor = redColorStateList
+                        passwordTIL.boxStrokeErrorColor = redColorStateList
+                        passwordTIL.setErrorIconTintList(redColorStateList)
+                        passwordTIL.setErrorTextColor(redColorStateList)
+                    }
+
+                    9 -> {
+                        changeStatusBarColor(activityContext, lightPurpleColor)
+                        val lightPurpleColorStateList = ColorStateList.valueOf(lightPurpleColor)
+                        errorColorStateList = lightPurpleColorStateList
+                        firstIB.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
+                        secondIB.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
+                        thirdIB.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
+                        fourthIB.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
+                        signUpTV.setTextColor(lightPurpleColor)
+                        signUpButton.setBackgroundColor(lightPurpleColor)
+                        dropDownIV.setColorFilter(lightPurpleColor)
+                        signInTV.setTextColor(lightPurpleColor)
+                        asterikTV.setTextColor(lightPurpleColor)
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            userNameTIL.cursorColor = lightPurpleColorStateList
+                            passwordTIL.cursorColor = lightPurpleColorStateList
+                        }
+
+                        userNameTIL.setStartIconTintList(lightPurpleColorStateList)
+                        userNameTIL.boxStrokeErrorColor = lightPurpleColorStateList
+                        userNameTIL.setErrorIconTintList(lightPurpleColorStateList)
+                        userNameTIL.setErrorTextColor(lightPurpleColorStateList)
+
+                        passwordTIL.setStartIconTintList(lightPurpleColorStateList)
+                        passwordTIL.setEndIconTintList(lightPurpleColorStateList)
+                        passwordTIL.counterTextColor = lightPurpleColorStateList
+                        passwordTIL.boxStrokeErrorColor = lightPurpleColorStateList
+                        passwordTIL.setErrorIconTintList(lightPurpleColorStateList)
+                        passwordTIL.setErrorTextColor(lightPurpleColorStateList)
+                    }
                 }
             }
         }
     }
 
-    override fun selectCategory(category: Int, forWhichInvoked: String) {
-        if (forWhichInvoked.equals("Gender", ignoreCase = true)) {
+    private fun checkGenderAndSecurityQuestion(forWhichInvoked: String?, category: Int) {
+        if (forWhichInvoked.equals(other = "Gender", ignoreCase = true)) {
             gender = ""
             when (category) {
-                1 -> {
+                GenderEnum.MALE.ordinal -> {
                     gender = getString(R.string.male_text)
                 }
 
-                2 -> {
+                GenderEnum.FEMALE.ordinal -> {
                     gender = getString(R.string.fe_male_text)
                 }
 
-                3 -> {
+                GenderEnum.TRANSGENDER.ordinal -> {
                     gender = getString(R.string.transgender_text)
                 }
             }
 
             with(binding) {
+                if (prefs.isDarkModeEnable) {
+                    selectGenderTV.setTextColor(whiteColor)
+                } else {
+                    selectGenderTV.setTextColor(blackColor)
+                }
                 when (category) {
-                    0 -> {
-                        selectGenderTextView.text = activityContext.getString(R.string.select_gender_text)
-                        selectGenderTextView.setTextColor(Color.parseColor("#9E9E9E"))
+                    GenderEnum.NONE.ordinal -> {
+                        selectGenderTV.text =
+                            activityContext.getString(R.string.select_gender_text)
+                        selectGenderTV.setTextColor(Color.parseColor("#9E9E9E"))
                     }
 
-                    1 -> {
-                        selectGenderTextView.text = activityContext.getString(R.string.male_text)
-                        selectGenderTextView.setTextColor(blackColor)
+                    GenderEnum.MALE.ordinal -> {
+                        selectGenderTV.text = getString(R.string.male_text)
                     }
 
-                    2 -> {
-                        selectGenderTextView.text = activityContext.getString(R.string.fe_male_text)
-                        selectGenderTextView.setTextColor(blackColor)
+                    GenderEnum.FEMALE.ordinal -> {
+                        selectGenderTV.text = getString(R.string.fe_male_text)
                     }
 
-                    3 -> {
-                        selectGenderTextView.text = activityContext.getString(R.string.transgender_text)
-                        selectGenderTextView.setTextColor(blackColor)
+                    GenderEnum.TRANSGENDER.ordinal -> {
+                        selectGenderTV.text = getString(R.string.transgender_text)
                     }
                 }
             }
-        } else if (forWhichInvoked.equals("Security Questions", ignoreCase = true)) {
+        } else if (forWhichInvoked.equals(other = "Security Questions", ignoreCase = true)) {
             if (category != 0) {
                 with(securityQuestionDialogLayoutBinding) {
                     securityQuestionLayout.visibility = View.GONE
                     group1.visibility = View.VISIBLE
                     when (category) {
-                        1 -> {
-                            securityQuestionAnswerTextInputLayout.hint =
-                                getString(R.string.what_is_your_favourite_book_question)
+                        SecurityQuestionsEnum.QUESTION_1.ordinal -> {
+                            securityQuestionAnswerTIL.hint = getString(R.string.what_is_your_favourite_book_question)
                         }
 
-                        2 -> {
-                            securityQuestionAnswerTextInputLayout.hint =
-                                getString(R.string.what_is_your_favourite_teacher_name_question)
+                        SecurityQuestionsEnum.QUESTION_2.ordinal -> {
+                            securityQuestionAnswerTIL.hint = getString(R.string.what_is_your_favourite_teacher_name_question)
                         }
 
-                        3 -> {
-                            securityQuestionAnswerTextInputLayout.hint =
-                                getString(R.string.what_is_your_school_name_question)
+                        SecurityQuestionsEnum.QUESTION_3.ordinal -> {
+                            securityQuestionAnswerTIL.hint = getString(R.string.what_is_your_school_name_question)
                         }
 
-                        4 -> {
-                            securityQuestionAnswerTextInputLayout.hint =
-                                getString(R.string.what_is_your_favourite_game_question)
+                        SecurityQuestionsEnum.QUESTION_4.ordinal -> {
+                            securityQuestionAnswerTIL.hint = getString(R.string.what_is_your_favourite_game_question)
                         }
                     }
                     showSoftKeyboard()
-                    securityQuestionAnswerTextInputEditText.requestFocus()
+                    securityQuestionAnswerTIET.requestFocus()
                 }
             }
         }

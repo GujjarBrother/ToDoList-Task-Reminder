@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/delete_task_dialog_root_layout"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_boxes_light_mode_background"
     android:paddingHorizontal="@dimen/_10sdp"
     android:paddingBottom="@dimen/_8sdp">
 
-    <ImageView
-        android:id="@+id/delete_image_view"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/deleteIV"
         android:layout_width="@dimen/_60sdp"
         android:layout_height="@dimen/_60sdp"
-        android:contentDescription="@string/app_name"
         android:src="@drawable/delete_image"
         android:layout_marginTop="@dimen/_15sdp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,8 +19,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/defaultColor" />
 
-    <TextView
-        android:id="@+id/delete_message_text_view"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/deleteMessageTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -31,33 +30,54 @@
         android:textSize="@dimen/_15ssp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/delete_image_view" />
+        app:layout_constraintTop_toBottomOf="@id/deleteIV" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/yes_button"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/buttonsLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="@dimen/_15sdp"
-        android:background="@drawable/dialog_boxes_buttons_light_mode_default_background"
-        android:text="@string/yes_text"
-        android:textAllCaps="false"
-        android:textColor="@color/blackColor"
-        android:textSize="@dimen/_11ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/deleteMessageTV"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/delete_message_text_view" />
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/no_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/_3sdp"
-        android:background="@drawable/dialog_boxes_buttons_light_mode_default_background"
-        android:text="@string/no_text"
-        android:textAllCaps="false"
-        android:textColor="@color/blackColor"
-        android:textSize="@dimen/_11ssp"
-        app:layout_constraintBottom_toBottomOf="@id/yes_button"
-        app:layout_constraintEnd_toStartOf="@id/yes_button"
-        app:layout_constraintTop_toTopOf="@id/yes_button" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/noButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/_50sdp"
+            android:text="@string/no_text"
+            android:textAllCaps="false"
+            android:textColor="@color/defaultColor"
+            android:textSize="@dimen/_11ssp"
+            android:textStyle="bold"
+            android:backgroundTint="@android:color/transparent"
+            app:strokeColor="@color/defaultColor"
+            app:strokeWidth="@dimen/_1sdp"
+            app:cornerRadius="@dimen/_5sdp"
+            android:layout_weight="1"
+            android:stateListAnimator="@null"/>
 
+        <View
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="match_parent"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/yesButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/_50sdp"
+            android:text="@string/yes_text"
+            android:textAllCaps="false"
+            android:textColor="@color/whiteColor"
+            android:textSize="@dimen/_11ssp"
+            android:backgroundTint="@color/defaultColor"
+            app:cornerRadius="@dimen/_5sdp"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:stateListAnimator="@null"/>
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
