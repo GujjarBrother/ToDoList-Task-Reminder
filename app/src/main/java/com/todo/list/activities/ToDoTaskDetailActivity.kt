@@ -82,7 +82,7 @@ class ToDoTaskDetailActivity : BaseActivity(), View.OnClickListener {
 
     private fun applyColorSchemeORLightAndDarkMode() {
         with(binding) {
-            if (prefs.dayAndNightModeSwitchValue) {
+            if (prefs.isDarkModeEnable) {
                 changeStatusBarColor(activityContext, screensNightModeColor)
                 include.root.visibility = View.VISIBLE
                 detailActivityRootLayout.setBackgroundColor(screensNightModeColor)

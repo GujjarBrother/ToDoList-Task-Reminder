@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground">
 
-    <TextView
-        android:id="@+id/categoryNameTextView"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/categoryNameTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"

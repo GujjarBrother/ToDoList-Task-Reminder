@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <solid
-        android:color="@color/cardsNightModeColor"/>
+    <item>
+        <shape android:shape="rectangle">
 
-    <size
-        android:width="@dimen/_13sdp"
-        android:height="@dimen/_13sdp"/>
+            <solid
+                android:color="@color/cardsNightModeColor"/>
 
-    <corners
-        android:radius="@dimen/_50sdp"/>
+            <size
+                android:width="@dimen/_13sdp"
+                android:height="@dimen/_13sdp"/>
 
-    <stroke
-        android:width="@dimen/_1sdp"
-        android:color="@color/snowWhiteColor"/>
+            <corners
+                android:radius="@dimen/_50sdp"/>
 
-</shape>
+            <stroke
+                android:width="@dimen/_1sdp"
+                android:color="@color/lightBlueColor"/>
+
+        </shape>
+    </item>
+</selector>

@@ -32,9 +32,9 @@ class Prefs(private val toDoListSharedPreferences: SharedPreferences) {
         get() = toDoListSharedPreferences.getInt("textSize", 14)
         set(value) = toDoListSharedPreferences.edit().putInt("textSize", value).apply()
 
-    var dayAndNightModeSwitchValue: Boolean
-        get() = toDoListSharedPreferences.getBoolean("isDayORNight", false)
-        set(value) = toDoListSharedPreferences.edit().putBoolean("isDayORNight", value).apply()
+    var isDarkModeEnable: Boolean
+        get() = toDoListSharedPreferences.getBoolean("lightORDarkMode", false)
+        set(value) = toDoListSharedPreferences.edit().putBoolean("lightORDarkMode", value).apply()
 
     fun saveUserCredentials(
         emailOrUserName: String, password: String, gender: String, securityQuestion: String,

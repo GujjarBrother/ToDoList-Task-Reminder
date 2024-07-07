@@ -143,7 +143,7 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
 
     private fun applyColorSchemeORLightAndDarkMode() {
         with(binding) {
-            if (prefs.dayAndNightModeSwitchValue) {
+            if (prefs.isDarkModeEnable) {
                 changeStatusBarColor(activityContext, screensNightModeColor)
                 toolbar.setBackgroundColor(screensNightModeColor)
                 include.root.visibility = View.VISIBLE

@@ -17,17 +17,14 @@ import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.application.Application.Companion.typeface
 import com.todo.list.databinding.ToDosRecyclerViewSingleItemLayoutBinding
 import com.todo.list.db.ToDoTask
-import com.todo.list.listeners.TaskUpdateAndDeleteListener
-import com.todo.list.listeners.ToDoTaskDetailListener
-import com.todo.list.utils.CommonFunctions.COMPLETED_TAB
-import com.todo.list.utils.CommonFunctions.TASKS_TAB
+import com.todo.list.enums.TabsEnum
 
 class TasksRecyclerViewAdapter(
-        private val toDoTaskDetailListener: ToDoTaskDetailListener,
-        private val taskUpdateAndDeleteListener: TaskUpdateAndDeleteListener? = null,
         private val colorsSchemeArray: IntArray,
         private val isAppColorChanged: Boolean,
-        private val fromWhereInvoked: Int
+        private val fromWhereInvoked: Int,
+        private val taskDetailCallback: ((ToDoTask) -> Unit)? = null,
+        private val taskUpdateAndDeleteCallback: ((ToDoTask, View, Int) -> Unit)? = null
 ) : ListAdapter<ToDoTask, TasksRecyclerViewAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     var isTextSizeChanged = false
@@ -47,33 +44,33 @@ class TasksRecyclerViewAdapter(
         val toDoTask = getItem(position)
 
         with(holder.binding) {
-            if (fromWhereInvoked == TASKS_TAB) {
+            if (fromWhereInvoked == TabsEnum.TASKS_TAB.ordinal) {
                 deleteFromCompletedFragmentImageView.visibility = GONE
-                updateAndDeleteOptionsImageView.visibility = VISIBLE
-                updateAndDeleteOptionsImageView.isEnabled = true
-            } else if (fromWhereInvoked == COMPLETED_TAB) {
-                updateAndDeleteOptionsImageView.visibility = INVISIBLE
-                updateAndDeleteOptionsImageView.isEnabled = false
+                updateAndDeleteOptionsIV.visibility = VISIBLE
+                updateAndDeleteOptionsIV.isEnabled = true
+            } else if (fromWhereInvoked == TabsEnum.COMPLETED_TAB.ordinal) {
+                updateAndDeleteOptionsIV.visibility = INVISIBLE
+                updateAndDeleteOptionsIV.isEnabled = false
                 deleteFromCompletedFragmentImageView.visibility = VISIBLE
             }
 
             if (toDoTask.day.length >= 3) {
-                dayTextView.text = toDoTask.day.substring(0, 3)
+                dayTV.text = toDoTask.day.substring(0, 3)
             } else {
-                dayTextView.text = toDoTask.day
+                dayTV.text = toDoTask.day
             }
-            dateTextView.text = toDoTask.date
-            monthTextView.text = toDoTask.month
-            toDoTaskTitleTextView.text = toDoTask.title
-            toDoTaskDescriptionTextView.text = toDoTask.description
-            toDoTaskTimeTextView.text = toDoTask.time
+            dateTV.text = toDoTask.date
+            monthTV.text = toDoTask.month
+            toDoTaskTitleTV.text = toDoTask.title
+            toDoTaskDescriptionTV.text = toDoTask.description
+            toDoTaskTimeTV.text = toDoTask.time
 
             if (isTextSizeChanged) {
-                holder.binding.toDoTaskTitleTextView.textSize = prefs.textSizeValue.toFloat()
+                holder.binding.toDoTaskTitleTV.textSize = prefs.textSizeValue.toFloat()
             }
 
-            updateAndDeleteOptionsImageView.setOnClickListener { v: View ->
-                taskUpdateAndDeleteListener?.taskUpdateAndDelete(toDoTask, v, color, position)
+            updateAndDeleteOptionsIV.setOnClickListener { v: View ->
+                taskUpdateAndDeleteCallback?.invoke(toDoTask, v, color)
             }
         }
 
@@ -82,13 +79,15 @@ class TasksRecyclerViewAdapter(
         }
 
         holder.itemView.setOnClickListener { _: View? ->
-            toDoTaskDetailListener.taskDetail(toDoTask)
+            taskDetailCallback?.invoke(toDoTask)
         }
     }
 
     class ViewHolder(val binding: ToDosRecyclerViewSingleItemLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
 
         val whiteColor: Int = ContextCompat.getColor(itemView.context, R.color.whiteColor)
+        val lightBlueColor: Int = ContextCompat.getColor(itemView.context, R.color.lightBlueColor)
+        val darkModeTextColor: Int = ContextCompat.getColor(itemView.context, R.color.purple_500)
         val blackColor: Int = ContextCompat.getColor(itemView.context, R.color.blackColor)
         val cardDarkModeColor: Int = ContextCompat.getColor(itemView.context, R.color.cardsNightModeColor)
         val lightBlackColor: Int = ContextCompat.getColor(itemView.context, R.color.lightBlackColor)
@@ -96,105 +95,105 @@ class TasksRecyclerViewAdapter(
 
         init {
             with(binding) {
-                dayTextView.typeface = typeface
-                dateTextView.typeface = typeface
-                monthTextView.typeface = typeface
-                toDoTaskTitleTextView.typeface = typeface
-                toDoTaskDescriptionTextView.typeface = typeface
-                toDoTaskTimeTextView.typeface = typeface
+                dayTV.typeface = typeface
+                dateTV.typeface = typeface
+                monthTV.typeface = typeface
+                toDoTaskTitleTV.typeface = typeface
+                toDoTaskDescriptionTV.typeface = typeface
+                toDoTaskTimeTV.typeface = typeface
             }
         }
     }
 
     private fun applyColorSchemeOnNormalRVItems(holder: ViewHolder) {
         with(holder.binding) {
-            if (prefs.dayAndNightModeSwitchValue) {
-                cardView.setCardBackgroundColor(holder.cardDarkModeColor)
-                dayTextView.setTextColor(holder.whiteColor)
-                dateTextView.setTextColor(holder.whiteColor)
-                monthTextView.setTextColor(holder.whiteColor)
-                view.setBackgroundColor(holder.whiteColor)
-                toDoTaskTitleTextView.setTextColor(holder.whiteColor)
-                toDoTaskDescriptionTextView.setTextColor(holder.whiteColor)
-                toDoTaskTimeTextView.setTextColor(holder.whiteColor)
-                updateAndDeleteOptionsImageView.setColorFilter(holder.whiteColor)
+            if (prefs.isDarkModeEnable) {
+                rootCV.setCardBackgroundColor(holder.cardDarkModeColor)
+                dayTV.setTextColor(holder.darkModeTextColor)
+                dateTV.setTextColor(holder.lightBlueColor)
+                monthTV.setTextColor(holder.darkModeTextColor)
+                view.setBackgroundColor(holder.darkModeTextColor)
+                toDoTaskTitleTV.setTextColor(holder.whiteColor)
+                toDoTaskDescriptionTV.setTextColor(holder.whiteColor)
+                toDoTaskTimeTV.setTextColor(holder.darkModeTextColor)
+                updateAndDeleteOptionsIV.setColorFilter(holder.lightBlueColor)
                 deleteFromCompletedFragmentImageView.setColorFilter(holder.whiteColor)
             } else {
-                cardView.setCardBackgroundColor(holder.whiteColor)
-                dayTextView.setTextColor(holder.lightBlackColor)
-                monthTextView.setTextColor(holder.lightBlackColor)
+                rootCV.setCardBackgroundColor(holder.whiteColor)
+                dayTV.setTextColor(holder.lightBlackColor)
+                monthTV.setTextColor(holder.lightBlackColor)
                 view.setBackgroundColor(holder.recyclerViewsDividerColor)
-                toDoTaskTitleTextView.setTextColor(holder.blackColor)
-                toDoTaskDescriptionTextView.setTextColor(holder.lightBlackColor)
-                toDoTaskTimeTextView.setTextColor(holder.lightBlackColor)
+                toDoTaskTitleTV.setTextColor(holder.blackColor)
+                toDoTaskDescriptionTV.setTextColor(holder.lightBlackColor)
+                toDoTaskTimeTV.setTextColor(holder.lightBlackColor)
                 when (prefs.colorSchemeValue) {
                     0 -> {
                         color = colorsSchemeArray[0]
-                        dateTextView.setTextColor(colorsSchemeArray[0])
-                        updateAndDeleteOptionsImageView.setColorFilter(colorsSchemeArray[0])
+                        dateTV.setTextColor(colorsSchemeArray[0])
+                        updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[0])
                         deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[0])
                     }
 
                     1 -> {
                         color = colorsSchemeArray[1]
-                        dateTextView.setTextColor(colorsSchemeArray[1])
-                        updateAndDeleteOptionsImageView.setColorFilter(colorsSchemeArray[1])
+                        dateTV.setTextColor(colorsSchemeArray[1])
+                        updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[1])
                         deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[1])
                     }
 
                     2 -> {
                         color = colorsSchemeArray[2]
-                        dateTextView.setTextColor(colorsSchemeArray[2])
-                        updateAndDeleteOptionsImageView.setColorFilter(colorsSchemeArray[2])
+                        dateTV.setTextColor(colorsSchemeArray[2])
+                        updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[2])
                         deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[2])
                     }
 
                     3 -> {
                         color = colorsSchemeArray[3]
-                        dateTextView.setTextColor(colorsSchemeArray[3])
-                        updateAndDeleteOptionsImageView.setColorFilter(colorsSchemeArray[3])
+                        dateTV.setTextColor(colorsSchemeArray[3])
+                        updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[3])
                         deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[3])
                     }
 
                     4 -> {
                         color = colorsSchemeArray[4]
-                        dateTextView.setTextColor(colorsSchemeArray[4])
-                        updateAndDeleteOptionsImageView.setColorFilter(colorsSchemeArray[4])
+                        dateTV.setTextColor(colorsSchemeArray[4])
+                        updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[4])
                         deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[4])
                     }
 
                     5 -> {
                         color = colorsSchemeArray[5]
-                        dateTextView.setTextColor(colorsSchemeArray[5])
-                        updateAndDeleteOptionsImageView.setColorFilter(colorsSchemeArray[5])
+                        dateTV.setTextColor(colorsSchemeArray[5])
+                        updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[5])
                         deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[5])
                     }
 
                     6 -> {
                         color = colorsSchemeArray[6]
-                        dateTextView.setTextColor(colorsSchemeArray[6])
-                        updateAndDeleteOptionsImageView.setColorFilter(colorsSchemeArray[6])
+                        dateTV.setTextColor(colorsSchemeArray[6])
+                        updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[6])
                         deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[6])
                     }
 
                     7 -> {
                         color = colorsSchemeArray[7]
-                        dateTextView.setTextColor(colorsSchemeArray[7])
-                        updateAndDeleteOptionsImageView.setColorFilter(colorsSchemeArray[7])
+                        dateTV.setTextColor(colorsSchemeArray[7])
+                        updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[7])
                         deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[7])
                     }
 
                     8 -> {
                         color = colorsSchemeArray[8]
-                        dateTextView.setTextColor(colorsSchemeArray[8])
-                        updateAndDeleteOptionsImageView.setColorFilter(colorsSchemeArray[8])
+                        dateTV.setTextColor(colorsSchemeArray[8])
+                        updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[8])
                         deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[8])
                     }
 
                     9 -> {
                         color = colorsSchemeArray[9]
-                        dateTextView.setTextColor(colorsSchemeArray[9])
-                        updateAndDeleteOptionsImageView.setColorFilter(colorsSchemeArray[9])
+                        dateTV.setTextColor(colorsSchemeArray[9])
+                        updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[9])
                         deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[9])
                     }
                 }

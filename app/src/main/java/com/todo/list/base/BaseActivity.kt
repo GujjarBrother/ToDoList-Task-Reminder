@@ -1,7 +1,6 @@
 package com.todo.list.base
 
 import android.content.res.ColorStateList
-import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
@@ -53,8 +52,6 @@ open class BaseActivity : AppCompatActivity() {
 
     protected var dialogBoxesLightModeBackground = 0
 
-    protected lateinit var editTextsCursorDarkModeColor: Drawable
-
     protected lateinit var whiteColorStateList: ColorStateList
     protected lateinit var textInputLayoutBoxStrokeDarkModeColor: ColorStateList
 
@@ -104,7 +101,6 @@ open class BaseActivity : AppCompatActivity() {
         feedbackEditTextCardViewLightModeColor = ContextCompat.getColor(activityContext, R.color.feedbackEditTextCardViewLightModeColor)
         tabLayoutUnSelectedTabTextColor = ContextCompat.getColor(activityContext, R.color.tabLayoutUnSelectedTabTextColor)
 
-        editTextsCursorDarkModeColor = ContextCompat.getDrawable(activityContext, R.drawable.edittexts_cursor_dark_mode_color) as Drawable
         dialogBoxesLightModeBackground = R.drawable.dialog_boxes_light_mode_background
 
         whiteColorStateList = ColorStateList.valueOf(whiteColor)
@@ -112,11 +108,12 @@ open class BaseActivity : AppCompatActivity() {
         inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
         textInputLayoutBoxStrokeDarkModeColor = ColorStateList(
-                arrayOf(
-                        intArrayOf(android.R.attr.state_focused), intArrayOf(-android.R.attr.state_focused)),
+                arrayOf(intArrayOf(android.R.attr.state_focused), intArrayOf(-android.R.attr.state_focused)),
                 intArrayOf(
-                        whiteColor      // Color when focused
-                 , whiteColor // Color when not focused
+                    // Color when focused
+                    darkModeTextColor
+                    // Color when not focused
+                 ,darkModeTextColor
                 )
         )
     }

@@ -2,55 +2,52 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/snowWhiteColor"
     tools:context="com.todo.list.activities.SignUpActivity">
 
-    <ImageButton
-        android:id="@+id/first_image_button"
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/firstIB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="-100dp"
         android:layout_marginTop="-90dp"
         android:background="@drawable/sign_in_and_sign_up_activities_image_buttons_default_background"
-        android:contentDescription="@string/app_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/second_image_button"
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/secondIB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="-150dp"
         android:background="@drawable/sign_in_and_sign_up_activities_image_buttons_default_background"
-        android:contentDescription="@string/app_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/third_image_button"
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/thirdIB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="-100dp"
         android:layout_marginBottom="-90dp"
         android:background="@drawable/sign_in_and_sign_up_activities_image_buttons_default_background"
-        android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <ImageButton
-        android:id="@+id/fourth_image_button"
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/fourthIB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="-150dp"
         android:background="@drawable/sign_in_and_sign_up_activities_image_buttons_default_background"
-        android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/sign_up_text_view"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/signUpTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sign_up_text"
@@ -60,10 +57,11 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/second_image_button" />
+        app:layout_constraintBottom_toTopOf="@id/signUpCV"
+        app:layout_constraintTop_toBottomOf="@id/secondIB" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/sign_up_card_view"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/signUpCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"
@@ -71,10 +69,10 @@
         app:cardBackgroundColor="@color/whiteColor"
         app:cardCornerRadius="@dimen/_10sdp"
         app:cardElevation="@dimen/_1sdp"
-        app:layout_constraintBottom_toTopOf="@id/third_image_button"
+        app:layout_constraintBottom_toTopOf="@id/thirdIB"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/first_image_button">
+        app:layout_constraintTop_toBottomOf="@id/firstIB">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -82,7 +80,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/user_name_text_input_layout"
+                android:id="@+id/userNameTIL"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,20 +94,19 @@
                 app:startIconTint="@color/defaultColor">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/user_name_text_input_edit_text"
+                    android:id="@+id/userNameTIET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/username_e_mail_text"
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
                     android:textAllCaps="false"
-                    android:textColor="@color/blackColor"
-                    android:textCursorDrawable="@null" />
+                    android:textColor="@color/blackColor"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/password_text_input_layout"
+                android:id="@+id/passwordTIL"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -130,15 +127,14 @@
                 app:startIconTint="@color/defaultColor">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/password_text_input_edit_text"
+                    android:id="@+id/passwordTIET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/password_text"
                     android:imeOptions="actionGo"
                     android:inputType="textPassword"
                     android:textAllCaps="false"
-                    android:textColor="@color/blackColor"
-                    android:textCursorDrawable="@null" />
+                    android:textColor="@color/blackColor"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -148,10 +144,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_5sdp"
                 android:padding="@dimen/_13sdp"
-                android:background="@drawable/sign_up_spinner_background">
+                android:background="@drawable/stroke_background">
 
-                <TextView
-                    android:id="@+id/selectGenderTextView"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/selectGenderTV"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -160,18 +156,17 @@
                     android:textColor="#9E9E9E"
                     android:textSize="@dimen/_13ssp" />
 
-                <ImageView
-                    android:id="@+id/dropDownImageView"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/dropDownIV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/app_name"
                     android:src="@drawable/drop_down_arrow"
                     app:tint="@color/defaultColor" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/security_questions_layout"
+                android:id="@+id/securityQuestionsLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -179,8 +174,8 @@
                 android:layout_marginVertical="@dimen/_5sdp"
                 android:background="?attr/selectableItemBackground">
 
-                <TextView
-                    android:id="@+id/security_questions_text_view"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/securityQuestionsTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/security_questions_text"
@@ -189,8 +184,8 @@
                     android:textSize="@dimen/_10ssp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/asterik_text_view"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/asterikTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/asterik"
@@ -202,7 +197,7 @@
 
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/sign_up_button"
+                android:id="@+id/signUpButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="@dimen/_200sdp"
@@ -219,15 +214,15 @@
                 android:textStyle="bold" />
 
             <LinearLayout
-                android:id="@+id/already_have_an_account_and_sign_in_layout"
+                android:id="@+id/alreadyHaveAnAccountAndSignInLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:paddingBottom="@dimen/_5sdp">
 
-                <TextView
-                    android:id="@+id/already_have_an_account_text_view"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/alreadyHaveAnAccountTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/already_have_an_account_text"
@@ -236,8 +231,8 @@
                     android:textSize="@dimen/_10ssp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/sign_in_text_view"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/signInTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackground"
@@ -250,5 +245,5 @@
 
             </LinearLayout>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

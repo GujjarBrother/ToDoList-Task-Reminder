@@ -29,13 +29,12 @@ import com.todo.list.databinding.FragmentCompletedTasksBinding
 import com.todo.list.databinding.SortingDialogLayoutBinding
 import com.todo.list.db.ToDoTask
 import com.todo.list.db.ToDosDatabase
-import com.todo.list.listeners.ToDoTaskDetailListener
-import com.todo.list.utils.CommonFunctions.COMPLETED_TAB
+import com.todo.list.enums.TabsEnum
 import com.todo.list.utils.CommonFunctions.applyAnimation
 import es.dmoral.toasty.Toasty
 import java.util.Collections
 
-class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDetailListener {
+class CompletedTasksFragment : BaseFragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentCompletedTasksBinding
     private lateinit var completedTasksArrayList: ArrayList<ToDoTask>
@@ -99,7 +98,7 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
 
     private fun applyColorSchemeOrLightAndDarkModeOnCompletedTasksFragment() {
         with(binding) {
-            if (prefs.dayAndNightModeSwitchValue) {
+            if (prefs.isDarkModeEnable) {
                 completedTasksFragmentCardView.setCardBackgroundColor(screensNightModeColor)
                 nothingInHereTextView.setTextColor(whiteColor)
                 sortingCardView.setCardBackgroundColor(cardsNightModeColor)
@@ -280,8 +279,7 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
 
         if (!::adapter.isInitialized) {
             adapter = TasksRecyclerViewAdapter(
-                this, colorsSchemeArray = colorsSchemeArray, isAppColorChanged = true,
-                fromWhereInvoked = COMPLETED_TAB
+                colorsSchemeArray, true, TabsEnum.COMPLETED_TAB.ordinal
             )
         }
         val layoutManager: RecyclerView.LayoutManager = if (prefs.completedTasksStyleValue) {
@@ -299,8 +297,6 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
         }
     }
 
-    override fun taskDetail(toDoTask: ToDoTask) = openTaskDetailActivity(toDoTask)
-
     private fun openTaskDetailActivity(toDoTask: ToDoTask) {
         val toDoTaskDetailIntent = Intent(fragmentContext, ToDoTaskDetailActivity::class.java)
         with(toDoTaskDetailIntent) {
@@ -313,8 +309,10 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
         val deleteTaskDialogLayoutBinding = DeleteTaskDialogLayoutBinding.inflate(layoutInflater)
 
         val deleteTaskDialogBuilder = AlertDialog.Builder(fragmentContext)
-        deleteTaskDialogBuilder.setView(deleteTaskDialogLayoutBinding.root)
-        deleteTaskDialogBuilder.setCancelable(false)
+        with(deleteTaskDialogBuilder) {
+            setView(deleteTaskDialogLayoutBinding.root)
+            setCancelable(true)
+        }
         val deleteTaskAlertDialog = deleteTaskDialogBuilder.create()
 
         if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed && !deleteTaskAlertDialog.isShowing) {
@@ -325,7 +323,7 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
 
         with(deleteTaskDialogLayoutBinding) {
             applyCustomFontOnDeleteTaskDialogViews(this)
-            deleteImageView.startAnimation(applyAnimation(fragmentContext))
+            deleteIV.startAnimation(applyAnimation(fragmentContext))
             appColorSchemeORLightAndDarkModeOnDeleteTaskDialogViews(this)
 
             noButton.setOnClickListener { _: View? ->
@@ -353,97 +351,94 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
         deleteTaskDialogLayoutBinding: DeleteTaskDialogLayoutBinding
     ) {
         with(deleteTaskDialogLayoutBinding) {
-            if (prefs.dayAndNightModeSwitchValue) {
-                deleteTaskDialogRootLayout.background.colorFilter =
-                    PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
-                deleteImageView.setColorFilter(whiteColor)
-                deleteMessageTextView.setTextColor(whiteColor)
-                noButton.background.colorFilter =
-                    PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
-                noButton.setTextColor(whiteColor)
-                yesButton.background.colorFilter =
-                    PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
-                yesButton.setTextColor(whiteColor)
+            if (prefs.isDarkModeEnable) {
+                rootLayout.background.colorFilter = PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
+                deleteIV.setColorFilter(lightBlueColor)
+                deleteMessageTV.setTextColor(whiteColor)
+                noButton.strokeColor = ColorStateList.valueOf(lightBlueColor)
+                noButton.setTextColor(lightBlueColor)
+                yesButton.setBackgroundColor(lightBlueColor)
+                yesButton.setTextColor(blackColor)
             } else {
                 when (prefs.colorSchemeValue) {
                     0 -> {
-                        deleteImageView.setColorFilter(defaultColor)
-                        noButton.background.colorFilter =
-                            PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter =
-                            PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
+                        deleteIV.setColorFilter(defaultColor)
+                        noButton.strokeColor = ColorStateList.valueOf(defaultColor)
+                        noButton.setTextColor(defaultColor)
+                        yesButton.setBackgroundColor(defaultColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     1 -> {
-                        deleteImageView.setColorFilter(darkYellowColor)
-                        noButton.background.colorFilter =
-                            PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter =
-                            PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
+                        deleteIV.setColorFilter(darkYellowColor)
+                        noButton.strokeColor = ColorStateList.valueOf(darkYellowColor)
+                        noButton.setTextColor(darkYellowColor)
+                        yesButton.setBackgroundColor(darkYellowColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     2 -> {
-                        deleteImageView.setColorFilter(orangeColor)
-                        noButton.background.colorFilter =
-                            PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter =
-                            PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
+                        deleteIV.setColorFilter(orangeColor)
+                        noButton.strokeColor = ColorStateList.valueOf(orangeColor)
+                        noButton.setTextColor(orangeColor)
+                        yesButton.setBackgroundColor(orangeColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     3 -> {
-                        deleteImageView.setColorFilter(lightGreenColor)
-                        noButton.background.colorFilter =
-                            PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter =
-                            PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
+                        deleteIV.setColorFilter(lightGreenColor)
+                        noButton.strokeColor = ColorStateList.valueOf(lightGreenColor)
+                        noButton.setTextColor(lightGreenColor)
+                        yesButton.setBackgroundColor(lightGreenColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     4 -> {
-                        deleteImageView.setColorFilter(blueColor)
-                        noButton.background.colorFilter =
-                            PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter =
-                            PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
+                        deleteIV.setColorFilter(blueColor)
+                        noButton.strokeColor = ColorStateList.valueOf(blueColor)
+                        noButton.setTextColor(blueColor)
+                        yesButton.setBackgroundColor(blueColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     5 -> {
-                        deleteImageView.setColorFilter(cyanColor)
-                        noButton.background.colorFilter =
-                            PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter =
-                            PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
+                        deleteIV.setColorFilter(cyanColor)
+                        noButton.strokeColor = ColorStateList.valueOf(cyanColor)
+                        noButton.setTextColor(cyanColor)
+                        yesButton.setBackgroundColor(cyanColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     6 -> {
-                        deleteImageView.setColorFilter(pinkColor)
-                        noButton.background.colorFilter =
-                            PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter =
-                            PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
+                        deleteIV.setColorFilter(pinkColor)
+                        noButton.strokeColor = ColorStateList.valueOf(pinkColor)
+                        noButton.setTextColor(pinkColor)
+                        yesButton.setBackgroundColor(pinkColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     7 -> {
-                        deleteImageView.setColorFilter(darkBlueColor)
-                        noButton.background.colorFilter =
-                            PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter =
-                            PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
+                        deleteIV.setColorFilter(darkBlueColor)
+                        noButton.strokeColor = ColorStateList.valueOf(darkBlueColor)
+                        noButton.setTextColor(darkBlueColor)
+                        yesButton.setBackgroundColor(darkBlueColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     8 -> {
-                        deleteImageView.setColorFilter(redColor)
-                        noButton.background.colorFilter =
-                            PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter =
-                            PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
+                        deleteIV.setColorFilter(redColor)
+                        noButton.strokeColor = ColorStateList.valueOf(redColor)
+                        noButton.setTextColor(redColor)
+                        yesButton.setBackgroundColor(redColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     9 -> {
-                        deleteImageView.setColorFilter(lightPurpleColor)
-                        noButton.background.colorFilter =
-                            PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter =
-                            PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
+                        deleteIV.setColorFilter(lightPurpleColor)
+                        noButton.strokeColor = ColorStateList.valueOf(lightPurpleColor)
+                        noButton.setTextColor(lightPurpleColor)
+                        yesButton.setBackgroundColor(lightPurpleColor)
+                        yesButton.setTextColor(whiteColor)
                     }
                 }
             }
@@ -452,7 +447,7 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
 
     private fun applyCustomFontOnDeleteTaskDialogViews(deleteTaskDialogLayoutBinding: DeleteTaskDialogLayoutBinding) {
         with(deleteTaskDialogLayoutBinding) {
-            deleteMessageTextView.typeface = typeface
+            deleteMessageTV.typeface = typeface
             yesButton.typeface = typeface
             noButton.typeface = typeface
         }
@@ -462,7 +457,7 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
         with(binding) {
             when (v?.id) {
                 R.id.sortingCardView -> {
-                    showSortingDialog()
+//                    showSortingDialog()
                 }
 
                 R.id.stylesCardView -> {
@@ -482,7 +477,7 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
         }
     }
 
-    private fun showSortingDialog() {
+    /*private fun showSortingDialog() {
         val sortingDialogLayoutBinding = SortingDialogLayoutBinding.inflate(layoutInflater)
 
         val sortingDialogBuilder = AlertDialog.Builder(fragmentContext)
@@ -643,7 +638,7 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
                 }
             }
         }
-    }
+    }*/
 
     private fun sortRVAdapterList() {
         if (isAboveSortingValueSelected) {
@@ -658,11 +653,11 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
         displayCompletedTasksOnRecyclerView(completedTasksArrayList)
     }
 
-    private fun applyColorSchemeORLightAndDarkModeOnSortingDialog(
+    /*private fun applyColorSchemeORLightAndDarkModeOnSortingDialog(
         sortingDialogLayoutBinding: SortingDialogLayoutBinding
     ) {
         with(sortingDialogLayoutBinding) {
-            if (prefs.dayAndNightModeSwitchValue) {
+            if (prefs.isDarkModeEnable) {
                 sortingDialogRootLayout.background.colorFilter =
                     PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
                 sortByTextView.setTextColor(whiteColor)
@@ -846,5 +841,5 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener, ToDoTaskDet
             cancelButton.typeface = typeface
             sortButton.typeface = typeface
         }
-    }
+    }*/
 }

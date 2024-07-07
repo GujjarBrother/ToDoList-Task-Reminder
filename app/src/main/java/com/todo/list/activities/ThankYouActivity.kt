@@ -33,7 +33,7 @@ class ThankYouActivity : BaseActivity() {
 
     private fun applyLightAndDarkMode() {
         with(binding) {
-            if (prefs.dayAndNightModeSwitchValue) {
+            if (prefs.isDarkModeEnable) {
                 thankYouActivityRootLayout.setBackgroundColor(screensNightModeColor)
                 forUsingAnAppTextView.setTextColor(whiteColor)
                 descriptionTextView.setTextColor(whiteColor)

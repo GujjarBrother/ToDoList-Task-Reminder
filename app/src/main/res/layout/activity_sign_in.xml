@@ -9,49 +9,45 @@
     tools:context="com.todo.list.activities.SignInActivity">
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/firstImageButton"
+        android:id="@+id/firstIB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="-100dp"
         android:layout_marginTop="-90dp"
         android:background="@drawable/sign_in_and_sign_up_activities_image_buttons_default_background"
-        android:contentDescription="@string/app_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/secondImageButton"
+        android:id="@+id/secondIB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="-150dp"
         android:background="@drawable/sign_in_and_sign_up_activities_image_buttons_default_background"
-        android:contentDescription="@string/app_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/thirdImageButton"
+        android:id="@+id/thirdIB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="-100dp"
         android:layout_marginBottom="-90dp"
         android:background="@drawable/sign_in_and_sign_up_activities_image_buttons_default_background"
-        android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/fourthImageButton"
+        android:id="@+id/fourthIB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="-150dp"
         android:background="@drawable/sign_in_and_sign_up_activities_image_buttons_default_background"
-        android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/signInTextView"
+        android:id="@+id/signInTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sign_in_text"
@@ -59,13 +55,13 @@
         android:textColor="@color/defaultColor"
         android:textSize="@dimen/_23ssp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/signInCardView"
+        app:layout_constraintBottom_toTopOf="@id/signInCV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/secondImageButton" />
+        app:layout_constraintTop_toBottomOf="@id/secondIB" />
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/signInCardView"
+        android:id="@+id/signInCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"
@@ -73,10 +69,10 @@
         app:cardBackgroundColor="@color/whiteColor"
         app:cardCornerRadius="@dimen/_10sdp"
         app:cardElevation="@dimen/_1sdp"
-        app:layout_constraintBottom_toTopOf="@id/thirdImageButton"
+        app:layout_constraintBottom_toTopOf="@id/thirdIB"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/firstImageButton">
+        app:layout_constraintTop_toBottomOf="@id/firstIB">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -84,7 +80,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/userNameTextInputLayout"
+                android:id="@+id/userNameTIL"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -98,20 +94,19 @@
                 app:startIconTint="@color/defaultColor">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/userNameTextInputEditText"
+                    android:id="@+id/userNameTIET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/username_e_mail_text"
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
                     android:textAllCaps="false"
-                    android:textColor="@color/blackColor"
-                    android:textCursorDrawable="@null" />
+                    android:textColor="@color/blackColor" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/passwordTextInputLayout"
+                android:id="@+id/passwordTIL"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -132,20 +127,19 @@
                 app:startIconTint="@color/defaultColor">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/passwordTextInputEditText"
+                    android:id="@+id/passwordTIET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/password_text"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:textAllCaps="false"
-                    android:textColor="@color/blackColor"
-                    android:textCursorDrawable="@null" />
+                    android:textColor="@color/blackColor" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.checkbox.MaterialCheckBox
-                android:id="@+id/rememberMeCheckBox"
+                android:id="@+id/rememberMeCB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/defaultColor"
@@ -171,7 +165,7 @@
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/forgotPasswordTextView"
+                android:id="@+id/forgotPasswordTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -193,7 +187,7 @@
                 android:paddingBottom="@dimen/_5sdp">
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/dontHaveAnAccountTextView"
+                    android:id="@+id/dontHaveAnAccountTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/don_t_have_an_account_text"
@@ -203,7 +197,7 @@
                     android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/signUpTextView"
+                    android:id="@+id/signUpTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackground"

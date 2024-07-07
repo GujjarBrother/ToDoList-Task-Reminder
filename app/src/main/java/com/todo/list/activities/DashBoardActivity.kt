@@ -31,8 +31,8 @@ import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivityDashBoardBinding
 import com.todo.list.databinding.ExitFromAnAppDialogLayoutBinding
 import com.todo.list.databinding.SignOutDialogLayoutBinding
+import com.todo.list.enums.TabsEnum
 import com.todo.list.listeners.StartAndStopFABAnimationAndSwitchBetweenLightAndDarkModeListener
-import com.todo.list.utils.CommonFunctions.TASKS_TAB
 import com.todo.list.utils.CommonFunctions.applyAnimation
 import com.todo.list.utils.CommonFunctions.changeStatusBarColor
 import com.todo.list.utils.CommonFunctions.keepActivityOn
@@ -69,14 +69,14 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
             dashBoardActivityDrawerLayout.addDrawerListener(actionBarDrawerToggle)
             actionBarDrawerToggle.syncState()
 
-            navigationDrawerInclude.versionNumberTextView.text = String.format("%s%s", "v", BuildConfig.VERSION_NAME)
+            navigationDrawerInclude.versionNumberTV.text = String.format("%s%s", "v", BuildConfig.VERSION_NAME)
 
             dashBoardViewPager.adapter = viewPagerAdapter
             TabLayoutMediator(
                 tabLayout, dashBoardViewPager
             ) {
                 tab: TabLayout.Tab, position: Int -> tab.setText(
-                if (position == TASKS_TAB) {
+                if (position == TabsEnum.TASKS_TAB.ordinal) {
                     getString(R.string.tasks_text)
                 } else {
                     getString(R.string.completed_text)
@@ -88,22 +88,22 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
             dashBoardViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     if (position == 0) {
-                        toolbarTextView.text = getString(R.string.tasks_text)
+                        toolbarTV.text = getString(R.string.tasks_text)
                     } else if (position == 1) {
-                        toolbarTextView.text = getString(R.string.completed_text)
+                        toolbarTV.text = getString(R.string.completed_text)
                     }
                 }
             })
-            signOutImageView.setOnClickListener(this@DashBoardActivity)
-            settingsImageView.setOnClickListener(this@DashBoardActivity)
-            openAndCloseDrawerImageView.setOnClickListener(this@DashBoardActivity)
+            signOutIV.setOnClickListener(this@DashBoardActivity)
+            settingsIV.setOnClickListener(this@DashBoardActivity)
+            openAndCloseDrawerIV.setOnClickListener(this@DashBoardActivity)
             navigationDrawerInclude.settingsOuterLayout.setOnClickListener(this@DashBoardActivity)
             navigationDrawerInclude.visitOurAppStoreOuterLayout.setOnClickListener(this@DashBoardActivity)
             navigationDrawerInclude.privacyPolicyOuterLayout.setOnClickListener(this@DashBoardActivity)
             navigationDrawerInclude.checkUpdateOuterLayout.setOnClickListener(this@DashBoardActivity)
             navigationDrawerInclude.lightAndDarkModeSwitch.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
-                prefs.dayAndNightModeSwitchValue = isChecked
-                applyColorSchemeORLightAndDarkModeOnDashboardActivity()
+                prefs.isDarkModeEnable = isChecked
+                applyLightAndDarkModeOnDashboardActivity()
                 dashBoardActivityDrawerLayout.closeDrawer(GravityCompat.START)
                 if (::startAndStopFABAnimationAndSwitchBetweenLightAndDarkModeListener.isInitialized) {
                     startAndStopFABAnimationAndSwitchBetweenLightAndDarkModeListener.goAhead(
@@ -131,72 +131,78 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        applyColorSchemeORLightAndDarkModeOnDashboardActivity()
+        applyLightAndDarkModeOnDashboardActivity()
     }
 
-    private fun applyColorSchemeORLightAndDarkModeOnDashboardActivity() {
+    private fun applyLightAndDarkModeOnDashboardActivity() {
         with(binding) {
             val trackDrawable = navigationDrawerInclude.lightAndDarkModeSwitch.trackDrawable
-            if (prefs.dayAndNightModeSwitchValue) {
+            if (prefs.isDarkModeEnable) {
                 changeStatusBarColor(activityContext, screensNightModeColor)
                 toolbar.setBackgroundColor(screensNightModeColor)
-                dashBoardActivityRootLayout.setBackgroundColor(screensNightModeColor)
+                rootLayout.setBackgroundColor(screensNightModeColor)
                 tabLayout.setBackgroundColor(screensNightModeColor)
                 tabLayout.setSelectedTabIndicatorColor(cardsNightModeColor)
                 tabLayout.setTabTextColors(tabLayoutUnSelectedTabTextColor, whiteColor)
                 adLoadingInclude.adIsLoadingTextView.setTextColor(whiteColor)
                 adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(whiteColor)
 
-                navigationDrawerInclude.navigationDrawerRootLayout.background.colorFilter = PorterDuffColorFilter(
+                openAndCloseDrawerIV.setColorFilter(lightBlueColor)
+                signOutIV.setColorFilter(lightBlueColor)
+                settingsIV.setColorFilter(lightBlueColor)
+
+                navigationDrawerInclude.rootLayout.background.colorFilter = PorterDuffColorFilter(
                     screensNightModeColor, PorterDuff.Mode.SRC_IN)
-                navigationDrawerInclude.appNameTextView.setTextColor(whiteColor)
-                navigationDrawerInclude.featuresTextView.setBackgroundColor(cardsNightModeColor)
-                navigationDrawerInclude.lightAndDarkImageView.setImageResource(R.drawable.sun_image)
-                navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
-                    whiteColor, PorterDuff.Mode.SRC_IN)
-                navigationDrawerInclude.lightAndDarkModeTextView.text = getString(R.string.light_mode_text)
-                navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(whiteColor)
-                navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(whiteColor)
+                navigationDrawerInclude.appNameTV.setTextColor(whiteColor)
+                navigationDrawerInclude.featuresTV.setBackgroundColor(cardsNightModeColor)
+                navigationDrawerInclude.lightAndDarkIV.setImageResource(R.drawable.sun_image)
+                navigationDrawerInclude.lightAndDarkIV.colorFilter = PorterDuffColorFilter(lightBlueColor, PorterDuff.Mode.SRC_IN)
+                navigationDrawerInclude.lightAndDarkModeTV.text = getString(R.string.light_mode_text)
+                navigationDrawerInclude.lightAndDarkModeTV.setTextColor(whiteColor)
+                navigationDrawerInclude.switchBetweenLightAndDarkModeTV.setTextColor(darkModeTextColor)
                 navigationDrawerInclude.lightAndDarkModeSwitch.isChecked = true
-                trackDrawable.colorFilter = PorterDuffColorFilter(snowWhiteColor, PorterDuff.Mode.SRC_IN)
+                trackDrawable.colorFilter = PorterDuffColorFilter(lightBlueColor, PorterDuff.Mode.SRC_IN)
                 navigationDrawerInclude.lightAndDarkModeSwitch.thumbDrawable =
                     ContextCompat.getDrawable(activityContext, R.drawable.switch_thumb_night_mode)
-                navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(cardsNightModeColor)
-                navigationDrawerInclude.generalSettingsTextView.setTextColor(whiteColor)
-                navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
-                    whiteColor, PorterDuff.Mode.SRC_IN)
-                navigationDrawerInclude.settingsTextView.setTextColor(whiteColor)
-                navigationDrawerInclude.seeTheRequiredSettingsTextView.setTextColor(whiteColor)
-                navigationDrawerInclude.settingsArrowImageView.colorFilter = PorterDuffColorFilter(
-                    whiteColor, PorterDuff.Mode.SRC_IN)
-                navigationDrawerInclude.visitOurAppStoreImageView.colorFilter = PorterDuffColorFilter(
-                    whiteColor, PorterDuff.Mode.SRC_IN)
-                navigationDrawerInclude.visitOurAppStoreTextView.setTextColor(whiteColor)
-                navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTextView.setTextColor(whiteColor)
-                navigationDrawerInclude.visitOurAppStoreArrowImageView.colorFilter = PorterDuffColorFilter(
-                    whiteColor, PorterDuff.Mode.SRC_IN)
-                navigationDrawerInclude.privacyPolicyImageView.colorFilter = PorterDuffColorFilter(
-                    whiteColor, PorterDuff.Mode.SRC_IN)
-                navigationDrawerInclude.privacyPolicyTextView.setTextColor(whiteColor)
-                navigationDrawerInclude.readOurPrivacyPolicyTextView.setTextColor(whiteColor)
-                navigationDrawerInclude.privacyPolicyArrowImageView.colorFilter = PorterDuffColorFilter(
-                    whiteColor, PorterDuff.Mode.SRC_IN)
-                navigationDrawerInclude.checkUpdateImageView.colorFilter = PorterDuffColorFilter(
-                    whiteColor, PorterDuff.Mode.SRC_IN)
-                navigationDrawerInclude.checkUpdateTextView.setTextColor(whiteColor)
-                navigationDrawerInclude.versionNumberTextView.setTextColor(whiteColor)
-                navigationDrawerInclude.checkUpdateArrowImageView.colorFilter = PorterDuffColorFilter(
-                    whiteColor, PorterDuff.Mode.SRC_IN)
+                navigationDrawerInclude.generalSettingsTV.setBackgroundColor(cardsNightModeColor)
+                navigationDrawerInclude.generalSettingsTV.setTextColor(whiteColor)
+                navigationDrawerInclude.settingsIV.colorFilter = PorterDuffColorFilter(
+                    lightBlueColor, PorterDuff.Mode.SRC_IN)
+                navigationDrawerInclude.settingsTV.setTextColor(whiteColor)
+                navigationDrawerInclude.seeTheRequiredSettingsTV.setTextColor(darkModeTextColor)
+                navigationDrawerInclude.settingsArrowIV.colorFilter = PorterDuffColorFilter(
+                    lightBlueColor, PorterDuff.Mode.SRC_IN)
+                navigationDrawerInclude.visitOurAppStoreIV.colorFilter = PorterDuffColorFilter(
+                    lightBlueColor, PorterDuff.Mode.SRC_IN)
+                navigationDrawerInclude.visitOurAppStoreTV.setTextColor(whiteColor)
+                navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTV.setTextColor(darkModeTextColor)
+                navigationDrawerInclude.visitOurAppStoreArrowIV.colorFilter = PorterDuffColorFilter(
+                    lightBlueColor, PorterDuff.Mode.SRC_IN)
+                navigationDrawerInclude.privacyPolicyIV.colorFilter = PorterDuffColorFilter(
+                    lightBlueColor, PorterDuff.Mode.SRC_IN)
+                navigationDrawerInclude.privacyPolicyTV.setTextColor(whiteColor)
+                navigationDrawerInclude.readOurPrivacyPolicyTV.setTextColor(darkModeTextColor)
+                navigationDrawerInclude.privacyPolicyArrowIV.colorFilter = PorterDuffColorFilter(
+                    lightBlueColor, PorterDuff.Mode.SRC_IN)
+                navigationDrawerInclude.checkUpdateIV.colorFilter = PorterDuffColorFilter(
+                    lightBlueColor, PorterDuff.Mode.SRC_IN)
+                navigationDrawerInclude.checkUpdateTV.setTextColor(whiteColor)
+                navigationDrawerInclude.versionNumberTV.setTextColor(darkModeTextColor)
+                navigationDrawerInclude.checkUpdateArrowIV.colorFilter = PorterDuffColorFilter(
+                    lightBlueColor, PorterDuff.Mode.SRC_IN)
             } else {
-                navigationDrawerInclude.lightAndDarkImageView.setImageResource(R.drawable.moon_image)
-                navigationDrawerInclude.lightAndDarkModeTextView.text = getString(R.string.dark_mode_text)
+                navigationDrawerInclude.lightAndDarkIV.setImageResource(R.drawable.moon_image)
+                navigationDrawerInclude.lightAndDarkModeTV.text = getString(R.string.dark_mode_text)
                 navigationDrawerInclude.lightAndDarkModeSwitch.isChecked = false
                 trackDrawable.colorFilter = PorterDuffColorFilter(switchTrackOffColor, PorterDuff.Mode.SRC_IN)
                 navigationDrawerInclude.lightAndDarkModeSwitch.thumbDrawable =
                     ContextCompat.getDrawable(activityContext, R.drawable.switch_thumb)
-                dashBoardActivityRootLayout.setBackgroundColor(snowWhiteColor)
+                rootLayout.setBackgroundColor(snowWhiteColor)
                 tabLayout.setSelectedTabIndicatorColor(snowWhiteColor)
                 tabLayout.setTabTextColors(tabLayoutUnSelectedTabTextColor, blackColor)
+                openAndCloseDrawerIV.setColorFilter(whiteColor)
+                signOutIV.setColorFilter(whiteColor)
+                settingsIV.setColorFilter(whiteColor)
                 when (prefs.colorSchemeValue) {
                     0 -> {
                         changeStatusBarColor(activityContext, defaultColor)
@@ -205,38 +211,38 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         adLoadingInclude.adIsLoadingTextView.setTextColor(defaultColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(defaultColor)
 
-                        navigationDrawerInclude.navigationDrawerRootLayout.background.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.rootLayout.background.colorFilter = PorterDuffColorFilter(
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.featuresTextView.setBackgroundColor(defaultTransparentColor)
-                        navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.appNameTV.setTextColor(blackColor)
+                        navigationDrawerInclude.featuresTV.setBackgroundColor(defaultTransparentColor)
+                        navigationDrawerInclude.lightAndDarkIV.colorFilter = PorterDuffColorFilter(
                             defaultColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(defaultTransparentColor)
-                        navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.lightAndDarkModeTV.setTextColor(blackColor)
+                        navigationDrawerInclude.switchBetweenLightAndDarkModeTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.generalSettingsTV.setBackgroundColor(defaultTransparentColor)
+                        navigationDrawerInclude.settingsIV.colorFilter = PorterDuffColorFilter(
                             defaultColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.seeTheRequiredSettingsTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.settingsArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.settingsTV.setTextColor(blackColor)
+                        navigationDrawerInclude.seeTheRequiredSettingsTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.settingsArrowIV.colorFilter = PorterDuffColorFilter(
                             defaultColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreIV.colorFilter = PorterDuffColorFilter(
                             defaultColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.visitOurAppStoreArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreTV.setTextColor(blackColor)
+                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.visitOurAppStoreArrowIV.colorFilter = PorterDuffColorFilter(
                             defaultColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyIV.colorFilter = PorterDuffColorFilter(
                             defaultColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.readOurPrivacyPolicyTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.privacyPolicyArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyTV.setTextColor(blackColor)
+                        navigationDrawerInclude.readOurPrivacyPolicyTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.privacyPolicyArrowIV.colorFilter = PorterDuffColorFilter(
                             defaultColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateIV.colorFilter = PorterDuffColorFilter(
                             defaultColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.versionNumberTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.checkUpdateArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateTV.setTextColor(blackColor)
+                        navigationDrawerInclude.versionNumberTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.checkUpdateArrowIV.colorFilter = PorterDuffColorFilter(
                             defaultColor, PorterDuff.Mode.SRC_IN)
                     }
 
@@ -247,38 +253,38 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         adLoadingInclude.adIsLoadingTextView.setTextColor(darkYellowColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(darkYellowColor)
 
-                        navigationDrawerInclude.navigationDrawerRootLayout.background.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.rootLayout.background.colorFilter = PorterDuffColorFilter(
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.featuresTextView.setBackgroundColor(darkYellowTransparentColor)
-                        navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.appNameTV.setTextColor(blackColor)
+                        navigationDrawerInclude.featuresTV.setBackgroundColor(darkYellowTransparentColor)
+                        navigationDrawerInclude.lightAndDarkIV.colorFilter = PorterDuffColorFilter(
                             darkYellowColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(darkYellowTransparentColor)
-                        navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.lightAndDarkModeTV.setTextColor(blackColor)
+                        navigationDrawerInclude.switchBetweenLightAndDarkModeTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.generalSettingsTV.setBackgroundColor(darkYellowTransparentColor)
+                        navigationDrawerInclude.settingsIV.colorFilter = PorterDuffColorFilter(
                             darkYellowColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.seeTheRequiredSettingsTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.settingsArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.settingsTV.setTextColor(blackColor)
+                        navigationDrawerInclude.seeTheRequiredSettingsTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.settingsArrowIV.colorFilter = PorterDuffColorFilter(
                             darkYellowColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreIV.colorFilter = PorterDuffColorFilter(
                             darkYellowColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.visitOurAppStoreArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreTV.setTextColor(blackColor)
+                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.visitOurAppStoreArrowIV.colorFilter = PorterDuffColorFilter(
                             darkYellowColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyIV.colorFilter = PorterDuffColorFilter(
                             darkYellowColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.readOurPrivacyPolicyTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.privacyPolicyArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyTV.setTextColor(blackColor)
+                        navigationDrawerInclude.readOurPrivacyPolicyTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.privacyPolicyArrowIV.colorFilter = PorterDuffColorFilter(
                             darkYellowColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateIV.colorFilter = PorterDuffColorFilter(
                             darkYellowColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.versionNumberTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.checkUpdateArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateTV.setTextColor(blackColor)
+                        navigationDrawerInclude.versionNumberTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.checkUpdateArrowIV.colorFilter = PorterDuffColorFilter(
                             darkYellowColor, PorterDuff.Mode.SRC_IN)
                     }
 
@@ -289,38 +295,38 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         adLoadingInclude.adIsLoadingTextView.setTextColor(orangeColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(orangeColor)
 
-                        navigationDrawerInclude.navigationDrawerRootLayout.background.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.rootLayout.background.colorFilter = PorterDuffColorFilter(
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.featuresTextView.setBackgroundColor(orangeTransparentColor)
-                        navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.appNameTV.setTextColor(blackColor)
+                        navigationDrawerInclude.featuresTV.setBackgroundColor(orangeTransparentColor)
+                        navigationDrawerInclude.lightAndDarkIV.colorFilter = PorterDuffColorFilter(
                             orangeColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(orangeTransparentColor)
-                        navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.lightAndDarkModeTV.setTextColor(blackColor)
+                        navigationDrawerInclude.switchBetweenLightAndDarkModeTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.generalSettingsTV.setBackgroundColor(orangeTransparentColor)
+                        navigationDrawerInclude.settingsIV.colorFilter = PorterDuffColorFilter(
                             orangeColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.seeTheRequiredSettingsTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.settingsArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.settingsTV.setTextColor(blackColor)
+                        navigationDrawerInclude.seeTheRequiredSettingsTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.settingsArrowIV.colorFilter = PorterDuffColorFilter(
                             orangeColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreIV.colorFilter = PorterDuffColorFilter(
                             orangeColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.visitOurAppStoreArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreTV.setTextColor(blackColor)
+                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.visitOurAppStoreArrowIV.colorFilter = PorterDuffColorFilter(
                             orangeColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyIV.colorFilter = PorterDuffColorFilter(
                             orangeColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.readOurPrivacyPolicyTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.privacyPolicyArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyTV.setTextColor(blackColor)
+                        navigationDrawerInclude.readOurPrivacyPolicyTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.privacyPolicyArrowIV.colorFilter = PorterDuffColorFilter(
                             orangeColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateIV.colorFilter = PorterDuffColorFilter(
                             orangeColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.versionNumberTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.checkUpdateArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateTV.setTextColor(blackColor)
+                        navigationDrawerInclude.versionNumberTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.checkUpdateArrowIV.colorFilter = PorterDuffColorFilter(
                             orangeColor, PorterDuff.Mode.SRC_IN)
                     }
 
@@ -331,38 +337,38 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         adLoadingInclude.adIsLoadingTextView.setTextColor(lightGreenColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(lightGreenColor)
 
-                        navigationDrawerInclude.navigationDrawerRootLayout.background.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.rootLayout.background.colorFilter = PorterDuffColorFilter(
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.featuresTextView.setBackgroundColor(lightGreenTransparentColor)
-                        navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.appNameTV.setTextColor(blackColor)
+                        navigationDrawerInclude.featuresTV.setBackgroundColor(lightGreenTransparentColor)
+                        navigationDrawerInclude.lightAndDarkIV.colorFilter = PorterDuffColorFilter(
                             lightGreenColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(lightGreenTransparentColor)
-                        navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.lightAndDarkModeTV.setTextColor(blackColor)
+                        navigationDrawerInclude.switchBetweenLightAndDarkModeTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.generalSettingsTV.setBackgroundColor(lightGreenTransparentColor)
+                        navigationDrawerInclude.settingsIV.colorFilter = PorterDuffColorFilter(
                             lightGreenColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.seeTheRequiredSettingsTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.settingsArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.settingsTV.setTextColor(blackColor)
+                        navigationDrawerInclude.seeTheRequiredSettingsTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.settingsArrowIV.colorFilter = PorterDuffColorFilter(
                             lightGreenColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreIV.colorFilter = PorterDuffColorFilter(
                             lightGreenColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.visitOurAppStoreArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreTV.setTextColor(blackColor)
+                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.visitOurAppStoreArrowIV.colorFilter = PorterDuffColorFilter(
                             lightGreenColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyIV.colorFilter = PorterDuffColorFilter(
                             lightGreenColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.readOurPrivacyPolicyTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.privacyPolicyArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyTV.setTextColor(blackColor)
+                        navigationDrawerInclude.readOurPrivacyPolicyTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.privacyPolicyArrowIV.colorFilter = PorterDuffColorFilter(
                             lightGreenColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateIV.colorFilter = PorterDuffColorFilter(
                             lightGreenColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.versionNumberTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.checkUpdateArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateTV.setTextColor(blackColor)
+                        navigationDrawerInclude.versionNumberTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.checkUpdateArrowIV.colorFilter = PorterDuffColorFilter(
                             lightGreenColor, PorterDuff.Mode.SRC_IN)
                     }
 
@@ -373,38 +379,38 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         adLoadingInclude.adIsLoadingTextView.setTextColor(blueColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(blueColor)
 
-                        navigationDrawerInclude.navigationDrawerRootLayout.background.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.rootLayout.background.colorFilter = PorterDuffColorFilter(
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.featuresTextView.setBackgroundColor(blueTransparentColor)
-                        navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.appNameTV.setTextColor(blackColor)
+                        navigationDrawerInclude.featuresTV.setBackgroundColor(blueTransparentColor)
+                        navigationDrawerInclude.lightAndDarkIV.colorFilter = PorterDuffColorFilter(
                             blueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(blueTransparentColor)
-                        navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.lightAndDarkModeTV.setTextColor(blackColor)
+                        navigationDrawerInclude.switchBetweenLightAndDarkModeTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.generalSettingsTV.setBackgroundColor(blueTransparentColor)
+                        navigationDrawerInclude.settingsIV.colorFilter = PorterDuffColorFilter(
                             blueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.seeTheRequiredSettingsTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.settingsArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.settingsTV.setTextColor(blackColor)
+                        navigationDrawerInclude.seeTheRequiredSettingsTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.settingsArrowIV.colorFilter = PorterDuffColorFilter(
                             blueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreIV.colorFilter = PorterDuffColorFilter(
                             blueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.visitOurAppStoreArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreTV.setTextColor(blackColor)
+                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.visitOurAppStoreArrowIV.colorFilter = PorterDuffColorFilter(
                             blueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyIV.colorFilter = PorterDuffColorFilter(
                             blueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.readOurPrivacyPolicyTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.privacyPolicyArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyTV.setTextColor(blackColor)
+                        navigationDrawerInclude.readOurPrivacyPolicyTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.privacyPolicyArrowIV.colorFilter = PorterDuffColorFilter(
                             blueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateIV.colorFilter = PorterDuffColorFilter(
                             blueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.versionNumberTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.checkUpdateArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateTV.setTextColor(blackColor)
+                        navigationDrawerInclude.versionNumberTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.checkUpdateArrowIV.colorFilter = PorterDuffColorFilter(
                             blueColor, PorterDuff.Mode.SRC_IN)
                     }
 
@@ -415,38 +421,38 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         adLoadingInclude.adIsLoadingTextView.setTextColor(cyanColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(cyanColor)
 
-                        navigationDrawerInclude.navigationDrawerRootLayout.background.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.rootLayout.background.colorFilter = PorterDuffColorFilter(
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.featuresTextView.setBackgroundColor(cyanTransparentColor)
-                        navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.appNameTV.setTextColor(blackColor)
+                        navigationDrawerInclude.featuresTV.setBackgroundColor(cyanTransparentColor)
+                        navigationDrawerInclude.lightAndDarkIV.colorFilter = PorterDuffColorFilter(
                             cyanColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(cyanTransparentColor)
-                        navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.lightAndDarkModeTV.setTextColor(blackColor)
+                        navigationDrawerInclude.switchBetweenLightAndDarkModeTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.generalSettingsTV.setBackgroundColor(cyanTransparentColor)
+                        navigationDrawerInclude.settingsIV.colorFilter = PorterDuffColorFilter(
                             cyanColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.seeTheRequiredSettingsTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.settingsArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.settingsTV.setTextColor(blackColor)
+                        navigationDrawerInclude.seeTheRequiredSettingsTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.settingsArrowIV.colorFilter = PorterDuffColorFilter(
                             cyanColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreIV.colorFilter = PorterDuffColorFilter(
                             cyanColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.visitOurAppStoreArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreTV.setTextColor(blackColor)
+                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.visitOurAppStoreArrowIV.colorFilter = PorterDuffColorFilter(
                             cyanColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyIV.colorFilter = PorterDuffColorFilter(
                             cyanColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.readOurPrivacyPolicyTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.privacyPolicyArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyTV.setTextColor(blackColor)
+                        navigationDrawerInclude.readOurPrivacyPolicyTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.privacyPolicyArrowIV.colorFilter = PorterDuffColorFilter(
                             cyanColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateIV.colorFilter = PorterDuffColorFilter(
                             cyanColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.versionNumberTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.checkUpdateArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateTV.setTextColor(blackColor)
+                        navigationDrawerInclude.versionNumberTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.checkUpdateArrowIV.colorFilter = PorterDuffColorFilter(
                             cyanColor, PorterDuff.Mode.SRC_IN)
                     }
 
@@ -457,38 +463,38 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         adLoadingInclude.adIsLoadingTextView.setTextColor(pinkColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(pinkColor)
 
-                        navigationDrawerInclude.navigationDrawerRootLayout.background.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.rootLayout.background.colorFilter = PorterDuffColorFilter(
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.featuresTextView.setBackgroundColor(pinkTransparentColor)
-                        navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.appNameTV.setTextColor(blackColor)
+                        navigationDrawerInclude.featuresTV.setBackgroundColor(pinkTransparentColor)
+                        navigationDrawerInclude.lightAndDarkIV.colorFilter = PorterDuffColorFilter(
                             pinkColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(pinkTransparentColor)
-                        navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.lightAndDarkModeTV.setTextColor(blackColor)
+                        navigationDrawerInclude.switchBetweenLightAndDarkModeTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.generalSettingsTV.setBackgroundColor(pinkTransparentColor)
+                        navigationDrawerInclude.settingsIV.colorFilter = PorterDuffColorFilter(
                             pinkColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.seeTheRequiredSettingsTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.settingsArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.settingsTV.setTextColor(blackColor)
+                        navigationDrawerInclude.seeTheRequiredSettingsTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.settingsArrowIV.colorFilter = PorterDuffColorFilter(
                             pinkColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreIV.colorFilter = PorterDuffColorFilter(
                             pinkColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.visitOurAppStoreArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreTV.setTextColor(blackColor)
+                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.visitOurAppStoreArrowIV.colorFilter = PorterDuffColorFilter(
                             pinkColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyIV.colorFilter = PorterDuffColorFilter(
                             pinkColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.readOurPrivacyPolicyTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.privacyPolicyArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyTV.setTextColor(blackColor)
+                        navigationDrawerInclude.readOurPrivacyPolicyTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.privacyPolicyArrowIV.colorFilter = PorterDuffColorFilter(
                             pinkColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateIV.colorFilter = PorterDuffColorFilter(
                             pinkColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.versionNumberTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.checkUpdateArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateTV.setTextColor(blackColor)
+                        navigationDrawerInclude.versionNumberTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.checkUpdateArrowIV.colorFilter = PorterDuffColorFilter(
                             pinkColor, PorterDuff.Mode.SRC_IN)
                     }
 
@@ -499,38 +505,38 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         adLoadingInclude.adIsLoadingTextView.setTextColor(darkBlueColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(darkBlueColor)
 
-                        navigationDrawerInclude.navigationDrawerRootLayout.background.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.rootLayout.background.colorFilter = PorterDuffColorFilter(
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.featuresTextView.setBackgroundColor(darkBlueTransparentColor)
-                        navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.appNameTV.setTextColor(blackColor)
+                        navigationDrawerInclude.featuresTV.setBackgroundColor(darkBlueTransparentColor)
+                        navigationDrawerInclude.lightAndDarkIV.colorFilter = PorterDuffColorFilter(
                             darkBlueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(darkBlueTransparentColor)
-                        navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.lightAndDarkModeTV.setTextColor(blackColor)
+                        navigationDrawerInclude.switchBetweenLightAndDarkModeTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.generalSettingsTV.setBackgroundColor(darkBlueTransparentColor)
+                        navigationDrawerInclude.settingsIV.colorFilter = PorterDuffColorFilter(
                             darkBlueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.seeTheRequiredSettingsTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.settingsArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.settingsTV.setTextColor(blackColor)
+                        navigationDrawerInclude.seeTheRequiredSettingsTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.settingsArrowIV.colorFilter = PorterDuffColorFilter(
                             darkBlueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreIV.colorFilter = PorterDuffColorFilter(
                             darkBlueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.visitOurAppStoreArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreTV.setTextColor(blackColor)
+                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.visitOurAppStoreArrowIV.colorFilter = PorterDuffColorFilter(
                             darkBlueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyIV.colorFilter = PorterDuffColorFilter(
                             darkBlueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.readOurPrivacyPolicyTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.privacyPolicyArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyTV.setTextColor(blackColor)
+                        navigationDrawerInclude.readOurPrivacyPolicyTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.privacyPolicyArrowIV.colorFilter = PorterDuffColorFilter(
                             darkBlueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateIV.colorFilter = PorterDuffColorFilter(
                             darkBlueColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.versionNumberTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.checkUpdateArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateTV.setTextColor(blackColor)
+                        navigationDrawerInclude.versionNumberTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.checkUpdateArrowIV.colorFilter = PorterDuffColorFilter(
                             darkBlueColor, PorterDuff.Mode.SRC_IN)
                     }
 
@@ -541,38 +547,38 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         adLoadingInclude.adIsLoadingTextView.setTextColor(redColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(redColor)
 
-                        navigationDrawerInclude.navigationDrawerRootLayout.background.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.rootLayout.background.colorFilter = PorterDuffColorFilter(
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.featuresTextView.setBackgroundColor(redTransparentColor)
-                        navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.appNameTV.setTextColor(blackColor)
+                        navigationDrawerInclude.featuresTV.setBackgroundColor(redTransparentColor)
+                        navigationDrawerInclude.lightAndDarkIV.colorFilter = PorterDuffColorFilter(
                             redColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(redTransparentColor)
-                        navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.lightAndDarkModeTV.setTextColor(blackColor)
+                        navigationDrawerInclude.switchBetweenLightAndDarkModeTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.generalSettingsTV.setBackgroundColor(redTransparentColor)
+                        navigationDrawerInclude.settingsIV.colorFilter = PorterDuffColorFilter(
                             redColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.seeTheRequiredSettingsTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.settingsArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.settingsTV.setTextColor(blackColor)
+                        navigationDrawerInclude.seeTheRequiredSettingsTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.settingsArrowIV.colorFilter = PorterDuffColorFilter(
                             redColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreIV.colorFilter = PorterDuffColorFilter(
                             redColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.visitOurAppStoreArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreTV.setTextColor(blackColor)
+                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.visitOurAppStoreArrowIV.colorFilter = PorterDuffColorFilter(
                             redColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyIV.colorFilter = PorterDuffColorFilter(
                             redColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.readOurPrivacyPolicyTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.privacyPolicyArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyTV.setTextColor(blackColor)
+                        navigationDrawerInclude.readOurPrivacyPolicyTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.privacyPolicyArrowIV.colorFilter = PorterDuffColorFilter(
                             redColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateIV.colorFilter = PorterDuffColorFilter(
                             redColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.versionNumberTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.checkUpdateArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateTV.setTextColor(blackColor)
+                        navigationDrawerInclude.versionNumberTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.checkUpdateArrowIV.colorFilter = PorterDuffColorFilter(
                             redColor, PorterDuff.Mode.SRC_IN)
                     }
 
@@ -583,38 +589,38 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         adLoadingInclude.adIsLoadingTextView.setTextColor(lightPurpleColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(lightPurpleColor)
 
-                        navigationDrawerInclude.navigationDrawerRootLayout.background.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.rootLayout.background.colorFilter = PorterDuffColorFilter(
                             snowWhiteColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.appNameTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.featuresTextView.setBackgroundColor(lightPurpleTransparentColor)
-                        navigationDrawerInclude.lightAndDarkImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.appNameTV.setTextColor(blackColor)
+                        navigationDrawerInclude.featuresTV.setBackgroundColor(lightPurpleTransparentColor)
+                        navigationDrawerInclude.lightAndDarkIV.colorFilter = PorterDuffColorFilter(
                             lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.lightAndDarkModeTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.generalSettingsTextView.setBackgroundColor(lightPurpleTransparentColor)
-                        navigationDrawerInclude.settingsImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.lightAndDarkModeTV.setTextColor(blackColor)
+                        navigationDrawerInclude.switchBetweenLightAndDarkModeTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.generalSettingsTV.setBackgroundColor(lightPurpleTransparentColor)
+                        navigationDrawerInclude.settingsIV.colorFilter = PorterDuffColorFilter(
                             lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.settingsTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.seeTheRequiredSettingsTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.settingsArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.settingsTV.setTextColor(blackColor)
+                        navigationDrawerInclude.seeTheRequiredSettingsTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.settingsArrowIV.colorFilter = PorterDuffColorFilter(
                             lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreIV.colorFilter = PorterDuffColorFilter(
                             lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.visitOurAppStoreTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.visitOurAppStoreArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.visitOurAppStoreTV.setTextColor(blackColor)
+                        navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.visitOurAppStoreArrowIV.colorFilter = PorterDuffColorFilter(
                             lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyIV.colorFilter = PorterDuffColorFilter(
                             lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.privacyPolicyTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.readOurPrivacyPolicyTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.privacyPolicyArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.privacyPolicyTV.setTextColor(blackColor)
+                        navigationDrawerInclude.readOurPrivacyPolicyTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.privacyPolicyArrowIV.colorFilter = PorterDuffColorFilter(
                             lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateIV.colorFilter = PorterDuffColorFilter(
                             lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                        navigationDrawerInclude.checkUpdateTextView.setTextColor(blackColor)
-                        navigationDrawerInclude.versionNumberTextView.setTextColor(subTitlesTextColor)
-                        navigationDrawerInclude.checkUpdateArrowImageView.colorFilter = PorterDuffColorFilter(
+                        navigationDrawerInclude.checkUpdateTV.setTextColor(blackColor)
+                        navigationDrawerInclude.versionNumberTV.setTextColor(subTitlesTextColor)
+                        navigationDrawerInclude.checkUpdateArrowIV.colorFilter = PorterDuffColorFilter(
                             lightPurpleColor, PorterDuff.Mode.SRC_IN)
                     }
                 }
@@ -631,21 +637,21 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
 
     private fun applyCustomFont() {
         with(binding) {
-            toolbarTextView.typeface = typeface
+            toolbarTV.typeface = typeface
             adLoadingInclude.adIsLoadingTextView.typeface = typeface
-            navigationDrawerInclude.appNameTextView.typeface = typeface
-            navigationDrawerInclude.featuresTextView.typeface = typeface
-            navigationDrawerInclude.lightAndDarkModeTextView.typeface = typeface
-            navigationDrawerInclude.switchBetweenLightAndDarkModeTextView.typeface = typeface
-            navigationDrawerInclude.generalSettingsTextView.typeface = typeface
-            navigationDrawerInclude.settingsTextView.typeface = typeface
-            navigationDrawerInclude.seeTheRequiredSettingsTextView.typeface = typeface
-            navigationDrawerInclude.visitOurAppStoreTextView.typeface = typeface
-            navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTextView.typeface = typeface
-            navigationDrawerInclude.privacyPolicyTextView.typeface = typeface
-            navigationDrawerInclude.readOurPrivacyPolicyTextView.typeface = typeface
-            navigationDrawerInclude.checkUpdateTextView.typeface = typeface
-            navigationDrawerInclude.versionNumberTextView.typeface = typeface
+            navigationDrawerInclude.appNameTV.typeface = typeface
+            navigationDrawerInclude.featuresTV.typeface = typeface
+            navigationDrawerInclude.lightAndDarkModeTV.typeface = typeface
+            navigationDrawerInclude.switchBetweenLightAndDarkModeTV.typeface = typeface
+            navigationDrawerInclude.generalSettingsTV.typeface = typeface
+            navigationDrawerInclude.settingsTV.typeface = typeface
+            navigationDrawerInclude.seeTheRequiredSettingsTV.typeface = typeface
+            navigationDrawerInclude.visitOurAppStoreTV.typeface = typeface
+            navigationDrawerInclude.checkOurMoreAppsOnPlayStoreTV.typeface = typeface
+            navigationDrawerInclude.privacyPolicyTV.typeface = typeface
+            navigationDrawerInclude.readOurPrivacyPolicyTV.typeface = typeface
+            navigationDrawerInclude.checkUpdateTV.typeface = typeface
+            navigationDrawerInclude.versionNumberTV.typeface = typeface
 
 //        Here We Applying Our Custom Font On Tab Item's Text In TabLayout In Tabbed Activity...........
             val viewGroup = tabLayout.getChildAt(0) as ViewGroup
@@ -666,15 +672,15 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         with(binding) {
             when (view?.id) {
-                R.id.signOutImageView -> {
+                R.id.signOutIV -> {
                     showSignOutDialog()
                 }
 
-                R.id.settingsImageView -> {
+                R.id.settingsIV -> {
                     openSettingsActivity()
                 }
 
-                R.id.openAndCloseDrawerImageView -> {
+                R.id.openAndCloseDrawerIV -> {
                     dashBoardActivityDrawerLayout.openDrawer(GravityCompat.START)
                 }
 
@@ -708,8 +714,15 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
         val signOutDialogLayoutBinding = SignOutDialogLayoutBinding.inflate(layoutInflater)
 
         val signOutDialogBuilder = AlertDialog.Builder(activityContext)
-        signOutDialogBuilder.setView(signOutDialogLayoutBinding.root)
-        signOutDialogBuilder.setCancelable(false)
+        with(signOutDialogBuilder) {
+            setView(signOutDialogLayoutBinding.root)
+            setCancelable(true)
+            setOnDismissListener {
+                if (binding.dashBoardViewPager.currentItem == 0) {
+                    startAndStopFABAnimationAndSwitchBetweenLightAndDarkModeListener.goAhead(1)
+                }
+            }
+        }
         val signOutAlertDialog = signOutDialogBuilder.create()
         if (!activityContext.isFinishing && !activityContext.isDestroyed && !signOutAlertDialog.isShowing) {
             signOutAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -722,9 +735,9 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
         }
 
         with(signOutDialogLayoutBinding) {
-            signOutImageView.startAnimation(applyAnimation(activityContext))
+            signOutIV.startAnimation(applyAnimation(activityContext))
             applyCustomFontOnSignOutDialogViews(this)
-            applyColorSchemeORLightAndDarkModeOnSignOutDialogViews(this)
+            applyLightAndDarkModeOnSignOutDialogViews(this)
 
             noButton.setOnClickListener { _: View ->
                 if (!activityContext.isFinishing && !activityContext.isDestroyed) {
@@ -759,79 +772,98 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
 
     private fun openSettingsActivity() = startActivity(Intent(activityContext, SettingsActivity::class.java))
 
-    private fun applyColorSchemeORLightAndDarkModeOnSignOutDialogViews(
+    private fun applyLightAndDarkModeOnSignOutDialogViews(
             signOutDialogLayoutBinding: SignOutDialogLayoutBinding
     ) {
         with(signOutDialogLayoutBinding) {
-            if (prefs.dayAndNightModeSwitchValue) {
-                signOutDialogRootLayout.background.colorFilter =
-                    PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
-                signOutImageView.setColorFilter(whiteColor)
-                signOutMessageTextView.setTextColor(whiteColor)
-                noButton.background.colorFilter = PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
-                noButton.setTextColor(whiteColor)
-                yesButton.background.colorFilter = PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
-                yesButton.setTextColor(whiteColor)
+            if (prefs.isDarkModeEnable) {
+                rootLayout.background.colorFilter = PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
+                signOutIV.setColorFilter(lightBlueColor)
+                signOutMessageTV.setTextColor(whiteColor)
+                noButton.strokeColor = ColorStateList.valueOf(lightBlueColor)
+                noButton.setTextColor(lightBlueColor)
+                yesButton.setBackgroundColor(lightBlueColor)
+                yesButton.setTextColor(blackColor)
             } else {
                 when (prefs.colorSchemeValue) {
                     0 -> {
-                        signOutImageView.setColorFilter(defaultColor)
-                        noButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
+                        signOutIV.setColorFilter(defaultColor)
+                        noButton.strokeColor = ColorStateList.valueOf(defaultColor)
+                        noButton.setTextColor(defaultColor)
+                        yesButton.setBackgroundColor(defaultColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     1 -> {
-                        signOutImageView.setColorFilter(darkYellowColor)
-                        noButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
+                        signOutIV.setColorFilter(darkYellowColor)
+                        noButton.strokeColor = ColorStateList.valueOf(darkYellowColor)
+                        noButton.setTextColor(darkYellowColor)
+                        yesButton.setBackgroundColor(darkYellowColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     2 -> {
-                        signOutImageView.setColorFilter(orangeColor)
-                        noButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
+                        signOutIV.setColorFilter(orangeColor)
+                        noButton.strokeColor = ColorStateList.valueOf(orangeColor)
+                        noButton.setTextColor(orangeColor)
+                        yesButton.setBackgroundColor(orangeColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     3 -> {
-                        signOutImageView.setColorFilter(lightGreenColor)
-                        noButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
+                        signOutIV.setColorFilter(lightGreenColor)
+                        noButton.strokeColor = ColorStateList.valueOf(lightGreenColor)
+                        noButton.setTextColor(lightGreenColor)
+                        yesButton.setBackgroundColor(lightGreenColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     4 -> {
-                        signOutImageView.setColorFilter(blueColor)
-                        noButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
+                        signOutIV.setColorFilter(blueColor)
+                        noButton.strokeColor = ColorStateList.valueOf(blueColor)
+                        noButton.setTextColor(blueColor)
+                        yesButton.setBackgroundColor(blueColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     5 -> {
-                        signOutImageView.setColorFilter(blueColor)
-                        noButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
+                        signOutIV.setColorFilter(blueColor)
+                        noButton.strokeColor = ColorStateList.valueOf(blueColor)
+                        noButton.setTextColor(blueColor)
+                        yesButton.setBackgroundColor(blueColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     6 -> {
-                        signOutImageView.setColorFilter(pinkColor)
-                        noButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
+                        signOutIV.setColorFilter(pinkColor)
+                        noButton.strokeColor = ColorStateList.valueOf(pinkColor)
+                        noButton.setTextColor(pinkColor)
+                        yesButton.setBackgroundColor(pinkColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     7 -> {
-                        signOutImageView.setColorFilter(darkBlueColor)
-                        noButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
+                        signOutIV.setColorFilter(darkBlueColor)
+                        noButton.strokeColor = ColorStateList.valueOf(darkBlueColor)
+                        noButton.setTextColor(darkBlueColor)
+                        yesButton.setBackgroundColor(darkBlueColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     8 -> {
-                        signOutImageView.setColorFilter(redColor)
-                        noButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
+                        signOutIV.setColorFilter(redColor)
+                        noButton.strokeColor = ColorStateList.valueOf(redColor)
+                        noButton.setTextColor(redColor)
+                        yesButton.setBackgroundColor(redColor)
+                        yesButton.setTextColor(whiteColor)
                     }
 
                     9 -> {
-                        signOutImageView.setColorFilter(lightPurpleColor)
-                        noButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
+                        signOutIV.setColorFilter(lightPurpleColor)
+                        noButton.strokeColor = ColorStateList.valueOf(lightPurpleColor)
+                        noButton.setTextColor(lightPurpleColor)
+                        yesButton.setBackgroundColor(lightPurpleColor)
+                        yesButton.setTextColor(whiteColor)
                     }
                 }
             }
@@ -840,7 +872,7 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
 
     private fun applyCustomFontOnSignOutDialogViews(signOutDialogLayoutBinding: SignOutDialogLayoutBinding) {
         with(signOutDialogLayoutBinding) {
-            signOutMessageTextView.typeface = typeface
+            signOutMessageTV.typeface = typeface
             yesButton.typeface = typeface
             noButton.typeface = typeface
         }
@@ -895,7 +927,7 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
             exitFromAnAppDialogLayoutBinding: ExitFromAnAppDialogLayoutBinding
     ) {
         with(exitFromAnAppDialogLayoutBinding) {
-            if (prefs.dayAndNightModeSwitchValue) {
+            if (prefs.isDarkModeEnable) {
                 exitDialogRootLayout.background.colorFilter =
                     PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
                 exitFromAnAppImageView.setColorFilter(whiteColor)

@@ -2,15 +2,16 @@ package com.todo.list.adapters
 
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.todo.list.databinding.ColorSchemeRecyclerViewSingleItemLayoutBinding
-import com.todo.list.listeners.ColorSchemeListener
 import com.todo.list.models.ColorSchemeModel
 
 class ColorSchemeAdapter(
         private val colorSchemeArrayList: ArrayList<ColorSchemeModel>,
-        private val colorSchemeListener: ColorSchemeListener
+        private val callback: (Int) -> Unit
 ) : RecyclerView.Adapter<ColorSchemeAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -24,20 +25,18 @@ class ColorSchemeAdapter(
             colorCardView.setCardBackgroundColor(colorSchemeModel.color)
 
             if (colorSchemeModel.isSelected) {
-                activeColorImageView.visibility = View.VISIBLE
+                activeColorImageView.visibility = VISIBLE
             } else {
-                activeColorImageView.visibility = View.GONE
+                activeColorImageView.visibility = GONE
             }
 
             holder.itemView.setOnClickListener { _: View? ->
-                colorSchemeListener.changeColorScheme(colorSchemeModel.id)
+                callback.invoke(colorSchemeModel.id)
             }
         }
     }
 
-    override fun getItemCount(): Int {
-        return colorSchemeArrayList.size
-    }
+    override fun getItemCount() = colorSchemeArrayList.size
 
     inner class ViewHolder(val binding: ColorSchemeRecyclerViewSingleItemLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 }
