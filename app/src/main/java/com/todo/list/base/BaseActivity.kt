@@ -60,6 +60,7 @@ open class BaseActivity : AppCompatActivity() {
     protected lateinit var handler: Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.decorView
         super.onCreate(savedInstanceState)
 
         activityContext = this

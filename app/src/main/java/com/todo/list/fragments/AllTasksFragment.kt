@@ -31,6 +31,8 @@ import android.widget.RadioGroup
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -55,9 +57,15 @@ import com.todo.list.db.ToDosDatabase
 import com.todo.list.enums.TabsEnum
 import com.todo.list.enums.TasksCategoriesEnum
 import com.todo.list.listeners.StartAndStopFABAnimationAndSwitchBetweenLightAndDarkModeListener
+import com.todo.list.repositories.TasksRepo
 import com.todo.list.utils.CommonFunctions.applyAnimation
 import com.todo.list.utils.CommonFunctions.isSomethingChanged
+import com.todo.list.viewModels.TasksViewModel
+import com.todo.list.viewModels.TasksViewModelFactory
 import es.dmoral.toasty.Toasty
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Collections
@@ -73,13 +81,15 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     private var belowTempValue = 7
     private var aboveSortedValue = 1
     private var belowSortedValue = 7
-    private lateinit var allTasksArrayList: ArrayList<ToDoTask>
+    private lateinit var allToDosTasksArrayList: ArrayList<ToDoTask>
     private var isAboveSortingValueSelected = false
     private var isBelowSortingValueSelected = false
+    private var isForSorting = true
     private lateinit var adapter: TasksRecyclerViewAdapter
     private lateinit var popupWindow: PopupWindow
     private lateinit var addAndUpdateTasksDialogLayoutBinding: AddAndUpdateTasksDialogLayoutBinding
     private lateinit var toDoTask: ToDoTask
+    private lateinit var tasksViewModel: TasksViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -122,6 +132,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
         startFABAnimation()
 
+
         with(binding) {
             if (prefs.allTasksStyleValue) {
                 listAndGridViewStylesIV.setImageDrawable(listViewStyleImage)
@@ -137,8 +148,14 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             stylesCV.setOnClickListener(this@AllTasksFragment)
         }
 
-        allTasksArrayList = ArrayList()
-        readAllTasks()
+        tasksViewModel = ViewModelProvider(this, TasksViewModelFactory(TasksRepo(ToDosDatabase.getDatabase(fragmentContext).dao())))[TasksViewModel::class.java]
+        lifecycleScope.launch(Dispatchers.IO) {
+            tasksViewModel.updateCompletedAndTimeUpTasks(true, Date(System.currentTimeMillis()))
+        }
+        tasksViewModel.getAllTasks(false).observe(viewLifecycleOwner) {
+            allToDosTasksArrayList = it as ArrayList<ToDoTask>
+            readAllTasks()
+        }
     }
 
     private fun startFABAnimation() =
@@ -171,7 +188,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         with(binding) {
             if (prefs.isDarkModeEnable) {
                 allTasksFragmentCV.setCardBackgroundColor(screensNightModeColor)
-                nothingInHereTV.setTextColor(whiteColor)
+                nothingInHereTV.setTextColor(darkModeTextColor)
                 addNewTasksFAB.backgroundTintList = ColorStateList.valueOf(lightBlueColor)
                 addNewTasksFAB.setColorFilter(blackColor)
                 sortingCV.setCardBackgroundColor(cardsNightModeColor)
@@ -284,13 +301,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
     private fun readAllTasks() {
         with(binding) {
-            if (allTasksArrayList.isNotEmpty()) {
-                allTasksArrayList.clear()
-            }
-            ToDosDatabase.getDatabase(fragmentContext.applicationContext)
-                .dao().updateCompletedAndTimeUpTasks(true, Date(System.currentTimeMillis()))
-            allTasksArrayList = ToDosDatabase.getDatabase(fragmentContext.applicationContext).dao().getAllTasks(false) as ArrayList<ToDoTask>
-            if (allTasksArrayList.size > 0) {
+            if (allToDosTasksArrayList.size > 0) {
                 group1.visibility = GONE
                 group2.visibility = VISIBLE
                 displayAllTasksOnRecyclerView()
@@ -308,68 +319,70 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         if (aboveSortedValue == 1) {
             if (belowSortedValue == 7) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    allTasksArrayList.sortWith(Comparator.comparing(ToDoTask::title))
+                    allToDosTasksArrayList.sortWith(Comparator.comparing(ToDoTask::title))
                 }
             } else if (belowSortedValue == 8) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    allTasksArrayList.sortWith(Collections.reverseOrder(Comparator.comparing(ToDoTask::title)))
+                    allToDosTasksArrayList.sortWith(Collections.reverseOrder(Comparator.comparing(ToDoTask::title)))
                 }
             }
         } else if (aboveSortedValue == 2) {
             if (belowSortedValue == 7) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    allTasksArrayList.sortWith(Comparator.comparing(ToDoTask::day))
+                    allToDosTasksArrayList.sortWith(Comparator.comparing(ToDoTask::day))
                 }
             } else if (belowSortedValue == 8) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    allTasksArrayList.sortWith(Collections.reverseOrder(Comparator.comparing(ToDoTask::day)))
+                    allToDosTasksArrayList.sortWith(Collections.reverseOrder(Comparator.comparing(ToDoTask::day)))
                 }
             }
         } else if (aboveSortedValue == 3) {
             if (belowSortedValue == 7) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    allTasksArrayList.sortWith(Comparator.comparing(ToDoTask::date))
+                    allToDosTasksArrayList.sortWith(Comparator.comparing(ToDoTask::date))
                 }
             } else if (belowSortedValue == 8) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    allTasksArrayList.sortWith(Collections.reverseOrder(Comparator.comparing(ToDoTask::date)))
+                    allToDosTasksArrayList.sortWith(Collections.reverseOrder(Comparator.comparing(ToDoTask::date)))
                 }
             }
         } else if (aboveSortedValue == 4) {
             if (belowSortedValue == 7) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    allTasksArrayList.sortWith(Comparator.comparing(ToDoTask::month))
+                    allToDosTasksArrayList.sortWith(Comparator.comparing(ToDoTask::month))
                 }
             } else if (belowSortedValue == 8) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    allTasksArrayList.sortWith(Collections.reverseOrder(Comparator.comparing(ToDoTask::month)))
+                    allToDosTasksArrayList.sortWith(Collections.reverseOrder(Comparator.comparing(ToDoTask::month)))
                 }
             }
         } else if (aboveSortedValue == 5) {
             if (belowSortedValue == 7) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    allTasksArrayList.sortWith(Comparator.comparing(ToDoTask::year))
+                    allToDosTasksArrayList.sortWith(Comparator.comparing(ToDoTask::year))
                 }
             } else if (belowSortedValue == 8) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    allTasksArrayList.sortWith(Collections.reverseOrder(Comparator.comparing(ToDoTask::year)))
+                    allToDosTasksArrayList.sortWith(Collections.reverseOrder(Comparator.comparing(ToDoTask::year)))
                 }
             }
         } else if (aboveSortedValue == 6) {
             if (belowSortedValue == 7) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    allTasksArrayList.sortWith(Comparator.comparing(ToDoTask::time))
+                    allToDosTasksArrayList.sortWith(Comparator.comparing(ToDoTask::time))
                 }
             } else if (belowSortedValue == 8) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    allTasksArrayList.sortWith(Collections.reverseOrder(Comparator.comparing(ToDoTask::time)))
+                    allToDosTasksArrayList.sortWith(Collections.reverseOrder(Comparator.comparing(ToDoTask::time)))
                 }
             }
         }
     }
 
     private fun displayAllTasksOnRecyclerView() {
-        sortAnArrayList()
+        if (isForSorting) {
+            sortAnArrayList()
+        }
         val colorsSchemeArray = intArrayOf(
             defaultColor, darkYellowColor, orangeColor, lightGreenColor,
             blueColor, cyanColor, pinkColor, darkBlueColor, redColor, lightPurpleColor
@@ -443,7 +456,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             allTasksRecyclerView.layoutManager = layoutManager
             if (::adapter.isInitialized) {
                 allTasksRecyclerView.adapter = adapter
-                adapter.submitList(allTasksArrayList)
+                adapter.submitList(allToDosTasksArrayList)
             }
         }
     }
@@ -460,6 +473,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
             R.id.stylesCV -> {
                 with(binding) {
+                    isForSorting = false
                     if (prefs.allTasksStyleValue) {
                         listAndGridViewStylesIV.setImageDrawable(gridViewStyleImage)
                         listAndGridViewStylesTV.setText(R.string.gridview_text)
@@ -500,6 +514,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             stopFABAnimation()
             applyCustomFontOnAddAndUpdateTasksDialogViews(this)
             applyLightAndDarkModeOnAddAndUpdateTasksDialogViews(this)
+
             if (fromWhereInvoked == 2) {
                 addAndEditIV.setImageResource(R.drawable.update_image)
                 addAndUpdateToDoTaskTV.text = getString(R.string.update_todo_task_text)
@@ -586,65 +601,45 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                             toDoTask = ToDoTask(0, dayOfWeek, dateSDF.format(parse), monthSDF.format(parse),
                                 yearSDF.format(parse), title, description, time, category, completeDateAndTimeDate, false
                             )
-                            val isTaskAlreadySaved = ToDosDatabase.getDatabase(fragmentContext.applicationContext).dao().isTaskAlreadySaved(
-                                toDoTask.day, toDoTask.date, toDoTask.month, toDoTask.year, toDoTask.title,
-                                toDoTask.description, toDoTask.time, toDoTask.category
-                            )
-                            if (isTaskAlreadySaved >= 1) {
-                                Toasty.info(fragmentContext, getString(R.string.this_task_is_already_saved_toast_text),
-                                    Toasty.LENGTH_LONG).show()
-                            } else if (parse.time <= System.currentTimeMillis()) {
-                                Toasty.error(fragmentContext, getString(R.string.please_select_future_date_time_toast_text),
-                                    Toasty.LENGTH_LONG).show()
-                            } else {
-                                val newlyAddedTaskID = ToDosDatabase.getDatabase(fragmentContext.applicationContext).dao().saveTask(toDoTask)
-                                if (newlyAddedTaskID >= 1) {
-                                    prefs.category = category
-
-                                    val searchingIndex = allTasksArrayList.binarySearch(
-                                        toDoTask, compareBy(
-                                            { it.title },
-                                            { it.day },
-                                            { it.date },
-                                            { it.month },
-                                            { it.year },
-                                            { it.time }
-                                        )
-                                    )
-
-                                    val insertionIndex = if (searchingIndex < 0) {
-                                        -(searchingIndex + 1)
-                                    } else {
-                                        searchingIndex
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                val isTaskAlreadySaved = tasksViewModel.isTaskAlreadySaved(toDoTask.day, toDoTask.date,
+                                    toDoTask.month, toDoTask.year, toDoTask.title, toDoTask.description, toDoTask.time,
+                                    toDoTask.category).await()
+                                if (isTaskAlreadySaved >= 1) {
+                                    withContext(Dispatchers.Main) {
+                                        Toasty.info(fragmentContext, getString(R.string.this_task_is_already_saved_toast_text),
+                                            Toasty.LENGTH_LONG).show()
                                     }
-
-                                    toDoTask.id = newlyAddedTaskID.toInt()
-                                    allTasksArrayList.add(insertionIndex, toDoTask)
-                                    if (::adapter.isInitialized) {
-                                        adapter.notifyItemInserted(insertionIndex)
-                                    } else {
-                                        readAllTasks()
+                                } else if (parse.time <= System.currentTimeMillis()) {
+                                    withContext(Dispatchers.Main) {
+                                        Toasty.error(fragmentContext, getString(R.string.please_select_future_date_time_toast_text),
+                                            Toasty.LENGTH_LONG).show()
                                     }
-                                    with(binding) {
-                                        allTasksRecyclerView.smoothScrollToPosition(insertionIndex)
-                                    }
-
-                                    Toasty.success(requireContext(), getString(R.string.task_is_saved_successfully_toast_text),
-                                        Toasty.LENGTH_LONG).show()
-                                    titleTIL.editText?.text = null
-                                    descriptionTIL.editText?.text = null
-                                    dayOfWeekTIL.editText?.text = null
-                                    dateTIL.editText?.text = null
-                                    timeTIL.editText?.text = null
-                                    titleTIL.editText?.requestFocus()
-                                    category = 0
-                                    if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
-                                        addTasksAlertDialog.dismiss()
-                                    }
-                                    startFABAnimation()
                                 } else {
-                                    Toasty.error(requireContext(), getString(R.string.task_is_not_saved_successfully_toast_text),
-                                        Toasty.LENGTH_LONG).show()
+                                    val newlyAddedTaskID = tasksViewModel.saveTask(toDoTask).await()
+                                    if (newlyAddedTaskID >= 1) {
+                                        prefs.category = category
+                                        withContext(Dispatchers.Main) {
+                                            Toasty.success(fragmentContext, getString(R.string.task_is_saved_successfully_toast_text),
+                                                Toasty.LENGTH_LONG).show()
+                                            titleTIL.editText?.text = null
+                                            descriptionTIL.editText?.text = null
+                                            dayOfWeekTIL.editText?.text = null
+                                            dateTIL.editText?.text = null
+                                            timeTIL.editText?.text = null
+                                            titleTIL.editText?.requestFocus()
+                                            category = 0
+                                            if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
+                                                addTasksAlertDialog.dismiss()
+                                            }
+                                            startFABAnimation()
+                                        }
+                                    } else {
+                                        withContext(Dispatchers.Main) {
+                                            Toasty.error(fragmentContext, getString(R.string.task_is_not_saved_successfully_toast_text),
+                                                Toasty.LENGTH_LONG).show()
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -654,29 +649,29 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                             yearSDF.format(parse), title, description, time, category,
                             completeDateAndTimeDate, false
                         )
-                        if (updatedToDoTask != toDoTask) {
-                            val isUpdated = ToDosDatabase.getDatabase(fragmentContext.applicationContext).dao().updateTask(updatedToDoTask)
-                            if (isUpdated == 1) {
-                                Toasty.success(fragmentContext, getString(R.string.updated_successfully_toast_text),
-                                    Toasty.LENGTH_LONG).show()
-                                prefs.category = category
-
-                                val updatableObjectIndex = allTasksArrayList.indexOf(toDoTask)
-                                allTasksArrayList[updatableObjectIndex] = updatedToDoTask
-                                sortAnArrayList()
-                                adapter.notifyDataSetChanged()
-
-                                if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
-                                    addTasksAlertDialog.dismiss()
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            if (updatedToDoTask != toDoTask) {
+                                val isUpdated = tasksViewModel.updateTask(updatedToDoTask).await()
+                                if (isUpdated == 1) {
+                                    withContext(Dispatchers.Main) {
+                                        Toasty.success(fragmentContext, getString(R.string.updated_successfully_toast_text),
+                                            Toasty.LENGTH_LONG).show()
+                                        prefs.category = category
+                                        if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
+                                            addTasksAlertDialog.dismiss()
+                                        }
+                                        startFABAnimation()
+                                        category = 0
+                                    }
+                                } else {
+                                    withContext(Dispatchers.Main) {
+                                        Toasty.success(fragmentContext, getString(R.string.not_updated_successfully_toast_text),
+                                            Toasty.LENGTH_LONG).show()
+                                    }
                                 }
-                                startFABAnimation()
-                                category = 0
-                            } else {
-                                Toasty.success(fragmentContext, getString(R.string.not_updated_successfully_toast_text),
-                                    Toasty.LENGTH_LONG).show()
+                            } else if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
+                                addTasksAlertDialog.dismiss()
                             }
-                        } else if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
-                            addTasksAlertDialog.dismiss()
                         }
                     }
                 }
@@ -923,6 +918,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         }
 
         prefs.saveAllTasksSortingValues(aboveSortedValue, belowSortedValue)
+        isForSorting = true
         displayAllTasksOnRecyclerView()
         startFABAnimation()
     }
@@ -1718,28 +1714,20 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             }
 
             yesButton.setOnClickListener { _: View? ->
-                val isDeleted = ToDosDatabase.getDatabase(fragmentContext.applicationContext).dao().deleteTask(toDoTask)
-                if (isDeleted == 1) {
-                    Toasty.success(fragmentContext, R.string.deleted_successfully_toast_text, Toasty.LENGTH_LONG)
-                        .show()
-                    if (allTasksArrayList.contains(toDoTask)) {
-                        val removableObjectIndex = allTasksArrayList.indexOf(toDoTask)
-                        allTasksArrayList.removeAt(removableObjectIndex)
-                        adapter.notifyItemRemoved(removableObjectIndex)
-                        if (allTasksArrayList.isEmpty()) {
-                            with(binding) {
-                                group1.visibility = VISIBLE
-                                group2.visibility = GONE
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val isDeleted = tasksViewModel.deleteTask(toDoTask).await()
+                    withContext(Dispatchers.Main) {
+                        if (isDeleted == 1) {
+                            Toasty.success(fragmentContext, R.string.deleted_successfully_toast_text, Toasty.LENGTH_LONG).show()
+                            if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
+                                deleteTaskAlertDialog.dismiss()
                             }
+                            startFABAnimation()
+                        } else {
+                            Toasty.success(fragmentContext, R.string.deleted_unsuccessfully_toast_text, Toasty.LENGTH_LONG)
+                                .show()
                         }
                     }
-                    if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
-                        deleteTaskAlertDialog.dismiss()
-                    }
-                    startFABAnimation()
-                } else {
-                    Toasty.success(fragmentContext, R.string.deleted_unsuccessfully_toast_text, Toasty.LENGTH_LONG)
-                        .show()
                 }
             }
         }

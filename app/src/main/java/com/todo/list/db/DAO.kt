@@ -1,5 +1,6 @@
 package com.todo.list.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -11,22 +12,22 @@ import java.util.Date
 interface DAO {
 
     @Insert
-    fun saveTask(toDoTask: ToDoTask): Long
+    suspend fun saveTask(toDoTask: ToDoTask): Long
 
     @Query("SELECT * FROM ToDosTasks WHERE Is_Task_Completed_OR_TimeUp = :isCompletedAndTimeUp")
-    fun getAllTasks(isCompletedAndTimeUp: Boolean): List<ToDoTask>
+    fun getAllTasks(isCompletedAndTimeUp: Boolean): LiveData<List<ToDoTask>>
 
     @Query("SELECT * FROM ToDosTasks WHERE Tasks_Category = :category")
     fun getAllSpecificTasks(category: Int): List<ToDoTask>
 
     @Delete
-    fun deleteTask(toDoTask: ToDoTask): Int
+    suspend fun deleteTask(toDoTask: ToDoTask): Int
 
     @Update
-    fun updateTask(toDoTask: ToDoTask): Int
+    suspend fun updateTask(toDoTask: ToDoTask): Int
 
     @Query("SELECT COUNT(*) FROM ToDosTasks WHERE Week_Days = :dayOfWeek AND Month_Dates = :date AND Month_Names = :month AND Years = :year AND Tasks_Titles = :title AND Tasks_Descriptions = :description AND Tasks_Time = :time AND Tasks_Category = :category")
-    fun isTaskAlreadySaved(
+    suspend fun isTaskAlreadySaved(
         dayOfWeek: String,
         date: String,
         month: String,
@@ -38,5 +39,5 @@ interface DAO {
     ): Int
 
     @Query("UPDATE ToDosTasks SET Is_Task_Completed_OR_TimeUp = :completed WHERE Date_And_Time_In_Millis <= :taskCompletedTime")
-    fun updateCompletedAndTimeUpTasks(completed: Boolean, taskCompletedTime: Date)
+    suspend fun updateCompletedAndTimeUpTasks(completed: Boolean, taskCompletedTime: Date)
 }

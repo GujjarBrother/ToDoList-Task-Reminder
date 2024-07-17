@@ -13,13 +13,8 @@ class ViewPagerAdapter(val activity: FragmentActivity) : FragmentStateAdapter(ac
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            TabsEnum.TASKS_TAB.ordinal -> {
-                AllTasksFragment()
-            }
-
-            else -> {
-                CompletedTasksFragment()
-            }
+            TabsEnum.TASKS_TAB.ordinal -> AllTasksFragment()
+            else -> CompletedTasksFragment()
         }
     }
 }
