@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -59,8 +59,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 
 //    'sdp' dependency...
     api 'com.intuit.sdp:sdp-android:1.1.1'
@@ -75,24 +75,29 @@ dependencies {
     api 'com.airbnb.android:lottie:6.4.0'
 
 //    'ViewModel & LiveData' dependency...
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.1'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.1'
+    api 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3'
+    api 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.3'
 
 //    'CircularImageView' dependency...
     api 'com.github.AtifSayings:CircularImageView:1.0.2'
 
 //    'MultiDex' dependency...
-    implementation "androidx.multidex:multidex:2.0.1"
+    api "androidx.multidex:multidex:2.0.1"
 
 //    'ShapeableImageView' dependency...
     api 'com.google.android.material:material:1.12.0'
 
-//    'ROOM database' dependency...
-    def room_version = "2.6.1"
-    implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-
 //    'Ads' dependency...
-    api "com.google.android.gms:play-services-ads:23.1.0"
+    api "com.google.android.gms:play-services-ads:23.2.0"
+
+//    'Coroutines' dependencies...
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0-RC"
+
+//    'ROOM database' dependency...
+    api "androidx.room:room-runtime:2.6.1"
+    ksp "androidx.room:room-compiler:2.6.1"
+
+//    To use Kotlin Coroutines...
+    api "androidx.room:room-ktx:2.6.1"
 }

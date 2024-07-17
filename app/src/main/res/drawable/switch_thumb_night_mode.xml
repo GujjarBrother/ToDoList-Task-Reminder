@@ -5,7 +5,7 @@
         <shape android:shape="rectangle">
 
             <solid
-                android:color="@color/cardsNightModeColor"/>
+                android:color="@color/lightBlueColor"/>
 
             <size
                 android:width="@dimen/_13sdp"
@@ -16,8 +16,9 @@
 
             <stroke
                 android:width="@dimen/_1sdp"
-                android:color="@color/lightBlueColor"/>
+                android:color="@color/whiteColor"/>
 
         </shape>
     </item>
+
 </selector>

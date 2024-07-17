@@ -2,8 +2,6 @@ package com.todo.list.activities
 
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
@@ -34,7 +32,7 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
         binding = ActivityFeedbackBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        applyColorSchemeORLightAndDarkMode()
+        applyLightAndDarkMode()
         keepActivityOn(activityContext)
         applyCustomFont()
 
@@ -45,7 +43,7 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
                 loadingLayout = adLoadingInclude.rootLayout,
                 isInternetConnected = isInternetConnectedORNot((getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager))
             )
-            backArrowImageView.setOnClickListener(this@FeedbackActivity)
+            backArrowIV.setOnClickListener(this@FeedbackActivity)
             submitButton.setOnClickListener(this@FeedbackActivity)
             cancelButton.setOnClickListener(this@FeedbackActivity)
             signUpIssuesCB.setOnCheckedChangeListener { _: CompoundButton, isChecked: Boolean ->
@@ -99,15 +97,15 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
             otherIssuesCB.setOnCheckedChangeListener { _: CompoundButton, isChecked: Boolean ->
                 if (isChecked) {
                     feedbackArrayList.add(otherIssuesCB.text.toString().trim())
-                    feedbackEditTextCardView.visibility = View.VISIBLE
+                    feedbackEditTextCV.visibility = View.VISIBLE
                     showSoftKeyboard()
-                    feedbackEditText.requestFocus()
+                    feedbackET.requestFocus()
                     otherIssuesCheck = true
                 } else {
-                    feedbackEditText.text = null
+                    feedbackET.text = null
                     feedbackArrayList.remove(otherIssuesCB.text.toString().trim())
-                    feedbackEditTextCardView.visibility = View.GONE
-                    hideSoftKeyboard(feedbackEditText)
+                    feedbackEditTextCV.visibility = View.GONE
+                    hideSoftKeyboard(feedbackET)
                     otherIssuesCheck = false
                 }
             }
@@ -125,8 +123,8 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
 
     private fun applyCustomFont() {
         with(binding) {
-            toolbarTextView.typeface = typeface
-            selectFeedbackTextView.typeface = typeface
+            toolbarTV.typeface = typeface
+            selectFeedbackTV.typeface = typeface
             signUpIssuesCB.typeface = typeface
             signInIssuesCB.typeface = typeface
             tasksSaveIssuesCB.typeface = typeface
@@ -134,41 +132,42 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
             tasksDeleteIssuesCB.typeface = typeface
             signOutIssuesCB.typeface = typeface
             otherIssuesCB.typeface = typeface
-            feedbackEditText.typeface = typeface
+            feedbackET.typeface = typeface
             submitButton.typeface = typeface
             cancelButton.typeface = typeface
             adLoadingInclude.adIsLoadingTextView.typeface = typeface
         }
     }
 
-    private fun applyColorSchemeORLightAndDarkMode() {
+    private fun applyLightAndDarkMode() {
         with(binding) {
             if (prefs.isDarkModeEnable) {
                 changeStatusBarColor(activityContext, screensNightModeColor)
                 toolbar.setBackgroundColor(screensNightModeColor)
                 include.root.visibility = View.VISIBLE
-                feedbackActivityRootLayout.setBackgroundColor(screensNightModeColor)
-                selectFeedbackTextView.setTextColor(whiteColor)
-                signUpIssuesCB.buttonTintList = ColorStateList.valueOf(whiteColor)
+                rootLayout.setBackgroundColor(screensNightModeColor)
+                selectFeedbackTV.setTextColor(darkModeTextColor)
+                signUpIssuesCB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
                 signUpIssuesCB.setTextColor(whiteColor)
-                signInIssuesCB.buttonTintList = ColorStateList.valueOf(whiteColor)
+                signInIssuesCB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
                 signInIssuesCB.setTextColor(whiteColor)
-                tasksSaveIssuesCB.buttonTintList = ColorStateList.valueOf(whiteColor)
+                tasksSaveIssuesCB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
                 tasksSaveIssuesCB.setTextColor(whiteColor)
-                tasksUpdateIssuesCB.buttonTintList = ColorStateList.valueOf(whiteColor)
+                tasksUpdateIssuesCB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
                 tasksUpdateIssuesCB.setTextColor(whiteColor)
-                tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(whiteColor)
+                tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
                 tasksDeleteIssuesCB.setTextColor(whiteColor)
-                signOutIssuesCB.buttonTintList = ColorStateList.valueOf(whiteColor)
+                signOutIssuesCB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
                 signOutIssuesCB.setTextColor(whiteColor)
-                otherIssuesCB.buttonTintList = ColorStateList.valueOf(whiteColor)
+                otherIssuesCB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
                 otherIssuesCB.setTextColor(whiteColor)
-                feedbackEditTextCardView.setCardBackgroundColor(cardsNightModeColor)
-                feedbackEditText.setTextColor(whiteColor)
-                cancelButton.background.colorFilter = PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
-                cancelButton.setTextColor(whiteColor)
-                submitButton.background.colorFilter = PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
-                submitButton.setTextColor(whiteColor)
+                feedbackEditTextCV.setCardBackgroundColor(cardsNightModeColor)
+                feedbackET.setHintTextColor(darkModeTextColor)
+                feedbackET.setTextColor(whiteColor)
+                cancelButton.strokeColor = ColorStateList.valueOf(lightBlueColor)
+                cancelButton.setTextColor(lightBlueColor)
+                submitButton.setBackgroundColor(lightBlueColor)
+                submitButton.setTextColor(blackColor)
                 adLoadingInclude.adIsLoadingTextView.setTextColor(whiteColor)
                 adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(whiteColor)
             } else {
@@ -183,8 +182,9 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
                         tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(defaultColor)
                         signOutIssuesCB.buttonTintList = ColorStateList.valueOf(defaultColor)
                         otherIssuesCB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        cancelButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
-                        submitButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
+                        cancelButton.strokeColor = ColorStateList.valueOf(defaultColor)
+                        cancelButton.setTextColor(defaultColor)
+                        submitButton.setBackgroundColor(defaultColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(defaultColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(defaultColor)
                     }
@@ -199,8 +199,9 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
                         tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
                         signOutIssuesCB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
                         otherIssuesCB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        cancelButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
-                        submitButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
+                        cancelButton.strokeColor = ColorStateList.valueOf(darkYellowColor)
+                        cancelButton.setTextColor(darkYellowColor)
+                        submitButton.setBackgroundColor(darkYellowColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(darkYellowColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(darkYellowColor)
                     }
@@ -215,8 +216,9 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
                         tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(orangeColor)
                         signOutIssuesCB.buttonTintList = ColorStateList.valueOf(orangeColor)
                         otherIssuesCB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        cancelButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
-                        submitButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
+                        cancelButton.strokeColor = ColorStateList.valueOf(orangeColor)
+                        cancelButton.setTextColor(orangeColor)
+                        submitButton.setBackgroundColor(orangeColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(orangeColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(orangeColor)
                     }
@@ -231,8 +233,9 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
                         tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
                         signOutIssuesCB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
                         otherIssuesCB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        cancelButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
-                        submitButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
+                        cancelButton.strokeColor = ColorStateList.valueOf(lightGreenColor)
+                        cancelButton.setTextColor(lightGreenColor)
+                        submitButton.setBackgroundColor(lightGreenColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(lightGreenColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(lightGreenColor)
                     }
@@ -247,8 +250,9 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
                         tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(blueColor)
                         signOutIssuesCB.buttonTintList = ColorStateList.valueOf(blueColor)
                         otherIssuesCB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        cancelButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
-                        submitButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
+                        cancelButton.strokeColor = ColorStateList.valueOf(blueColor)
+                        cancelButton.setTextColor(blueColor)
+                        submitButton.setBackgroundColor(blueColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(blueColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(blueColor)
                     }
@@ -263,8 +267,9 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
                         tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(cyanColor)
                         signOutIssuesCB.buttonTintList = ColorStateList.valueOf(cyanColor)
                         otherIssuesCB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        cancelButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
-                        submitButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
+                        cancelButton.strokeColor = ColorStateList.valueOf(cyanColor)
+                        cancelButton.setTextColor(cyanColor)
+                        submitButton.setBackgroundColor(cyanColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(cyanColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(cyanColor)
                     }
@@ -279,8 +284,9 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
                         tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(pinkColor)
                         signOutIssuesCB.buttonTintList = ColorStateList.valueOf(pinkColor)
                         otherIssuesCB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        cancelButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
-                        submitButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
+                        cancelButton.strokeColor = ColorStateList.valueOf(pinkColor)
+                        cancelButton.setTextColor(pinkColor)
+                        submitButton.setBackgroundColor(pinkColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(pinkColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(pinkColor)
                     }
@@ -295,8 +301,9 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
                         tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
                         signOutIssuesCB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
                         otherIssuesCB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        cancelButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
-                        submitButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
+                        cancelButton.strokeColor = ColorStateList.valueOf(darkBlueColor)
+                        cancelButton.setTextColor(darkBlueColor)
+                        submitButton.setBackgroundColor(darkBlueColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(darkBlueColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(darkBlueColor)
                     }
@@ -311,8 +318,9 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
                         tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(redColor)
                         signOutIssuesCB.buttonTintList = ColorStateList.valueOf(redColor)
                         otherIssuesCB.buttonTintList = ColorStateList.valueOf(redColor)
-                        cancelButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
-                        submitButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
+                        cancelButton.strokeColor = ColorStateList.valueOf(redColor)
+                        cancelButton.setTextColor(redColor)
+                        submitButton.setBackgroundColor(redColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(redColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(redColor)
                     }
@@ -327,8 +335,9 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
                         tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
                         signOutIssuesCB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
                         otherIssuesCB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        cancelButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                        submitButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
+                        cancelButton.strokeColor = ColorStateList.valueOf(lightPurpleColor)
+                        cancelButton.setTextColor(lightPurpleColor)
+                        submitButton.setBackgroundColor(lightPurpleColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(lightPurpleColor)
                         adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(lightPurpleColor)
                     }
@@ -339,23 +348,23 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.back_arrow_image_view -> {
+            R.id.backArrowIV -> {
                 goBackToSettingsActivity()
             }
 
-            R.id.cancel_button -> {
+            R.id.cancelButton -> {
                 goBackToSettingsActivity()
             }
 
-            R.id.submit_button -> {
+            R.id.submitButton -> {
                 if (feedbackArrayList.isEmpty()) {
                     Toasty.error(activityContext, R.string.please_select_at_least_one_issue_to_submit_toast_text, Toasty.LENGTH_LONG)
                             .show()
                 } else {
                     if (otherIssuesCheck) {
-                        val otherIssue = binding.feedbackEditText.text.toString().trim()
+                        val otherIssue = binding.feedbackET.text.toString().trim()
                         if (TextUtils.isEmpty(otherIssue)) {
-                            binding.feedbackEditText.error = getString(R.string.write_your_issues_here_text)
+                            binding.feedbackET.error = getString(R.string.write_your_issues_here_text)
                         } else {
                             sendFeedback(feedbackArrayList, otherIssue)
                         }

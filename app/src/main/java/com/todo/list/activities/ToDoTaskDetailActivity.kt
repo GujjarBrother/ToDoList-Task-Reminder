@@ -15,6 +15,7 @@ import com.todo.list.databinding.ActivityToDoTaskDetailBinding
 import com.todo.list.db.ToDoTask
 import com.todo.list.utils.CommonFunctions.changeStatusBarColor
 import com.todo.list.utils.CommonFunctions.keepActivityOn
+import java.util.Locale
 
 class ToDoTaskDetailActivity : BaseActivity(), View.OnClickListener {
 
@@ -25,7 +26,7 @@ class ToDoTaskDetailActivity : BaseActivity(), View.OnClickListener {
         binding = ActivityToDoTaskDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        applyColorSchemeORLightAndDarkMode()
+        applyLightAndDarkMode()
         keepActivityOn(activityContext)
         applyCustomFont()
 
@@ -39,18 +40,18 @@ class ToDoTaskDetailActivity : BaseActivity(), View.OnClickListener {
                 isInternetConnected = isInternetConnectedORNot((getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager))
             )
             if (toDoTask != null) {
-                toolbarTextView.text = toDoTask.title
-                titleTextView.text = toDoTask.title
-                descriptionTextView.text = toDoTask.description
-//            dateAndDayTextView.text = toDoTask.day.substring(0, 3) + ", " + toDoTask.month + " " + toDoTask.date + ", " + toDoTask.year
-                dateAndDayTextView.text = "${toDoTask.day}, ${toDoTask.month} ${toDoTask.date}, ${toDoTask.year}"
-                timeTextView.text = toDoTask.time
+                toolbarTV.text = toDoTask.title
+                titleTV.text = toDoTask.title
+                descriptionTV.text = toDoTask.description
+                dateAndDayTV.text = String.format(Locale.getDefault(), "%s, %s %s, %s",
+                    toDoTask.day, toDoTask.month, toDoTask.date, toDoTask.year)
+                timeTV.text = toDoTask.time
             }
-            titleTextView.textSize = prefs.textSizeValue.toFloat()
-            descriptionTextView.textSize = prefs.textSizeValue.toFloat()
-            dateAndDayTextView.textSize = prefs.textSizeValue.toFloat()
-            timeTextView.textSize = prefs.textSizeValue.toFloat()
-            backArrowImageView.setOnClickListener(this@ToDoTaskDetailActivity)
+            titleTV.textSize = prefs.textSizeValue.toFloat()
+            descriptionTV.textSize = prefs.textSizeValue.toFloat()
+            dateAndDayTV.textSize = prefs.textSizeValue.toFloat()
+            timeTV.textSize = prefs.textSizeValue.toFloat()
+            backArrowIV.setOnClickListener(this@ToDoTaskDetailActivity)
         }
 
         val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -63,36 +64,36 @@ class ToDoTaskDetailActivity : BaseActivity(), View.OnClickListener {
 
     private fun applyCustomFont() {
         with(binding) {
-            toolbarTextView.typeface = typeface
-            titleTextView.typeface = typeface
-            descriptionTextView.typeface = typeface
-            dateAndDayTextView.typeface = typeface
-            timeTextView.typeface = typeface
+            toolbarTV.typeface = typeface
+            titleTV.typeface = typeface
+            descriptionTV.typeface = typeface
+            dateAndDayTV.typeface = typeface
+            timeTV.typeface = typeface
             adLoadingInclude.adIsLoadingTextView.typeface = typeface
         }
     }
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.back_arrow_image_view -> {
+            R.id.backArrowIV -> {
                 goBackToDashBoardActivity()
             }
         }
     }
 
-    private fun applyColorSchemeORLightAndDarkMode() {
+    private fun applyLightAndDarkMode() {
         with(binding) {
             if (prefs.isDarkModeEnable) {
                 changeStatusBarColor(activityContext, screensNightModeColor)
                 include.root.visibility = View.VISIBLE
-                detailActivityRootLayout.setBackgroundColor(screensNightModeColor)
+                rootLayout.setBackgroundColor(screensNightModeColor)
                 toolbar.setBackgroundColor(screensNightModeColor)
-                backArrowImageView.setColorFilter(whiteColor)
-                toolbarTextView.setTextColor(whiteColor)
-                titleTextView.setTextColor(whiteColor)
-                descriptionTextView.setTextColor(whiteColor)
-                dateAndDayTextView.setTextColor(whiteColor)
-                timeTextView.setTextColor(whiteColor)
+                backArrowIV.setColorFilter(whiteColor)
+                toolbarTV.setTextColor(whiteColor)
+                titleTV.setTextColor(whiteColor)
+                descriptionTV.setTextColor(whiteColor)
+                dateAndDayTV.setTextColor(whiteColor)
+                timeTV.setTextColor(whiteColor)
                 adLoadingInclude.adIsLoadingTextView.setTextColor(whiteColor)
                 adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(whiteColor)
             } else {

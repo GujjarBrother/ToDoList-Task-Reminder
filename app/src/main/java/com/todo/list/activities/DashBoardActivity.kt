@@ -151,8 +151,7 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                 signOutIV.setColorFilter(lightBlueColor)
                 settingsIV.setColorFilter(lightBlueColor)
 
-                navigationDrawerInclude.rootLayout.background.colorFilter = PorterDuffColorFilter(
-                    screensNightModeColor, PorterDuff.Mode.SRC_IN)
+                navigationDrawerInclude.rootLayout.background.colorFilter = PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
                 navigationDrawerInclude.appNameTV.setTextColor(whiteColor)
                 navigationDrawerInclude.featuresTV.setBackgroundColor(cardsNightModeColor)
                 navigationDrawerInclude.lightAndDarkIV.setImageResource(R.drawable.sun_image)
@@ -161,7 +160,7 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                 navigationDrawerInclude.lightAndDarkModeTV.setTextColor(whiteColor)
                 navigationDrawerInclude.switchBetweenLightAndDarkModeTV.setTextColor(darkModeTextColor)
                 navigationDrawerInclude.lightAndDarkModeSwitch.isChecked = true
-                trackDrawable.colorFilter = PorterDuffColorFilter(lightBlueColor, PorterDuff.Mode.SRC_IN)
+                trackDrawable.colorFilter = PorterDuffColorFilter(snowWhiteColor, PorterDuff.Mode.SRC_IN)
                 navigationDrawerInclude.lightAndDarkModeSwitch.thumbDrawable =
                     ContextCompat.getDrawable(activityContext, R.drawable.switch_thumb_night_mode)
                 navigationDrawerInclude.generalSettingsTV.setBackgroundColor(cardsNightModeColor)
@@ -791,7 +790,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         noButton.strokeColor = ColorStateList.valueOf(defaultColor)
                         noButton.setTextColor(defaultColor)
                         yesButton.setBackgroundColor(defaultColor)
-                        yesButton.setTextColor(whiteColor)
                     }
 
                     1 -> {
@@ -799,7 +797,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         noButton.strokeColor = ColorStateList.valueOf(darkYellowColor)
                         noButton.setTextColor(darkYellowColor)
                         yesButton.setBackgroundColor(darkYellowColor)
-                        yesButton.setTextColor(whiteColor)
                     }
 
                     2 -> {
@@ -807,7 +804,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         noButton.strokeColor = ColorStateList.valueOf(orangeColor)
                         noButton.setTextColor(orangeColor)
                         yesButton.setBackgroundColor(orangeColor)
-                        yesButton.setTextColor(whiteColor)
                     }
 
                     3 -> {
@@ -815,7 +811,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         noButton.strokeColor = ColorStateList.valueOf(lightGreenColor)
                         noButton.setTextColor(lightGreenColor)
                         yesButton.setBackgroundColor(lightGreenColor)
-                        yesButton.setTextColor(whiteColor)
                     }
 
                     4 -> {
@@ -823,7 +818,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         noButton.strokeColor = ColorStateList.valueOf(blueColor)
                         noButton.setTextColor(blueColor)
                         yesButton.setBackgroundColor(blueColor)
-                        yesButton.setTextColor(whiteColor)
                     }
 
                     5 -> {
@@ -831,7 +825,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         noButton.strokeColor = ColorStateList.valueOf(blueColor)
                         noButton.setTextColor(blueColor)
                         yesButton.setBackgroundColor(blueColor)
-                        yesButton.setTextColor(whiteColor)
                     }
 
                     6 -> {
@@ -839,7 +832,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         noButton.strokeColor = ColorStateList.valueOf(pinkColor)
                         noButton.setTextColor(pinkColor)
                         yesButton.setBackgroundColor(pinkColor)
-                        yesButton.setTextColor(whiteColor)
                     }
 
                     7 -> {
@@ -847,7 +839,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         noButton.strokeColor = ColorStateList.valueOf(darkBlueColor)
                         noButton.setTextColor(darkBlueColor)
                         yesButton.setBackgroundColor(darkBlueColor)
-                        yesButton.setTextColor(whiteColor)
                     }
 
                     8 -> {
@@ -855,7 +846,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         noButton.strokeColor = ColorStateList.valueOf(redColor)
                         noButton.setTextColor(redColor)
                         yesButton.setBackgroundColor(redColor)
-                        yesButton.setTextColor(whiteColor)
                     }
 
                     9 -> {
@@ -863,7 +853,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                         noButton.strokeColor = ColorStateList.valueOf(lightPurpleColor)
                         noButton.setTextColor(lightPurpleColor)
                         yesButton.setBackgroundColor(lightPurpleColor)
-                        yesButton.setTextColor(whiteColor)
                     }
                 }
             }
@@ -882,8 +871,15 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
         val exitFromAnAppDialogLayoutBinding = ExitFromAnAppDialogLayoutBinding.inflate(layoutInflater)
 
         val exitFromAnAppDialogBuilder = AlertDialog.Builder(activityContext)
-        exitFromAnAppDialogBuilder.setView(exitFromAnAppDialogLayoutBinding.root)
-        exitFromAnAppDialogBuilder.setCancelable(false)
+        with(exitFromAnAppDialogBuilder) {
+            setView(exitFromAnAppDialogLayoutBinding.root)
+            setCancelable(true)
+            setOnDismissListener {
+                if (binding.dashBoardViewPager.currentItem == 0) {
+                    startAndStopFABAnimationAndSwitchBetweenLightAndDarkModeListener.goAhead(1)
+                }
+            }
+        }
         val exitFromAnAppAlertDialog = exitFromAnAppDialogBuilder.create()
         if (!activityContext.isFinishing && !activityContext.isDestroyed && !exitFromAnAppAlertDialog.isShowing) {
             exitFromAnAppAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -896,9 +892,9 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
         }
 
         with(exitFromAnAppDialogLayoutBinding) {
-            exitFromAnAppImageView.startAnimation(applyAnimation(activityContext))
+            exitFromAnAppIV.startAnimation(applyAnimation(activityContext))
             applyCustomFontOnExitFromAnAppDialogViews(this)
-            applyColorSchemeAndLightDarkModeOnExitDialogViews(this)
+            applyLightAndDarkModeOnExitDialogViews(this)
 
             noButton.setOnClickListener { _: View ->
                 if (!activityContext.isFinishing && !activityContext.isDestroyed) {
@@ -923,79 +919,88 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
         finish()
     }
 
-    private fun applyColorSchemeAndLightDarkModeOnExitDialogViews(
+    private fun applyLightAndDarkModeOnExitDialogViews(
             exitFromAnAppDialogLayoutBinding: ExitFromAnAppDialogLayoutBinding
     ) {
         with(exitFromAnAppDialogLayoutBinding) {
             if (prefs.isDarkModeEnable) {
-                exitDialogRootLayout.background.colorFilter =
-                    PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
-                exitFromAnAppImageView.setColorFilter(whiteColor)
-                exitFromAnAppMessageTextView.setTextColor(whiteColor)
-                yesButton.background.colorFilter = PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
-                yesButton.setTextColor(whiteColor)
-                noButton.background.colorFilter = PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
-                noButton.setTextColor(whiteColor)
+                rootLayout.background.colorFilter = PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
+                exitFromAnAppIV.setColorFilter(whiteColor)
+                exitFromAnAppMessageTV.setTextColor(whiteColor)
+                noButton.strokeColor = ColorStateList.valueOf(lightBlueColor)
+                noButton.setTextColor(lightBlueColor)
+                yesButton.setBackgroundColor(lightBlueColor)
+                yesButton.setTextColor(blackColor)
             } else {
                 when (prefs.colorSchemeValue) {
                     0 -> {
-                        exitFromAnAppImageView.setColorFilter(defaultColor)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
-                        noButton.background.colorFilter = PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
+                        exitFromAnAppIV.setColorFilter(defaultColor)
+                        noButton.strokeColor = ColorStateList.valueOf(defaultColor)
+                        noButton.setTextColor(defaultColor)
+                        yesButton.setBackgroundColor(defaultColor)
                     }
 
                     1 -> {
-                        exitFromAnAppImageView.setColorFilter(darkYellowColor)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
-                        noButton.background.colorFilter = PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
+                        exitFromAnAppIV.setColorFilter(darkYellowColor)
+                        noButton.strokeColor = ColorStateList.valueOf(darkYellowColor)
+                        noButton.setTextColor(darkYellowColor)
+                        yesButton.setBackgroundColor(darkYellowColor)
                     }
 
                     2 -> {
-                        exitFromAnAppImageView.setColorFilter(orangeColor)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
-                        noButton.background.colorFilter = PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
+                        exitFromAnAppIV.setColorFilter(orangeColor)
+                        noButton.strokeColor = ColorStateList.valueOf(orangeColor)
+                        noButton.setTextColor(orangeColor)
+                        yesButton.setBackgroundColor(orangeColor)
                     }
 
                     3 -> {
-                        exitFromAnAppImageView.setColorFilter(lightGreenColor)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
-                        noButton.background.colorFilter = PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
+                        exitFromAnAppIV.setColorFilter(lightGreenColor)
+                        noButton.strokeColor = ColorStateList.valueOf(lightGreenColor)
+                        noButton.setTextColor(lightGreenColor)
+                        yesButton.setBackgroundColor(lightGreenColor)
                     }
 
                     4 -> {
-                        exitFromAnAppImageView.setColorFilter(blueColor)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
-                        noButton.background.colorFilter = PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
+                        exitFromAnAppIV.setColorFilter(blueColor)
+                        noButton.strokeColor = ColorStateList.valueOf(blueColor)
+                        noButton.setTextColor(blueColor)
+                        yesButton.setBackgroundColor(blueColor)
                     }
 
                     5 -> {
-                        exitFromAnAppImageView.setColorFilter(cyanColor)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
-                        noButton.background.colorFilter = PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
+                        exitFromAnAppIV.setColorFilter(cyanColor)
+                        noButton.strokeColor = ColorStateList.valueOf(cyanColor)
+                        noButton.setTextColor(cyanColor)
+                        yesButton.setBackgroundColor(cyanColor)
                     }
 
                     6 -> {
-                        exitFromAnAppImageView.setColorFilter(pinkColor)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
-                        noButton.background.colorFilter = PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
+                        exitFromAnAppIV.setColorFilter(pinkColor)
+                        noButton.strokeColor = ColorStateList.valueOf(pinkColor)
+                        noButton.setTextColor(pinkColor)
+                        yesButton.setBackgroundColor(pinkColor)
                     }
 
                     7 -> {
-                        exitFromAnAppImageView.setColorFilter(darkBlueColor)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
-                        noButton.background.colorFilter = PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
+                        exitFromAnAppIV.setColorFilter(darkBlueColor)
+                        noButton.strokeColor = ColorStateList.valueOf(darkBlueColor)
+                        noButton.setTextColor(darkBlueColor)
+                        yesButton.setBackgroundColor(darkBlueColor)
                     }
 
                     8 -> {
-                        exitFromAnAppImageView.setColorFilter(redColor)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
-                        noButton.background.colorFilter = PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
+                        exitFromAnAppIV.setColorFilter(redColor)
+                        noButton.strokeColor = ColorStateList.valueOf(redColor)
+                        noButton.setTextColor(redColor)
+                        yesButton.setBackgroundColor(redColor)
                     }
 
                     9 -> {
-                        exitFromAnAppImageView.setColorFilter(lightPurpleColor)
-                        yesButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
-                        noButton.background.colorFilter = PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
+                        exitFromAnAppIV.setColorFilter(lightPurpleColor)
+                        noButton.strokeColor = ColorStateList.valueOf(lightPurpleColor)
+                        noButton.setTextColor(lightPurpleColor)
+                        yesButton.setBackgroundColor(lightPurpleColor)
                     }
                 }
             }
@@ -1006,7 +1011,7 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
             exitFromAnAppDialogLayoutBinding: ExitFromAnAppDialogLayoutBinding
     ) {
         with(exitFromAnAppDialogLayoutBinding) {
-            exitFromAnAppMessageTextView.typeface = typeface
+            exitFromAnAppMessageTV.typeface = typeface
             yesButton.typeface = typeface
             noButton.typeface = typeface
         }

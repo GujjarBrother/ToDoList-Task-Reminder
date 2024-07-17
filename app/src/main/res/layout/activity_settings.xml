@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/settings_activity_root_layout"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/snowWhiteColor"
@@ -17,18 +17,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/back_arrow_image_view"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/backArrowIV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/app_name"
             android:padding="@dimen/_10sdp"
             android:scaleType="centerCrop"
             android:src="@drawable/back_arrow_icon" />
 
-        <TextView
-            android:id="@+id/toolbar_text_view"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/toolbarTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -69,8 +68,8 @@
             android:padding="@dimen/_5sdp">
 
             <!--          Appearance CardView...!-->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/appearance_card_view"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/appearanceCV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_5sdp"
@@ -78,23 +77,22 @@
                 app:cardBackgroundColor="@color/whiteColor"
                 app:cardCornerRadius="@dimen/_10sdp"
                 app:cardElevation="@dimen/_1sdp"
-                app:layout_constraintBottom_toTopOf="@id/color_scheme_card_view"
+                app:layout_constraintBottom_toTopOf="@id/colorSchemeCV"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/appearance_root_layout"
+                    android:id="@+id/appearanceRootLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:paddingStart="@dimen/_5sdp"
-                    android:paddingEnd="@dimen/_5sdp"
+                    android:paddingHorizontal="@dimen/_5sdp"
                     android:paddingBottom="@dimen/_5sdp">
 
-                    <TextView
-                        android:id="@+id/appearance_text_view"
-                        android:layout_width="wrap_content"
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/appearanceTV"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/appearance_text"
                         android:textAllCaps="false"
@@ -102,57 +100,61 @@
                         android:textSize="@dimen/_13ssp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/appearanceChildLayout"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/appearance_child_layout"
+                        android:id="@+id/appearanceChildLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="@dimen/_10sdp"
                         android:layout_marginStart="@dimen/_7sdp"
                         android:layout_marginEnd="@dimen/_7sdp"
-                        app:layout_constraintBottom_toTopOf="@id/day_and_night_mode_layout"
+                        app:layout_constraintBottom_toTopOf="@id/lightAndDarkModeLayout"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/appearance_text_view">
+                        app:layout_constraintTop_toBottomOf="@id/appearanceTV">
 
-                        <ImageView
-                            android:id="@+id/appearance_image_view"
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/appearanceIV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="@string/app_name"
                             android:src="@drawable/text_size_image"
-                            app:layout_constraintBottom_toTopOf="@id/text_size_seek_bar"
+                            app:layout_constraintBottom_toTopOf="@id/textSizeSeekBar"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/textSizeTV"
                             app:tint="@color/defaultColor" />
 
-                        <TextView
-                            android:id="@+id/text_size_text_view"
-                            android:layout_width="wrap_content"
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/textSizeTV"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_marginHorizontal="@dimen/_5sdp"
                             android:text="@string/text_size_text"
                             android:textAllCaps="false"
                             android:textColor="@color/blackColor"
                             android:textSize="@dimen/_10ssp"
-                            app:layout_constraintBottom_toBottomOf="@id/appearance_image_view"
-                            app:layout_constraintStart_toEndOf="@id/appearance_image_view"
-                            app:layout_constraintTop_toTopOf="@id/appearance_image_view" />
+                            app:layout_constraintBottom_toBottomOf="@id/appearanceIV"
+                            app:layout_constraintStart_toEndOf="@id/appearanceIV"
+                            app:layout_constraintTop_toTopOf="@id/appearanceIV"
+                            app:layout_constraintEnd_toStartOf="@id/textSizeValueTV"/>
 
-                        <TextView
-                            android:id="@+id/text_size_value_text_view"
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/textSizeValueTV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_5sdp"
                             android:textAllCaps="false"
+                            android:text="13"
                             android:textColor="@color/defaultColor"
                             android:textSize="@dimen/_10ssp"
+                            app:layout_constraintStart_toEndOf="@id/textSizeTV"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"/>
 
-                        <SeekBar
-                            android:id="@+id/text_size_seek_bar"
+                        <androidx.appcompat.widget.AppCompatSeekBar
+                            android:id="@+id/textSizeSeekBar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_10sdp"
@@ -162,69 +164,67 @@
                             android:thumbTint="@color/defaultColor"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/appearance_image_view" />
+                            app:layout_constraintTop_toBottomOf="@id/appearanceIV" />
 
-                        <ImageView
-                            android:id="@+id/small_a_image_view"
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/smallAIV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="@string/app_name"
                             android:src="@drawable/small_a_image"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/text_size_seek_bar"
+                            app:layout_constraintTop_toBottomOf="@id/textSizeSeekBar"
                             app:tint="@color/defaultColor" />
 
-                        <ImageView
-                            android:id="@+id/capital_a_image_view"
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/capitalAIV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="@string/app_name"
                             android:src="@drawable/capital_a_image"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/text_size_seek_bar"
+                            app:layout_constraintTop_toBottomOf="@id/textSizeSeekBar"
                             app:tint="@color/defaultColor" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/day_and_night_mode_layout"
+                        android:id="@+id/lightAndDarkModeLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/_5sdp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/appearance_child_layout">
+                        app:layout_constraintTop_toBottomOf="@id/appearanceChildLayout">
 
-                        <ImageView
-                            android:id="@+id/day_and_night_mode_image_view"
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/lightAndDarkModeIV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="@string/app_name"
                             android:src="@drawable/moon_image"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/day_and_night_mode_text_view"
+                            app:layout_constraintEnd_toStartOf="@id/lightAndDarkModeTV"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:tint="@color/defaultColor" />
 
-                        <TextView
-                            android:id="@+id/day_and_night_mode_text_view"
-                            android:layout_width="wrap_content"
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/lightAndDarkModeTV"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_marginHorizontal="@dimen/_10sdp"
                             android:text="@string/dark_mode_text"
                             android:textAllCaps="false"
                             android:textColor="@color/blackColor"
                             android:textSize="@dimen/_12ssp"
+                            app:layout_constraintEnd_toStartOf="@id/lightAndDarkModeSwitch"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/day_and_night_mode_image_view"
+                            app:layout_constraintStart_toEndOf="@id/lightAndDarkModeIV"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <androidx.appcompat.widget.SwitchCompat
-                            android:id="@+id/day_and_night_mode_switch"
+                            android:id="@+id/lightAndDarkModeSwitch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:thumb="@drawable/switch_thumb"
@@ -235,11 +235,11 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!--          Color Scheme CardView...!-->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/color_scheme_card_view"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/colorSchemeCV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_5sdp"
@@ -247,13 +247,13 @@
                 app:cardBackgroundColor="@color/whiteColor"
                 app:cardCornerRadius="@dimen/_10sdp"
                 app:cardElevation="@dimen/_1sdp"
-                app:layout_constraintBottom_toTopOf="@id/more_apps_card_view"
+                app:layout_constraintBottom_toTopOf="@id/moreAppsCV"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/appearance_card_view">
+                app:layout_constraintTop_toBottomOf="@id/appearanceCV">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/color_scheme_root_layout"
+                    android:id="@+id/colorSchemeRootLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackgroundBorderless"
@@ -261,9 +261,9 @@
                     android:paddingEnd="@dimen/_5sdp"
                     android:paddingBottom="@dimen/_5sdp">
 
-                    <TextView
-                        android:id="@+id/color_scheme_text_view"
-                        android:layout_width="wrap_content"
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/colorSchemeTV"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_7sdp"
                         android:text="@string/color_scheme_text"
@@ -272,10 +272,12 @@
                         android:textSize="@dimen/_13ssp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/colorSchemeChildLayout"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/color_scheme_child_layout"
+                        android:id="@+id/colorSchemeChildLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_7sdp"
@@ -285,49 +287,53 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/color_scheme_text_view">
+                        app:layout_constraintTop_toBottomOf="@id/colorSchemeTV">
 
-                        <ImageView
-                            android:id="@+id/color_scheme_image_view"
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/colorSchemeIV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="@string/app_name"
                             android:src="@drawable/color_scheme_image"
-                            app:layout_constraintBottom_toTopOf="@id/color_scheme_recycler_view"
+                            app:layout_constraintBottom_toTopOf="@id/colorSchemeRV"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/enjoyMultipleColorsTV"
                             app:tint="@color/defaultColor" />
 
-                        <TextView
-                            android:id="@+id/enjoy_multiple_colors_text_view"
-                            android:layout_width="wrap_content"
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/enjoyMultipleColorsTV"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_5sdp"
                             android:text="@string/enjoy_multiple_colors_text"
                             android:textAllCaps="false"
                             android:textColor="@color/blackColor"
                             android:textSize="@dimen/_10ssp"
-                            app:layout_constraintStart_toEndOf="@id/color_scheme_image_view"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintStart_toEndOf="@id/colorSchemeIV"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/colorSchemeRV"/>
 
                         <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/color_scheme_recycler_view"
+                            android:id="@+id/colorSchemeRV"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:overScrollMode="never"
+                            android:scrollbarThumbVertical="@android:color/transparent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintStart_toStartOf="@id/enjoy_multiple_colors_text_view"
-                            app:layout_constraintTop_toBottomOf="@id/color_scheme_image_view"
+                            app:layout_constraintStart_toStartOf="@id/enjoyMultipleColorsTV"
+                            app:layout_constraintTop_toBottomOf="@id/colorSchemeIV"
                             tools:listitem="@layout/color_scheme_recycler_view_single_item_layout" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!--          More App's Card View...-->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/more_apps_card_view"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/moreAppsCV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_5sdp"
@@ -337,19 +343,20 @@
                 app:cardElevation="@dimen/_1sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/color_scheme_card_view">
+                app:layout_constraintBottom_toTopOf="@id/aboutCV"
+                app:layout_constraintTop_toBottomOf="@id/colorSchemeCV">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/more_apps_root_layout"
+                    android:id="@+id/moreAppsRootLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="@dimen/_5sdp"
                     android:paddingEnd="@dimen/_5sdp"
                     android:paddingBottom="@dimen/_5sdp">
 
-                    <TextView
-                        android:id="@+id/more_apps_text_view"
-                        android:layout_width="wrap_content"
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/moreAppsTV"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/more_app_s_text"
                         android:textAllCaps="false"
@@ -357,10 +364,12 @@
                         android:textSize="@dimen/_13ssp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/moreAppsChildLayout"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/more_apps_child_layout"
+                        android:id="@+id/moreAppsChildLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_4sdp"
@@ -368,46 +377,48 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/more_apps_text_view">
+                        app:layout_constraintTop_toBottomOf="@id/moreAppsTV">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/photo_editor_app_layout"
+                            android:id="@+id/photoEditorAppLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
                             android:padding="@dimen/_8sdp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/dailyExpenseManagerAppLayout">
 
                             <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/photo_editor_shapeable_image_view"
+                                android:id="@+id/photoEditorShapeableIV"
                                 android:layout_width="@dimen/_30sdp"
                                 android:layout_height="@dimen/_30sdp"
                                 android:src="@drawable/sa10_photo_editor_app_icon"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/photoEditorTV"
                                 app:shapeAppearanceOverlay="@style/roundedImageView" />
 
-                            <TextView
-                                android:id="@+id/photo_editor_text_view"
-                                android:layout_width="wrap_content"
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/photoEditorTV"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_10sdp"
+                                android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/sa_10_photo_editor"
                                 android:textAllCaps="false"
                                 android:textColor="@color/blackColor"
                                 android:textSize="@dimen/_12ssp"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/photo_editor_shapeable_image_view"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintStart_toEndOf="@id/photoEditorShapeableIV"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/photoEditorAppArrowIV"/>
 
-                            <ImageView
-                                android:id="@+id/photo_editor_app_arrow_image_view"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/photoEditorAppArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -417,135 +428,45 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/ramadan_app_layout"
+                            android:id="@+id/dailyExpenseManagerAppLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
                             android:padding="@dimen/_8sdp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/photo_editor_app_layout">
+                            app:layout_constraintBottom_toTopOf="@id/visitOurAppStoreLayout"
+                            app:layout_constraintTop_toBottomOf="@id/photoEditorAppLayout">
 
                             <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/ramadan_app_shapeable_image_view"
-                                android:layout_width="@dimen/_30sdp"
-                                android:layout_height="@dimen/_30sdp"
-                                android:src="@drawable/ramadan_app_icon"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearanceOverlay="@style/roundedImageView" />
-
-                            <TextView
-                                android:id="@+id/ramadan_app_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_10sdp"
-                                android:text="@string/ramadan_app"
-                                android:textAllCaps="false"
-                                android:textColor="@color/blackColor"
-                                android:textSize="@dimen/_12ssp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/ramadan_app_shapeable_image_view"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <ImageView
-                                android:id="@+id/ramadan_app_arrow_image_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:contentDescription="@string/app_name"
-                                android:src="@drawable/forward_arrow_image"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/defaultColor" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/note_pad_app_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:padding="@dimen/_8sdp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/ramadan_app_layout">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/note_pad_app_shapeable_image_view"
-                                android:layout_width="@dimen/_30sdp"
-                                android:layout_height="@dimen/_30sdp"
-                                android:src="@drawable/notepad_app_icon"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearanceOverlay="@style/roundedImageView" />
-
-                            <TextView
-                                android:id="@+id/note_pad_app_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_10sdp"
-                                android:text="@string/note_pad"
-                                android:textAllCaps="false"
-                                android:textColor="@color/blackColor"
-                                android:textSize="@dimen/_12ssp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/note_pad_app_shapeable_image_view"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <ImageView
-                                android:id="@+id/note_pad_app_arrow_image_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:contentDescription="@string/app_name"
-                                android:src="@drawable/forward_arrow_image"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/defaultColor" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/daily_expense_manager_app_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:padding="@dimen/_8sdp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/note_pad_app_layout">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/daily_expense_manager_app_shapeable_image_view"
+                                android:id="@+id/dailyExpenseManagerAppShapeableIV"
                                 android:layout_width="@dimen/_30sdp"
                                 android:layout_height="@dimen/_30sdp"
                                 android:src="@drawable/daily_expense_manager_app_icon"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/dailyExpenseManagerAppTV"
                                 app:shapeAppearanceOverlay="@style/roundedImageView" />
 
-                            <TextView
-                                android:id="@+id/daily_expense_manager_app_text_view"
-                                android:layout_width="wrap_content"
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/dailyExpenseManagerAppTV"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_10sdp"
+                                android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/daily_expense_manager"
                                 android:textAllCaps="false"
                                 android:textColor="@color/blackColor"
                                 android:textSize="@dimen/_12ssp"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/daily_expense_manager_app_shapeable_image_view"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintStart_toEndOf="@id/dailyExpenseManagerAppShapeableIV"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/dailyExpenseManagerAppArrowIV"/>
 
-                            <ImageView
-                                android:id="@+id/daily_expense_manager_app_arrow_image_view"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/dailyExpenseManagerAppArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -555,29 +476,31 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/visit_our_app_store_layout"
+                            android:id="@+id/visitOurAppStoreLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
                             android:padding="@dimen/_8sdp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/daily_expense_manager_app_layout">
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/dailyExpenseManagerAppLayout">
 
                             <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/visit_our_app_store_shapeable_image_view"
-                                android:layout_width="@dimen/_16sdp"
-                                android:layout_height="@dimen/_16sdp"
+                                android:id="@+id/visitOurAppStoreShapeableIV"
+                                android:layout_width="@dimen/_20sdp"
+                                android:layout_height="@dimen/_20sdp"
                                 android:src="@drawable/visit_our_app_store_image"
                                 android:tint="@color/defaultColor"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/visitOurAppStoreTV"
                                 app:shapeAppearanceOverlay="@style/roundedImageView" />
 
-                            <TextView
-                                android:id="@+id/visit_our_app_store_text_view"
-                                android:layout_width="wrap_content"
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/visitOurAppStoreTV"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_10sdp"
                                 android:text="@string/visit_our_app_store_text"
@@ -585,14 +508,14 @@
                                 android:textColor="@color/blackColor"
                                 android:textSize="@dimen/_12ssp"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/visit_our_app_store_shapeable_image_view"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintStart_toEndOf="@id/visitOurAppStoreShapeableIV"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/visitOurAppStoreArrowIV"/>
 
-                            <ImageView
-                                android:id="@+id/visit_our_app_store_arrow_image_view"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/visitOurAppStoreArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -602,11 +525,11 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!--          About's Card View...-->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/about_card_view"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/aboutCV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_5sdp"
@@ -617,19 +540,19 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/more_apps_card_view">
+                app:layout_constraintTop_toBottomOf="@id/moreAppsCV">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/about_root_layout"
+                    android:id="@+id/aboutRootLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="@dimen/_5sdp"
                     android:paddingEnd="@dimen/_5sdp"
                     android:paddingBottom="@dimen/_5sdp">
 
-                    <TextView
-                        android:id="@+id/about_text_view"
-                        android:layout_width="wrap_content"
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/aboutTV"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/about_text"
                         android:textAllCaps="false"
@@ -637,10 +560,12 @@
                         android:textSize="@dimen/_13ssp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/aboutChildLayout"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/about_child_layout"
+                        android:id="@+id/aboutChildLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_4sdp"
@@ -648,59 +573,62 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/about_text_view">
+                        app:layout_constraintTop_toBottomOf="@id/aboutTV">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/rate_us_layout"
+                            android:id="@+id/rateUsLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
                             android:padding="@dimen/_8sdp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/feedbackLayout">
 
-                            <ImageView
-                                android:id="@+id/rate_us_image_view"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/rateUsIV"
                                 android:layout_width="@dimen/_16sdp"
                                 android:layout_height="@dimen/_16sdp"
-                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/rate_us_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/rateUsTV"
                                 app:tint="@color/defaultColor" />
 
-                            <TextView
-                                android:id="@+id/rate_us_text_view"
-                                android:layout_width="wrap_content"
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/rateUsTV"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_10sdp"
+                                android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/rate_us_text"
                                 android:textAllCaps="false"
                                 android:textColor="@color/blackColor"
                                 android:textSize="@dimen/_12ssp"
-                                app:layout_constraintBottom_toTopOf="@id/please_tell_your_experience_text_view"
-                                app:layout_constraintStart_toEndOf="@id/rate_us_image_view"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintBottom_toTopOf="@id/pleaseTellYourExperienceTV"
+                                app:layout_constraintStart_toEndOf="@id/rateUsIV"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/rateUsArrowIV"/>
 
-                            <TextView
-                                android:id="@+id/please_tell_your_experience_text_view"
-                                android:layout_width="wrap_content"
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/pleaseTellYourExperienceTV"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_10sdp"
+                                android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/please_tell_your_experience_text"
                                 android:textAllCaps="false"
                                 android:textColor="#8E8E8E"
                                 android:textSize="@dimen/_8ssp"
-                                app:layout_constraintStart_toEndOf="@id/rate_us_image_view"
-                                app:layout_constraintTop_toBottomOf="@id/rate_us_text_view" />
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/rateUsArrowIV"
+                                app:layout_constraintStart_toEndOf="@id/rateUsIV"
+                                app:layout_constraintTop_toBottomOf="@id/rateUsTV" />
 
-                            <ImageView
-                                android:id="@+id/rate_us_arrow_image_view"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/rateUsArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -710,56 +638,59 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/feedback_layout"
+                            android:id="@+id/feedbackLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
                             android:padding="@dimen/_8sdp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/rate_us_layout">
+                            app:layout_constraintBottom_toTopOf="@id/shareAppLayout"
+                            app:layout_constraintTop_toBottomOf="@id/rateUsLayout">
 
-                            <ImageView
-                                android:id="@+id/feedback_image_view"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/feedbackIV"
                                 android:layout_width="@dimen/_16sdp"
                                 android:layout_height="@dimen/_16sdp"
-                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/feedback_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/feedbackTV"
                                 app:tint="@color/defaultColor" />
 
-                            <TextView
-                                android:id="@+id/feedback_text_view"
-                                android:layout_width="wrap_content"
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/feedbackTV"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_10sdp"
+                                android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/feedback_text"
                                 android:textAllCaps="false"
                                 android:textColor="@color/blackColor"
                                 android:textSize="@dimen/_12ssp"
-                                app:layout_constraintBottom_toTopOf="@id/give_your_suggestions_and_feedback_text_view"
-                                app:layout_constraintStart_toEndOf="@id/feedback_image_view"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintBottom_toTopOf="@id/giveYourSuggestionsAndFeedbackTV"
+                                app:layout_constraintStart_toEndOf="@id/feedbackIV"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/feedbackArrowIV"/>
 
-                            <TextView
-                                android:id="@+id/give_your_suggestions_and_feedback_text_view"
-                                android:layout_width="wrap_content"
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/giveYourSuggestionsAndFeedbackTV"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_10sdp"
+                                android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/give_your_suggestions_and_feedback_text"
                                 android:textAllCaps="false"
                                 android:textColor="#8E8E8E"
                                 android:textSize="@dimen/_8ssp"
-                                app:layout_constraintStart_toEndOf="@id/feedback_image_view"
-                                app:layout_constraintTop_toBottomOf="@id/feedback_text_view" />
+                                app:layout_constraintStart_toEndOf="@id/feedbackIV"
+                                app:layout_constraintTop_toBottomOf="@id/feedbackTV"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/feedbackArrowIV"/>
 
-                            <ImageView
-                                android:id="@+id/feedback_arrow_image_view"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/feedbackArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -769,56 +700,59 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/share_app_layout"
+                            android:id="@+id/shareAppLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
                             android:padding="@dimen/_8sdp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/feedback_layout">
+                            app:layout_constraintBottom_toTopOf="@id/privacyPolicyLayout"
+                            app:layout_constraintTop_toBottomOf="@id/feedbackLayout">
 
-                            <ImageView
-                                android:id="@+id/share_app_image_view"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/shareAppIV"
                                 android:layout_width="@dimen/_16sdp"
                                 android:layout_height="@dimen/_16sdp"
-                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/share_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/shareAppTV"
                                 app:tint="@color/defaultColor" />
 
-                            <TextView
-                                android:id="@+id/share_app_text_view"
-                                android:layout_width="wrap_content"
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/shareAppTV"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_10sdp"
+                                android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/share_app_text"
                                 android:textAllCaps="false"
                                 android:textColor="@color/blackColor"
                                 android:textSize="@dimen/_12ssp"
-                                app:layout_constraintBottom_toTopOf="@id/share_our_app_to_your_friends_and_family_text_view"
-                                app:layout_constraintStart_toEndOf="@id/share_app_image_view"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintBottom_toTopOf="@id/shareOurAppToYourFriendsAndFamilyTV"
+                                app:layout_constraintStart_toEndOf="@id/shareAppIV"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/shareAppArrowIV"/>
 
-                            <TextView
-                                android:id="@+id/share_our_app_to_your_friends_and_family_text_view"
-                                android:layout_width="wrap_content"
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/shareOurAppToYourFriendsAndFamilyTV"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_10sdp"
+                                android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/share_our_app_to_your_friends_and_family_text"
                                 android:textAllCaps="false"
                                 android:textColor="#8E8E8E"
                                 android:textSize="@dimen/_8ssp"
-                                app:layout_constraintStart_toEndOf="@id/share_app_image_view"
-                                app:layout_constraintTop_toBottomOf="@id/share_app_text_view" />
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/shareAppIV"
+                                app:layout_constraintTop_toBottomOf="@id/shareAppTV"
+                                app:layout_constraintEnd_toStartOf="@id/shareAppArrowIV"/>
 
-                            <ImageView
-                                android:id="@+id/share_app_arrow_image_view"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/shareAppArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -828,56 +762,59 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/privacy_policy_layout"
+                            android:id="@+id/privacyPolicyLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
                             android:padding="@dimen/_8sdp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/share_app_layout">
+                            app:layout_constraintBottom_toTopOf="@id/checkUpdateLayout"
+                            app:layout_constraintTop_toBottomOf="@id/shareAppLayout">
 
-                            <ImageView
-                                android:id="@+id/privacy_policy_image_view"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/privacyPolicyIV"
                                 android:layout_width="@dimen/_16sdp"
                                 android:layout_height="@dimen/_16sdp"
-                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/privacy_policy_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/privacyPolicyTV"
                                 app:tint="@color/defaultColor" />
 
-                            <TextView
-                                android:id="@+id/privacy_policy_text_view"
-                                android:layout_width="wrap_content"
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/privacyPolicyTV"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_10sdp"
+                                android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/privacy_policy_text"
                                 android:textAllCaps="false"
                                 android:textColor="@color/blackColor"
                                 android:textSize="@dimen/_12ssp"
-                                app:layout_constraintBottom_toTopOf="@id/read_our_privacy_policy_text_view"
-                                app:layout_constraintStart_toEndOf="@id/privacy_policy_image_view"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintBottom_toTopOf="@id/readOurPrivacyPolicyTV"
+                                app:layout_constraintStart_toEndOf="@id/privacyPolicyIV"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/privacyPolicyArrowIV"/>
 
-                            <TextView
-                                android:id="@+id/read_our_privacy_policy_text_view"
-                                android:layout_width="wrap_content"
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/readOurPrivacyPolicyTV"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_10sdp"
+                                android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/read_our_privacy_policy_text"
                                 android:textAllCaps="false"
                                 android:textColor="#8E8E8E"
                                 android:textSize="@dimen/_8ssp"
-                                app:layout_constraintStart_toEndOf="@id/privacy_policy_image_view"
-                                app:layout_constraintTop_toBottomOf="@id/privacy_policy_text_view" />
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/privacyPolicyIV"
+                                app:layout_constraintTop_toBottomOf="@id/privacyPolicyTV"
+                                app:layout_constraintEnd_toStartOf="@id/privacyPolicyArrowIV"/>
 
-                            <ImageView
-                                android:id="@+id/privacy_policy_arrow_image_view"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/privacyPolicyArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -894,48 +831,51 @@
                             android:padding="@dimen/_8sdp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/privacy_policy_layout">
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/privacyPolicyLayout">
 
-                            <ImageView
-                                android:id="@+id/checkUpdateImageView"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/checkUpdateIV"
                                 android:layout_width="@dimen/_16sdp"
                                 android:layout_height="@dimen/_16sdp"
-                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/app_version_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/checkUpdateTV"
                                 app:tint="@color/defaultColor" />
 
-                            <TextView
-                                android:id="@+id/checkUpdateTextView"
-                                android:layout_width="wrap_content"
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/checkUpdateTV"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_10sdp"
+                                android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/check_update_text"
                                 android:textAllCaps="false"
                                 android:textColor="@color/blackColor"
                                 android:textSize="@dimen/_12ssp"
-                                app:layout_constraintBottom_toTopOf="@id/version_number_text_view"
-                                app:layout_constraintStart_toEndOf="@id/checkUpdateImageView"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintBottom_toTopOf="@id/versionNumberTV"
+                                app:layout_constraintStart_toEndOf="@id/checkUpdateIV"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/checkUpdateArrowIV"/>
 
-                            <TextView
-                                android:id="@+id/version_number_text_view"
-                                android:layout_width="wrap_content"
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/versionNumberTV"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_10sdp"
+                                android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:textAllCaps="false"
                                 android:textColor="#8E8E8E"
                                 android:textSize="@dimen/_8ssp"
-                                app:layout_constraintStart_toEndOf="@id/checkUpdateImageView"
-                                app:layout_constraintTop_toBottomOf="@id/checkUpdateTextView" />
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/checkUpdateArrowIV"
+                                app:layout_constraintStart_toEndOf="@id/checkUpdateIV"
+                                app:layout_constraintTop_toBottomOf="@id/checkUpdateTV" />
 
-                            <ImageView
-                                android:id="@+id/checkUpdateArrowImageView"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/checkUpdateArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -945,7 +885,7 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
@@ -955,15 +895,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingTop="@dimen/_5sdp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <include
             android:id="@+id/adLoadingInclude"
+            layout="@layout/ad_loading_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/ad_loading_layout"/>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

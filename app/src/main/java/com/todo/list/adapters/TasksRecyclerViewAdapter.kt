@@ -38,8 +38,8 @@ class TasksRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val signInCardAnimation = AnimationUtils.loadAnimation(holder.itemView.context, R.anim.recycler_view_single_item_animation)
-        holder.itemView.startAnimation(signInCardAnimation)
+        /*val signInCardAnimation = AnimationUtils.loadAnimation(holder.itemView.context, R.anim.recycler_view_single_item_animation)
+        holder.itemView.startAnimation(signInCardAnimation)*/
 
         val toDoTask = getItem(position)
 

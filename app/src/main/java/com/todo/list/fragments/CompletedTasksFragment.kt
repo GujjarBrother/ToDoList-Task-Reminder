@@ -10,10 +10,8 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +24,6 @@ import com.todo.list.application.Application.Companion.typeface
 import com.todo.list.base.BaseFragment
 import com.todo.list.databinding.DeleteTaskDialogLayoutBinding
 import com.todo.list.databinding.FragmentCompletedTasksBinding
-import com.todo.list.databinding.SortingDialogLayoutBinding
 import com.todo.list.db.ToDoTask
 import com.todo.list.db.ToDosDatabase
 import com.todo.list.enums.TabsEnum
@@ -71,13 +68,13 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener {
         }
 
         completedTasksArrayList = ArrayList()
-        readCompletedTasks()
+//        readCompletedTasks()
     }
 
     override fun onResume() {
         super.onResume()
 
-        applyColorSchemeOrLightAndDarkModeOnCompletedTasksFragment()
+        applyLightAndDarkModeOnCompletedTasksFragment()
 
         /*if (isSomethingChanged) {
             isSomethingChanged = false
@@ -96,11 +93,11 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun applyColorSchemeOrLightAndDarkModeOnCompletedTasksFragment() {
+    private fun applyLightAndDarkModeOnCompletedTasksFragment() {
         with(binding) {
             if (prefs.isDarkModeEnable) {
                 completedTasksFragmentCardView.setCardBackgroundColor(screensNightModeColor)
-                nothingInHereTextView.setTextColor(whiteColor)
+                nothingInHereTextView.setTextColor(darkModeTextColor)
                 sortingCardView.setCardBackgroundColor(cardsNightModeColor)
                 sortingImageView.setColorFilter(whiteColor)
                 sortingTextView.setTextColor(whiteColor)
@@ -108,6 +105,7 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener {
                 listAndGridViewStylesImageView.setColorFilter(whiteColor)
                 listAndGridViewStylesTextView.setTextColor(whiteColor)
                 deletedPermanentlyTextView.setBackgroundColor(cardsNightModeColor)
+                deletedPermanentlyTextView.setTextColor(darkModeTextColor)
             } else {
                 completedTasksFragmentCardView.setCardBackgroundColor(fragmentsCardViewsColor)
                 sortingCardView.setCardBackgroundColor(whiteColor)
@@ -189,7 +187,7 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun readCompletedTasks() {
+    /*private fun readCompletedTasks() {
         with(binding) {
             if (completedTasksArrayList.isNotEmpty()) {
                 completedTasksArrayList.clear()
@@ -204,7 +202,7 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener {
                 group2.visibility = GONE
             }
         }
-    }
+    }*/
 
     private fun displayCompletedTasksOnRecyclerView(completedTasksArrayList: ArrayList<ToDoTask>) {
         val completedTasksSortingArray = prefs.completedTasksSortingValues
@@ -333,16 +331,16 @@ class CompletedTasksFragment : BaseFragment(), View.OnClickListener {
             }
 
             yesButton.setOnClickListener { _: View? ->
-                val isDeleted = ToDosDatabase.getDatabase(fragmentContext.applicationContext).dao().deleteTask(toDoTask)
+                /*val isDeleted = ToDosDatabase.getDatabase(fragmentContext.applicationContext).dao().deleteTask(toDoTask)
                 if (isDeleted == 1) {
                     Toasty.success(fragmentContext, R.string.deleted_successfully_toast_text, Toasty.LENGTH_LONG).show()
-                    readCompletedTasks()
+//                    readCompletedTasks()
                     if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
                         deleteTaskAlertDialog.dismiss()
                     }
                 } else {
                     Toasty.success(fragmentContext, R.string.deleted_unsuccessfully_toast_text, Toasty.LENGTH_LONG).show()
-                }
+                }*/
             }
         }
     }

@@ -49,8 +49,6 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
     private lateinit var colorSchemeAdapter: ColorSchemeAdapter
 
     private val sa10PhotoEditorAppPackage = "com.editor.sa10photoeditor"
-    private val ramadanAppPackage = "com.shafqatali.ramadanapp"
-    private val notePadAppPackage = "com.shafqatali.noteapp"
     private val dailyExpenseManagerAppPackage = "com.daily.manager"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,21 +66,19 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
                 )
             )
 
-            applyColorSchemeORDayAndNightMode()
-            applyColorSchemeORDayAndNightModeOnSwitch()
+            applyLightAndDarkMode()
+            applyLightAndDarkModeOnSwitch()
             keepActivityOn(activityContext)
             applyCustomFont()
             showColorsForColorScheme()
 
-            versionNumberTextView.text = String.format("%s%s", "v", BuildConfig.VERSION_NAME)
-            textSizeValueTextView.text = prefs.textSizeValue.toString()
+            versionNumberTV.text = String.format("%s%s", "v", BuildConfig.VERSION_NAME)
+            textSizeValueTV.text = prefs.textSizeValue.toString()
             textSizeSeekBar.progress = prefs.textSizeValue
-            dayAndNightModeSwitch.isChecked = prefs.isDarkModeEnable
+            lightAndDarkModeSwitch.isChecked = prefs.isDarkModeEnable
 
-            backArrowImageView.setOnClickListener(this@SettingsActivity)
+            backArrowIV.setOnClickListener(this@SettingsActivity)
             photoEditorAppLayout.setOnClickListener(this@SettingsActivity)
-            ramadanAppLayout.setOnClickListener(this@SettingsActivity)
-            notePadAppLayout.setOnClickListener(this@SettingsActivity)
             dailyExpenseManagerAppLayout.setOnClickListener(this@SettingsActivity)
             visitOurAppStoreLayout.setOnClickListener(this@SettingsActivity)
             rateUsLayout.setOnClickListener(this@SettingsActivity)
@@ -93,10 +89,10 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
             textSizeSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
                     if (i < 14) {
-                        textSizeValueTextView.text = 14.toString()
+                        textSizeValueTV.text = 14.toString()
                         textSizeSeekBar.progress = 14
                     } else {
-                        textSizeValueTextView.text = i.toString()
+                        textSizeValueTV.text = i.toString()
                     }
                 }
 
@@ -109,16 +105,16 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
                 }
             })
 
-            dayAndNightModeSwitch.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
+            lightAndDarkModeSwitch.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
                 if (isChecked) {
-                    colorSchemeCardView.visibility = GONE
+                    colorSchemeCV.visibility = GONE
                 } else {
-                    colorSchemeCardView.visibility = VISIBLE
+                    colorSchemeCV.visibility = VISIBLE
                 }
                 isSomethingChanged = true
                 prefs.isDarkModeEnable = isChecked
-                applyColorSchemeORDayAndNightMode()
-                applyColorSchemeORDayAndNightModeOnSwitch()
+                applyLightAndDarkMode()
+                applyLightAndDarkModeOnSwitch()
             }
         }
 
@@ -130,16 +126,15 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
         onBackPressedDispatcher.addCallback(onBackPressedCallback)
     }
 
-    private fun applyColorSchemeORDayAndNightModeOnSwitch() {
+    private fun applyLightAndDarkModeOnSwitch() {
         with(binding) {
-            val switchTrackDrawable = dayAndNightModeSwitch.trackDrawable
+            val switchTrackDrawable = lightAndDarkModeSwitch.trackDrawable
             if (prefs.isDarkModeEnable) {
                 include.root.visibility = VISIBLE
-                dayAndNightModeImageView.setImageResource(R.drawable.sun_image)
-                dayAndNightModeTextView.setText(R.string.light_mode_text)
+                lightAndDarkModeIV.setImageResource(R.drawable.sun_image)
+                lightAndDarkModeTV.setText(R.string.light_mode_text)
                 switchTrackDrawable.colorFilter = PorterDuffColorFilter(snowWhiteColor, PorterDuff.Mode.SRC_IN)
-                dayAndNightModeSwitch.thumbDrawable =
-                    ContextCompat.getDrawable(activityContext, R.drawable.switch_thumb_night_mode)
+                lightAndDarkModeSwitch.thumbDrawable = ContextCompat.getDrawable(activityContext, R.drawable.switch_thumb_night_mode)
                 /*if (prefs.getColorSchemeValue() == 0) {
                     switchTrackDrawable.setColorFilter(defaultColor, PorterDuff.Mode.SRC_IN);
                     dayAndNightModeSwitch.setThumbDrawable(ContextCompat.getDrawable(activityContext,
@@ -183,445 +178,408 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
                 }*/
             } else {
                 include.root.visibility = GONE
-                dayAndNightModeImageView.setImageResource(R.drawable.moon_image)
-                dayAndNightModeTextView.setText(R.string.dark_mode_text)
+                lightAndDarkModeIV.setImageResource(R.drawable.moon_image)
+                lightAndDarkModeTV.setText(R.string.dark_mode_text)
                 switchTrackDrawable.colorFilter = PorterDuffColorFilter(switchTrackOffColor, PorterDuff.Mode.SRC_IN)
-                dayAndNightModeSwitch.thumbDrawable =
-                    ContextCompat.getDrawable(activityContext, R.drawable.switch_thumb)
+                lightAndDarkModeSwitch.thumbDrawable = ContextCompat.getDrawable(activityContext, R.drawable.switch_thumb)
             }
         }
     }
 
     private fun goBackToDashBoardActivity() = finish()
 
-    private fun applyColorSchemeORDayAndNightMode() {
+    private fun applyLightAndDarkMode() {
         with(binding) {
             if (prefs.isDarkModeEnable) {
-                colorSchemeCardView.visibility = GONE
                 changeStatusBarColor(activityContext, screensNightModeColor)
+                colorSchemeCV.visibility = GONE
                 toolbar.setBackgroundColor(screensNightModeColor)
-                settingsActivityRootLayout.setBackgroundColor(screensNightModeColor)
-                appearanceCardView.setCardBackgroundColor(cardsNightModeColor)
-                appearanceTextView.setTextColor(whiteColor)
-                appearanceImageView.setColorFilter(whiteColor)
-                textSizeTextView.setTextColor(whiteColor)
-                textSizeValueTextView.setTextColor(whiteColor)
-                textSizeSeekBar.progressTintList = ColorStateList.valueOf(whiteColor)
-                textSizeSeekBar.thumbTintList = ColorStateList.valueOf(whiteColor)
-                smallAImageView.setColorFilter(whiteColor)
-                capitalAImageView.setColorFilter(whiteColor)
-                dayAndNightModeImageView.setColorFilter(whiteColor)
-                dayAndNightModeTextView.setTextColor(whiteColor)
-                moreAppsCardView.setCardBackgroundColor(cardsNightModeColor)
-                moreAppsTextView.setTextColor(whiteColor)
-                photoEditorTextView.setTextColor(whiteColor)
-                photoEditorAppArrowImageView.setColorFilter(whiteColor)
-                ramadanAppTextView.setTextColor(whiteColor)
-                ramadanAppArrowImageView.setColorFilter(whiteColor)
-                notePadAppTextView.setTextColor(whiteColor)
-                notePadAppArrowImageView.setColorFilter(whiteColor)
-                dailyExpenseManagerAppTextView.setTextColor(whiteColor)
-                dailyExpenseManagerAppArrowImageView.setColorFilter(whiteColor)
-                visitOurAppStoreShapeableImageView.setColorFilter(whiteColor)
-                visitOurAppStoreTextView.setTextColor(whiteColor)
-                visitOurAppStoreArrowImageView.setColorFilter(whiteColor)
-                aboutCardView.setCardBackgroundColor(cardsNightModeColor)
-                aboutTextView.setTextColor(whiteColor)
-                rateUsImageView.setColorFilter(whiteColor)
-                rateUsTextView.setTextColor(whiteColor)
-                rateUsArrowImageView.setColorFilter(whiteColor)
-                feedbackImageView.setColorFilter(whiteColor)
-                feedbackTextView.setTextColor(whiteColor)
-                feedbackArrowImageView.setColorFilter(whiteColor)
-                shareAppImageView.setColorFilter(whiteColor)
-                shareAppTextView.setTextColor(whiteColor)
-                shareAppArrowImageView.setColorFilter(whiteColor)
-                privacyPolicyImageView.setColorFilter(whiteColor)
-                privacyPolicyTextView.setTextColor(whiteColor)
-                privacyPolicyArrowImageView.setColorFilter(whiteColor)
-                checkUpdateImageView.setColorFilter(whiteColor)
-                checkUpdateTextView.setTextColor(whiteColor)
-                checkUpdateArrowImageView.setColorFilter(whiteColor)
+                rootLayout.setBackgroundColor(screensNightModeColor)
+                appearanceCV.setCardBackgroundColor(cardsNightModeColor)
+                appearanceTV.setTextColor(lightBlueColor)
+                appearanceIV.setColorFilter(lightBlueColor)
+                textSizeTV.setTextColor(whiteColor)
+                textSizeValueTV.setTextColor(lightBlueColor)
+                textSizeSeekBar.progressTintList = ColorStateList.valueOf(lightBlueColor)
+                textSizeSeekBar.thumbTintList = ColorStateList.valueOf(lightBlueColor)
+                smallAIV.setColorFilter(lightBlueColor)
+                capitalAIV.setColorFilter(lightBlueColor)
+                lightAndDarkModeIV.setColorFilter(lightBlueColor)
+                lightAndDarkModeTV.setTextColor(whiteColor)
+                moreAppsCV.setCardBackgroundColor(cardsNightModeColor)
+                moreAppsTV.setTextColor(lightBlueColor)
+                photoEditorTV.setTextColor(whiteColor)
+                photoEditorAppArrowIV.setColorFilter(lightBlueColor)
+                dailyExpenseManagerAppTV.setTextColor(whiteColor)
+                dailyExpenseManagerAppArrowIV.setColorFilter(lightBlueColor)
+                visitOurAppStoreShapeableIV.setColorFilter(lightBlueColor)
+                visitOurAppStoreTV.setTextColor(whiteColor)
+                visitOurAppStoreArrowIV.setColorFilter(lightBlueColor)
+                aboutCV.setCardBackgroundColor(cardsNightModeColor)
+                aboutTV.setTextColor(lightBlueColor)
+                rateUsIV.setColorFilter(lightBlueColor)
+                rateUsTV.setTextColor(whiteColor)
+                rateUsArrowIV.setColorFilter(lightBlueColor)
+                feedbackIV.setColorFilter(lightBlueColor)
+                feedbackTV.setTextColor(whiteColor)
+                feedbackArrowIV.setColorFilter(lightBlueColor)
+                shareAppIV.setColorFilter(lightBlueColor)
+                shareAppTV.setTextColor(whiteColor)
+                shareAppArrowIV.setColorFilter(lightBlueColor)
+                privacyPolicyIV.setColorFilter(lightBlueColor)
+                privacyPolicyTV.setTextColor(whiteColor)
+                privacyPolicyArrowIV.setColorFilter(lightBlueColor)
+                checkUpdateIV.setColorFilter(lightBlueColor)
+                checkUpdateTV.setTextColor(whiteColor)
+                checkUpdateArrowIV.setColorFilter(lightBlueColor)
                 adLoadingInclude.adIsLoadingTextView.setTextColor(whiteColor)
-                adLoadingInclude.progressBar.indeterminateTintList =
-                    ColorStateList.valueOf(whiteColor)
+                adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(whiteColor)
             } else {
-                colorSchemeCardView.visibility = VISIBLE
-                settingsActivityRootLayout.setBackgroundColor(snowWhiteColor)
-                appearanceCardView.setCardBackgroundColor(whiteColor)
-                textSizeTextView.setTextColor(defaultColor)
-                dayAndNightModeTextView.setTextColor(defaultColor)
-                colorSchemeCardView.setCardBackgroundColor(whiteColor)
-                moreAppsCardView.setCardBackgroundColor(whiteColor)
-                photoEditorTextView.setTextColor(blackColor)
-                ramadanAppTextView.setTextColor(blackColor)
-                dailyExpenseManagerAppTextView.setTextColor(blackColor)
-                visitOurAppStoreTextView.setTextColor(blackColor)
-                aboutCardView.setCardBackgroundColor(whiteColor)
-                rateUsTextView.setTextColor(blackColor)
-                feedbackTextView.setTextColor(blackColor)
-                shareAppTextView.setTextColor(blackColor)
-                privacyPolicyTextView.setTextColor(blackColor)
-                checkUpdateTextView.setTextColor(blackColor)
+                colorSchemeCV.visibility = VISIBLE
+                rootLayout.setBackgroundColor(snowWhiteColor)
+                appearanceCV.setCardBackgroundColor(whiteColor)
+                textSizeTV.setTextColor(defaultColor)
+                lightAndDarkModeTV.setTextColor(defaultColor)
+                colorSchemeCV.setCardBackgroundColor(whiteColor)
+                moreAppsCV.setCardBackgroundColor(whiteColor)
+                photoEditorTV.setTextColor(blackColor)
+                dailyExpenseManagerAppTV.setTextColor(blackColor)
+                visitOurAppStoreTV.setTextColor(blackColor)
+                aboutCV.setCardBackgroundColor(whiteColor)
+                rateUsTV.setTextColor(blackColor)
+                feedbackTV.setTextColor(blackColor)
+                shareAppTV.setTextColor(blackColor)
+                privacyPolicyTV.setTextColor(blackColor)
+                checkUpdateTV.setTextColor(blackColor)
                 when (prefs.colorSchemeValue) {
                     0 -> {
                         changeStatusBarColor(activityContext, defaultColor)
                         toolbar.setBackgroundColor(defaultColor)
-                        appearanceTextView.setTextColor(defaultColor)
-                        appearanceImageView.setColorFilter(defaultColor)
-                        textSizeValueTextView.setTextColor(defaultColor)
+                        appearanceTV.setTextColor(defaultColor)
+                        appearanceIV.setColorFilter(defaultColor)
+                        textSizeValueTV.setTextColor(defaultColor)
                         textSizeSeekBar.progressTintList = ColorStateList.valueOf(defaultColor)
                         textSizeSeekBar.thumbTintList = ColorStateList.valueOf(defaultColor)
-                        smallAImageView.setColorFilter(defaultColor)
-                        capitalAImageView.setColorFilter(defaultColor)
-                        dayAndNightModeImageView.setColorFilter(defaultColor)
-                        colorSchemeTextView.setTextColor(defaultColor)
-                        colorSchemeImageView.setColorFilter(defaultColor)
-                        moreAppsTextView.setTextColor(defaultColor)
-                        photoEditorAppArrowImageView.setColorFilter(defaultColor)
-                        ramadanAppArrowImageView.setColorFilter(defaultColor)
-                        notePadAppArrowImageView.setColorFilter(defaultColor)
-                        dailyExpenseManagerAppArrowImageView.setColorFilter(defaultColor)
-                        visitOurAppStoreShapeableImageView.setColorFilter(defaultColor)
-                        visitOurAppStoreArrowImageView.setColorFilter(defaultColor)
-                        aboutTextView.setTextColor(defaultColor)
-                        rateUsImageView.setColorFilter(defaultColor)
-                        rateUsArrowImageView.setColorFilter(defaultColor)
-                        feedbackImageView.setColorFilter(defaultColor)
-                        feedbackArrowImageView.setColorFilter(defaultColor)
-                        shareAppImageView.setColorFilter(defaultColor)
-                        shareAppArrowImageView.setColorFilter(defaultColor)
-                        privacyPolicyImageView.setColorFilter(defaultColor)
-                        privacyPolicyArrowImageView.setColorFilter(defaultColor)
-                        checkUpdateImageView.setColorFilter(defaultColor)
-                        checkUpdateArrowImageView.setColorFilter(defaultColor)
+                        smallAIV.setColorFilter(defaultColor)
+                        capitalAIV.setColorFilter(defaultColor)
+                        lightAndDarkModeIV.setColorFilter(defaultColor)
+                        colorSchemeTV.setTextColor(defaultColor)
+                        colorSchemeIV.setColorFilter(defaultColor)
+                        moreAppsTV.setTextColor(defaultColor)
+                        photoEditorAppArrowIV.setColorFilter(defaultColor)
+                        dailyExpenseManagerAppArrowIV.setColorFilter(defaultColor)
+                        visitOurAppStoreShapeableIV.setColorFilter(defaultColor)
+                        visitOurAppStoreArrowIV.setColorFilter(defaultColor)
+                        aboutTV.setTextColor(defaultColor)
+                        rateUsIV.setColorFilter(defaultColor)
+                        rateUsArrowIV.setColorFilter(defaultColor)
+                        feedbackIV.setColorFilter(defaultColor)
+                        feedbackArrowIV.setColorFilter(defaultColor)
+                        shareAppIV.setColorFilter(defaultColor)
+                        shareAppArrowIV.setColorFilter(defaultColor)
+                        privacyPolicyIV.setColorFilter(defaultColor)
+                        privacyPolicyArrowIV.setColorFilter(defaultColor)
+                        checkUpdateIV.setColorFilter(defaultColor)
+                        checkUpdateArrowIV.setColorFilter(defaultColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(defaultColor)
-                        adLoadingInclude.progressBar.indeterminateTintList =
-                            ColorStateList.valueOf(defaultColor)
+                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(defaultColor)
                     }
 
                     1 -> {
                         changeStatusBarColor(activityContext, darkYellowColor)
                         toolbar.setBackgroundColor(darkYellowColor)
-                        appearanceTextView.setTextColor(darkYellowColor)
-                        appearanceImageView.setColorFilter(darkYellowColor)
-                        textSizeValueTextView.setTextColor(darkYellowColor)
+                        appearanceTV.setTextColor(darkYellowColor)
+                        appearanceIV.setColorFilter(darkYellowColor)
+                        textSizeValueTV.setTextColor(darkYellowColor)
                         textSizeSeekBar.thumbTintList = ColorStateList.valueOf(darkYellowColor)
                         textSizeSeekBar.progressTintList = ColorStateList.valueOf(darkYellowColor)
-                        smallAImageView.setColorFilter(darkYellowColor)
-                        capitalAImageView.setColorFilter(darkYellowColor)
-                        dayAndNightModeImageView.setColorFilter(darkYellowColor)
-                        colorSchemeTextView.setTextColor(darkYellowColor)
-                        colorSchemeImageView.setColorFilter(darkYellowColor)
-                        moreAppsTextView.setTextColor(darkYellowColor)
-                        photoEditorAppArrowImageView.setColorFilter(darkYellowColor)
-                        ramadanAppArrowImageView.setColorFilter(darkYellowColor)
-                        notePadAppArrowImageView.setColorFilter(darkYellowColor)
-                        dailyExpenseManagerAppArrowImageView.setColorFilter(darkYellowColor)
-                        visitOurAppStoreShapeableImageView.setColorFilter(darkYellowColor)
-                        visitOurAppStoreArrowImageView.setColorFilter(darkYellowColor)
-                        aboutTextView.setTextColor(darkYellowColor)
-                        rateUsImageView.setColorFilter(darkYellowColor)
-                        rateUsArrowImageView.setColorFilter(darkYellowColor)
-                        feedbackImageView.setColorFilter(darkYellowColor)
-                        feedbackArrowImageView.setColorFilter(darkYellowColor)
-                        shareAppImageView.setColorFilter(darkYellowColor)
-                        shareAppArrowImageView.setColorFilter(darkYellowColor)
-                        privacyPolicyImageView.setColorFilter(darkYellowColor)
-                        privacyPolicyArrowImageView.setColorFilter(darkYellowColor)
-                        checkUpdateImageView.setColorFilter(darkYellowColor)
-                        checkUpdateArrowImageView.setColorFilter(darkYellowColor)
+                        smallAIV.setColorFilter(darkYellowColor)
+                        capitalAIV.setColorFilter(darkYellowColor)
+                        lightAndDarkModeIV.setColorFilter(darkYellowColor)
+                        colorSchemeTV.setTextColor(darkYellowColor)
+                        colorSchemeIV.setColorFilter(darkYellowColor)
+                        moreAppsTV.setTextColor(darkYellowColor)
+                        photoEditorAppArrowIV.setColorFilter(darkYellowColor)
+                        dailyExpenseManagerAppArrowIV.setColorFilter(darkYellowColor)
+                        visitOurAppStoreShapeableIV.setColorFilter(darkYellowColor)
+                        visitOurAppStoreArrowIV.setColorFilter(darkYellowColor)
+                        aboutTV.setTextColor(darkYellowColor)
+                        rateUsIV.setColorFilter(darkYellowColor)
+                        rateUsArrowIV.setColorFilter(darkYellowColor)
+                        feedbackIV.setColorFilter(darkYellowColor)
+                        feedbackArrowIV.setColorFilter(darkYellowColor)
+                        shareAppIV.setColorFilter(darkYellowColor)
+                        shareAppArrowIV.setColorFilter(darkYellowColor)
+                        privacyPolicyIV.setColorFilter(darkYellowColor)
+                        privacyPolicyArrowIV.setColorFilter(darkYellowColor)
+                        checkUpdateIV.setColorFilter(darkYellowColor)
+                        checkUpdateArrowIV.setColorFilter(darkYellowColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(darkYellowColor)
-                        adLoadingInclude.progressBar.indeterminateTintList =
-                            ColorStateList.valueOf(darkYellowColor)
+                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(darkYellowColor)
                     }
 
                     2 -> {
                         changeStatusBarColor(activityContext, orangeColor)
                         toolbar.setBackgroundColor(orangeColor)
-                        appearanceTextView.setTextColor(orangeColor)
-                        appearanceImageView.setColorFilter(orangeColor)
-                        textSizeValueTextView.setTextColor(orangeColor)
+                        appearanceTV.setTextColor(orangeColor)
+                        appearanceIV.setColorFilter(orangeColor)
+                        textSizeValueTV.setTextColor(orangeColor)
                         textSizeSeekBar.thumbTintList = ColorStateList.valueOf(orangeColor)
                         textSizeSeekBar.progressTintList = ColorStateList.valueOf(orangeColor)
-                        smallAImageView.setColorFilter(orangeColor)
-                        capitalAImageView.setColorFilter(orangeColor)
-                        dayAndNightModeImageView.setColorFilter(orangeColor)
-                        colorSchemeTextView.setTextColor(orangeColor)
-                        colorSchemeImageView.setColorFilter(orangeColor)
-                        moreAppsTextView.setTextColor(orangeColor)
-                        photoEditorAppArrowImageView.setColorFilter(orangeColor)
-                        ramadanAppArrowImageView.setColorFilter(orangeColor)
-                        notePadAppArrowImageView.setColorFilter(orangeColor)
-                        dailyExpenseManagerAppArrowImageView.setColorFilter(orangeColor)
-                        visitOurAppStoreShapeableImageView.setColorFilter(orangeColor)
-                        visitOurAppStoreArrowImageView.setColorFilter(orangeColor)
-                        aboutTextView.setTextColor(orangeColor)
-                        rateUsImageView.setColorFilter(orangeColor)
-                        rateUsArrowImageView.setColorFilter(orangeColor)
-                        feedbackImageView.setColorFilter(orangeColor)
-                        feedbackArrowImageView.setColorFilter(orangeColor)
-                        shareAppImageView.setColorFilter(orangeColor)
-                        shareAppArrowImageView.setColorFilter(orangeColor)
-                        privacyPolicyImageView.setColorFilter(orangeColor)
-                        privacyPolicyArrowImageView.setColorFilter(orangeColor)
-                        checkUpdateImageView.setColorFilter(orangeColor)
-                        checkUpdateArrowImageView.setColorFilter(orangeColor)
+                        smallAIV.setColorFilter(orangeColor)
+                        capitalAIV.setColorFilter(orangeColor)
+                        lightAndDarkModeIV.setColorFilter(orangeColor)
+                        colorSchemeTV.setTextColor(orangeColor)
+                        colorSchemeIV.setColorFilter(orangeColor)
+                        moreAppsTV.setTextColor(orangeColor)
+                        photoEditorAppArrowIV.setColorFilter(orangeColor)
+                        dailyExpenseManagerAppArrowIV.setColorFilter(orangeColor)
+                        visitOurAppStoreShapeableIV.setColorFilter(orangeColor)
+                        visitOurAppStoreArrowIV.setColorFilter(orangeColor)
+                        aboutTV.setTextColor(orangeColor)
+                        rateUsIV.setColorFilter(orangeColor)
+                        rateUsArrowIV.setColorFilter(orangeColor)
+                        feedbackIV.setColorFilter(orangeColor)
+                        feedbackArrowIV.setColorFilter(orangeColor)
+                        shareAppIV.setColorFilter(orangeColor)
+                        shareAppArrowIV.setColorFilter(orangeColor)
+                        privacyPolicyIV.setColorFilter(orangeColor)
+                        privacyPolicyArrowIV.setColorFilter(orangeColor)
+                        checkUpdateIV.setColorFilter(orangeColor)
+                        checkUpdateArrowIV.setColorFilter(orangeColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(orangeColor)
-                        adLoadingInclude.progressBar.indeterminateTintList =
-                            ColorStateList.valueOf(orangeColor)
+                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(orangeColor)
                     }
 
                     3 -> {
                         changeStatusBarColor(activityContext, lightGreenColor)
                         toolbar.setBackgroundColor(lightGreenColor)
-                        appearanceTextView.setTextColor(lightGreenColor)
-                        appearanceImageView.setColorFilter(lightGreenColor)
-                        textSizeValueTextView.setTextColor(lightGreenColor)
+                        appearanceTV.setTextColor(lightGreenColor)
+                        appearanceIV.setColorFilter(lightGreenColor)
+                        textSizeValueTV.setTextColor(lightGreenColor)
                         textSizeSeekBar.thumbTintList = ColorStateList.valueOf(lightGreenColor)
                         textSizeSeekBar.progressTintList = ColorStateList.valueOf(lightGreenColor)
-                        smallAImageView.setColorFilter(lightGreenColor)
-                        capitalAImageView.setColorFilter(lightGreenColor)
-                        dayAndNightModeImageView.setColorFilter(lightGreenColor)
-                        colorSchemeTextView.setTextColor(lightGreenColor)
-                        colorSchemeImageView.setColorFilter(lightGreenColor)
-                        moreAppsTextView.setTextColor(lightGreenColor)
-                        photoEditorAppArrowImageView.setColorFilter(lightGreenColor)
-                        ramadanAppArrowImageView.setColorFilter(lightGreenColor)
-                        notePadAppArrowImageView.setColorFilter(lightGreenColor)
-                        dailyExpenseManagerAppArrowImageView.setColorFilter(lightGreenColor)
-                        visitOurAppStoreShapeableImageView.setColorFilter(lightGreenColor)
-                        visitOurAppStoreArrowImageView.setColorFilter(lightGreenColor)
-                        aboutTextView.setTextColor(lightGreenColor)
-                        rateUsImageView.setColorFilter(lightGreenColor)
-                        rateUsArrowImageView.setColorFilter(lightGreenColor)
-                        feedbackImageView.setColorFilter(lightGreenColor)
-                        feedbackArrowImageView.setColorFilter(lightGreenColor)
-                        shareAppImageView.setColorFilter(lightGreenColor)
-                        shareAppArrowImageView.setColorFilter(lightGreenColor)
-                        privacyPolicyImageView.setColorFilter(lightGreenColor)
-                        privacyPolicyArrowImageView.setColorFilter(lightGreenColor)
-                        checkUpdateImageView.setColorFilter(lightGreenColor)
-                        checkUpdateArrowImageView.setColorFilter(lightGreenColor)
+                        smallAIV.setColorFilter(lightGreenColor)
+                        capitalAIV.setColorFilter(lightGreenColor)
+                        lightAndDarkModeIV.setColorFilter(lightGreenColor)
+                        colorSchemeTV.setTextColor(lightGreenColor)
+                        colorSchemeIV.setColorFilter(lightGreenColor)
+                        moreAppsTV.setTextColor(lightGreenColor)
+                        photoEditorAppArrowIV.setColorFilter(lightGreenColor)
+                        dailyExpenseManagerAppArrowIV.setColorFilter(lightGreenColor)
+                        visitOurAppStoreShapeableIV.setColorFilter(lightGreenColor)
+                        visitOurAppStoreArrowIV.setColorFilter(lightGreenColor)
+                        aboutTV.setTextColor(lightGreenColor)
+                        rateUsIV.setColorFilter(lightGreenColor)
+                        rateUsArrowIV.setColorFilter(lightGreenColor)
+                        feedbackIV.setColorFilter(lightGreenColor)
+                        feedbackArrowIV.setColorFilter(lightGreenColor)
+                        shareAppIV.setColorFilter(lightGreenColor)
+                        shareAppArrowIV.setColorFilter(lightGreenColor)
+                        privacyPolicyIV.setColorFilter(lightGreenColor)
+                        privacyPolicyArrowIV.setColorFilter(lightGreenColor)
+                        checkUpdateIV.setColorFilter(lightGreenColor)
+                        checkUpdateArrowIV.setColorFilter(lightGreenColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(lightGreenColor)
-                        adLoadingInclude.progressBar.indeterminateTintList =
-                            ColorStateList.valueOf(lightGreenColor)
+                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(lightGreenColor)
                     }
 
                     4 -> {
                         changeStatusBarColor(activityContext, blueColor)
                         toolbar.setBackgroundColor(blueColor)
-                        appearanceTextView.setTextColor(blueColor)
-                        appearanceImageView.setColorFilter(blueColor)
-                        textSizeValueTextView.setTextColor(blueColor)
+                        appearanceTV.setTextColor(blueColor)
+                        appearanceIV.setColorFilter(blueColor)
+                        textSizeValueTV.setTextColor(blueColor)
                         textSizeSeekBar.thumbTintList = ColorStateList.valueOf(blueColor)
                         textSizeSeekBar.progressTintList = ColorStateList.valueOf(blueColor)
-                        smallAImageView.setColorFilter(blueColor)
-                        capitalAImageView.setColorFilter(blueColor)
-                        dayAndNightModeImageView.setColorFilter(blueColor)
-                        colorSchemeTextView.setTextColor(blueColor)
-                        colorSchemeImageView.setColorFilter(blueColor)
-                        moreAppsTextView.setTextColor(blueColor)
-                        photoEditorAppArrowImageView.setColorFilter(blueColor)
-                        ramadanAppArrowImageView.setColorFilter(blueColor)
-                        notePadAppArrowImageView.setColorFilter(blueColor)
-                        dailyExpenseManagerAppArrowImageView.setColorFilter(blueColor)
-                        visitOurAppStoreShapeableImageView.setColorFilter(blueColor)
-                        visitOurAppStoreArrowImageView.setColorFilter(blueColor)
-                        aboutTextView.setTextColor(blueColor)
-                        rateUsImageView.setColorFilter(blueColor)
-                        rateUsArrowImageView.setColorFilter(blueColor)
-                        feedbackImageView.setColorFilter(blueColor)
-                        feedbackArrowImageView.setColorFilter(blueColor)
-                        shareAppImageView.setColorFilter(blueColor)
-                        shareAppArrowImageView.setColorFilter(blueColor)
-                        privacyPolicyImageView.setColorFilter(blueColor)
-                        privacyPolicyArrowImageView.setColorFilter(blueColor)
-                        checkUpdateImageView.setColorFilter(blueColor)
-                        checkUpdateArrowImageView.setColorFilter(blueColor)
+                        smallAIV.setColorFilter(blueColor)
+                        capitalAIV.setColorFilter(blueColor)
+                        lightAndDarkModeIV.setColorFilter(blueColor)
+                        colorSchemeTV.setTextColor(blueColor)
+                        colorSchemeIV.setColorFilter(blueColor)
+                        moreAppsTV.setTextColor(blueColor)
+                        photoEditorAppArrowIV.setColorFilter(blueColor)
+                        dailyExpenseManagerAppArrowIV.setColorFilter(blueColor)
+                        visitOurAppStoreShapeableIV.setColorFilter(blueColor)
+                        visitOurAppStoreArrowIV.setColorFilter(blueColor)
+                        aboutTV.setTextColor(blueColor)
+                        rateUsIV.setColorFilter(blueColor)
+                        rateUsArrowIV.setColorFilter(blueColor)
+                        feedbackIV.setColorFilter(blueColor)
+                        feedbackArrowIV.setColorFilter(blueColor)
+                        shareAppIV.setColorFilter(blueColor)
+                        shareAppArrowIV.setColorFilter(blueColor)
+                        privacyPolicyIV.setColorFilter(blueColor)
+                        privacyPolicyArrowIV.setColorFilter(blueColor)
+                        checkUpdateIV.setColorFilter(blueColor)
+                        checkUpdateArrowIV.setColorFilter(blueColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(blueColor)
-                        adLoadingInclude.progressBar.indeterminateTintList =
-                            ColorStateList.valueOf(blueColor)
+                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(blueColor)
                     }
 
                     5 -> {
                         changeStatusBarColor(activityContext, cyanColor)
                         toolbar.setBackgroundColor(cyanColor)
-                        appearanceTextView.setTextColor(cyanColor)
-                        appearanceImageView.setColorFilter(cyanColor)
-                        textSizeValueTextView.setTextColor(cyanColor)
+                        appearanceTV.setTextColor(cyanColor)
+                        appearanceIV.setColorFilter(cyanColor)
+                        textSizeValueTV.setTextColor(cyanColor)
                         textSizeSeekBar.thumbTintList = ColorStateList.valueOf(cyanColor)
                         textSizeSeekBar.progressTintList = ColorStateList.valueOf(cyanColor)
-                        smallAImageView.setColorFilter(cyanColor)
-                        capitalAImageView.setColorFilter(cyanColor)
-                        dayAndNightModeImageView.setColorFilter(cyanColor)
-                        colorSchemeTextView.setTextColor(cyanColor)
-                        colorSchemeImageView.setColorFilter(cyanColor)
-                        moreAppsTextView.setTextColor(cyanColor)
-                        photoEditorAppArrowImageView.setColorFilter(cyanColor)
-                        ramadanAppArrowImageView.setColorFilter(cyanColor)
-                        notePadAppArrowImageView.setColorFilter(cyanColor)
-                        dailyExpenseManagerAppArrowImageView.setColorFilter(cyanColor)
-                        visitOurAppStoreShapeableImageView.setColorFilter(cyanColor)
-                        visitOurAppStoreArrowImageView.setColorFilter(cyanColor)
-                        aboutTextView.setTextColor(cyanColor)
-                        rateUsImageView.setColorFilter(cyanColor)
-                        rateUsArrowImageView.setColorFilter(cyanColor)
-                        feedbackImageView.setColorFilter(cyanColor)
-                        feedbackArrowImageView.setColorFilter(cyanColor)
-                        shareAppImageView.setColorFilter(cyanColor)
-                        shareAppArrowImageView.setColorFilter(cyanColor)
-                        privacyPolicyImageView.setColorFilter(cyanColor)
-                        privacyPolicyArrowImageView.setColorFilter(cyanColor)
-                        checkUpdateImageView.setColorFilter(cyanColor)
-                        checkUpdateArrowImageView.setColorFilter(cyanColor)
+                        smallAIV.setColorFilter(cyanColor)
+                        capitalAIV.setColorFilter(cyanColor)
+                        lightAndDarkModeIV.setColorFilter(cyanColor)
+                        colorSchemeTV.setTextColor(cyanColor)
+                        colorSchemeIV.setColorFilter(cyanColor)
+                        moreAppsTV.setTextColor(cyanColor)
+                        photoEditorAppArrowIV.setColorFilter(cyanColor)
+                        dailyExpenseManagerAppArrowIV.setColorFilter(cyanColor)
+                        visitOurAppStoreShapeableIV.setColorFilter(cyanColor)
+                        visitOurAppStoreArrowIV.setColorFilter(cyanColor)
+                        aboutTV.setTextColor(cyanColor)
+                        rateUsIV.setColorFilter(cyanColor)
+                        rateUsArrowIV.setColorFilter(cyanColor)
+                        feedbackIV.setColorFilter(cyanColor)
+                        feedbackArrowIV.setColorFilter(cyanColor)
+                        shareAppIV.setColorFilter(cyanColor)
+                        shareAppArrowIV.setColorFilter(cyanColor)
+                        privacyPolicyIV.setColorFilter(cyanColor)
+                        privacyPolicyArrowIV.setColorFilter(cyanColor)
+                        checkUpdateIV.setColorFilter(cyanColor)
+                        checkUpdateArrowIV.setColorFilter(cyanColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(cyanColor)
-                        adLoadingInclude.progressBar.indeterminateTintList =
-                            ColorStateList.valueOf(cyanColor)
+                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(cyanColor)
                     }
 
                     6 -> {
                         changeStatusBarColor(activityContext, pinkColor)
                         toolbar.setBackgroundColor(pinkColor)
-                        appearanceTextView.setTextColor(pinkColor)
-                        appearanceImageView.setColorFilter(pinkColor)
-                        textSizeValueTextView.setTextColor(pinkColor)
+                        appearanceTV.setTextColor(pinkColor)
+                        appearanceIV.setColorFilter(pinkColor)
+                        textSizeValueTV.setTextColor(pinkColor)
                         textSizeSeekBar.thumbTintList = ColorStateList.valueOf(pinkColor)
                         textSizeSeekBar.progressTintList = ColorStateList.valueOf(pinkColor)
-                        smallAImageView.setColorFilter(pinkColor)
-                        capitalAImageView.setColorFilter(pinkColor)
-                        dayAndNightModeImageView.setColorFilter(pinkColor)
-                        colorSchemeTextView.setTextColor(pinkColor)
-                        colorSchemeImageView.setColorFilter(pinkColor)
-                        moreAppsTextView.setTextColor(pinkColor)
-                        photoEditorAppArrowImageView.setColorFilter(pinkColor)
-                        ramadanAppArrowImageView.setColorFilter(pinkColor)
-                        notePadAppArrowImageView.setColorFilter(pinkColor)
-                        dailyExpenseManagerAppArrowImageView.setColorFilter(pinkColor)
-                        visitOurAppStoreShapeableImageView.setColorFilter(pinkColor)
-                        visitOurAppStoreArrowImageView.setColorFilter(pinkColor)
-                        aboutTextView.setTextColor(pinkColor)
-                        rateUsImageView.setColorFilter(pinkColor)
-                        rateUsArrowImageView.setColorFilter(pinkColor)
-                        feedbackImageView.setColorFilter(pinkColor)
-                        feedbackArrowImageView.setColorFilter(pinkColor)
-                        shareAppImageView.setColorFilter(pinkColor)
-                        shareAppArrowImageView.setColorFilter(pinkColor)
-                        privacyPolicyImageView.setColorFilter(pinkColor)
-                        privacyPolicyArrowImageView.setColorFilter(pinkColor)
-                        checkUpdateImageView.setColorFilter(pinkColor)
-                        checkUpdateArrowImageView.setColorFilter(pinkColor)
+                        smallAIV.setColorFilter(pinkColor)
+                        capitalAIV.setColorFilter(pinkColor)
+                        lightAndDarkModeIV.setColorFilter(pinkColor)
+                        colorSchemeTV.setTextColor(pinkColor)
+                        colorSchemeIV.setColorFilter(pinkColor)
+                        moreAppsTV.setTextColor(pinkColor)
+                        photoEditorAppArrowIV.setColorFilter(pinkColor)
+                        dailyExpenseManagerAppArrowIV.setColorFilter(pinkColor)
+                        visitOurAppStoreShapeableIV.setColorFilter(pinkColor)
+                        visitOurAppStoreArrowIV.setColorFilter(pinkColor)
+                        aboutTV.setTextColor(pinkColor)
+                        rateUsIV.setColorFilter(pinkColor)
+                        rateUsArrowIV.setColorFilter(pinkColor)
+                        feedbackIV.setColorFilter(pinkColor)
+                        feedbackArrowIV.setColorFilter(pinkColor)
+                        shareAppIV.setColorFilter(pinkColor)
+                        shareAppArrowIV.setColorFilter(pinkColor)
+                        privacyPolicyIV.setColorFilter(pinkColor)
+                        privacyPolicyArrowIV.setColorFilter(pinkColor)
+                        checkUpdateIV.setColorFilter(pinkColor)
+                        checkUpdateArrowIV.setColorFilter(pinkColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(pinkColor)
-                        adLoadingInclude.progressBar.indeterminateTintList =
-                            ColorStateList.valueOf(pinkColor)
+                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(pinkColor)
                     }
 
                     7 -> {
                         changeStatusBarColor(activityContext, darkBlueColor)
                         toolbar.setBackgroundColor(darkBlueColor)
-                        appearanceTextView.setTextColor(darkBlueColor)
-                        appearanceImageView.setColorFilter(darkBlueColor)
-                        textSizeValueTextView.setTextColor(darkBlueColor)
+                        appearanceTV.setTextColor(darkBlueColor)
+                        appearanceIV.setColorFilter(darkBlueColor)
+                        textSizeValueTV.setTextColor(darkBlueColor)
                         textSizeSeekBar.thumbTintList = ColorStateList.valueOf(darkBlueColor)
                         textSizeSeekBar.progressTintList = ColorStateList.valueOf(darkBlueColor)
-                        smallAImageView.setColorFilter(darkBlueColor)
-                        capitalAImageView.setColorFilter(darkBlueColor)
-                        dayAndNightModeImageView.setColorFilter(darkBlueColor)
-                        colorSchemeTextView.setTextColor(darkBlueColor)
-                        colorSchemeImageView.setColorFilter(darkBlueColor)
-                        moreAppsTextView.setTextColor(darkBlueColor)
-                        photoEditorAppArrowImageView.setColorFilter(darkBlueColor)
-                        ramadanAppArrowImageView.setColorFilter(darkBlueColor)
-                        notePadAppArrowImageView.setColorFilter(darkBlueColor)
-                        dailyExpenseManagerAppArrowImageView.setColorFilter(darkBlueColor)
-                        visitOurAppStoreShapeableImageView.setColorFilter(darkBlueColor)
-                        visitOurAppStoreArrowImageView.setColorFilter(darkBlueColor)
-                        aboutTextView.setTextColor(darkBlueColor)
-                        rateUsImageView.setColorFilter(darkBlueColor)
-                        rateUsArrowImageView.setColorFilter(darkBlueColor)
-                        feedbackImageView.setColorFilter(darkBlueColor)
-                        feedbackArrowImageView.setColorFilter(darkBlueColor)
-                        shareAppImageView.setColorFilter(darkBlueColor)
-                        shareAppArrowImageView.setColorFilter(darkBlueColor)
-                        privacyPolicyImageView.setColorFilter(darkBlueColor)
-                        privacyPolicyArrowImageView.setColorFilter(darkBlueColor)
-                        checkUpdateImageView.setColorFilter(darkBlueColor)
-                        checkUpdateArrowImageView.setColorFilter(darkBlueColor)
+                        smallAIV.setColorFilter(darkBlueColor)
+                        capitalAIV.setColorFilter(darkBlueColor)
+                        lightAndDarkModeIV.setColorFilter(darkBlueColor)
+                        colorSchemeTV.setTextColor(darkBlueColor)
+                        colorSchemeIV.setColorFilter(darkBlueColor)
+                        moreAppsTV.setTextColor(darkBlueColor)
+                        photoEditorAppArrowIV.setColorFilter(darkBlueColor)
+                        dailyExpenseManagerAppArrowIV.setColorFilter(darkBlueColor)
+                        visitOurAppStoreShapeableIV.setColorFilter(darkBlueColor)
+                        visitOurAppStoreArrowIV.setColorFilter(darkBlueColor)
+                        aboutTV.setTextColor(darkBlueColor)
+                        rateUsIV.setColorFilter(darkBlueColor)
+                        rateUsArrowIV.setColorFilter(darkBlueColor)
+                        feedbackIV.setColorFilter(darkBlueColor)
+                        feedbackArrowIV.setColorFilter(darkBlueColor)
+                        shareAppIV.setColorFilter(darkBlueColor)
+                        shareAppArrowIV.setColorFilter(darkBlueColor)
+                        privacyPolicyIV.setColorFilter(darkBlueColor)
+                        privacyPolicyArrowIV.setColorFilter(darkBlueColor)
+                        checkUpdateIV.setColorFilter(darkBlueColor)
+                        checkUpdateArrowIV.setColorFilter(darkBlueColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(darkBlueColor)
-                        adLoadingInclude.progressBar.indeterminateTintList =
-                            ColorStateList.valueOf(darkBlueColor)
+                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(darkBlueColor)
                     }
 
                     8 -> {
                         changeStatusBarColor(activityContext, redColor)
                         toolbar.setBackgroundColor(redColor)
-                        appearanceTextView.setTextColor(redColor)
-                        appearanceImageView.setColorFilter(redColor)
-                        textSizeValueTextView.setTextColor(redColor)
+                        appearanceTV.setTextColor(redColor)
+                        appearanceIV.setColorFilter(redColor)
+                        textSizeValueTV.setTextColor(redColor)
                         textSizeSeekBar.thumbTintList = ColorStateList.valueOf(redColor)
                         textSizeSeekBar.progressTintList = ColorStateList.valueOf(redColor)
-                        smallAImageView.setColorFilter(redColor)
-                        capitalAImageView.setColorFilter(redColor)
-                        dayAndNightModeImageView.setColorFilter(redColor)
-                        colorSchemeTextView.setTextColor(redColor)
-                        colorSchemeImageView.setColorFilter(redColor)
-                        moreAppsTextView.setTextColor(redColor)
-                        photoEditorAppArrowImageView.setColorFilter(redColor)
-                        ramadanAppArrowImageView.setColorFilter(redColor)
-                        notePadAppArrowImageView.setColorFilter(redColor)
-                        dailyExpenseManagerAppArrowImageView.setColorFilter(redColor)
-                        visitOurAppStoreShapeableImageView.setColorFilter(redColor)
-                        visitOurAppStoreArrowImageView.setColorFilter(redColor)
-                        aboutTextView.setTextColor(redColor)
-                        rateUsImageView.setColorFilter(redColor)
-                        rateUsArrowImageView.setColorFilter(redColor)
-                        feedbackImageView.setColorFilter(redColor)
-                        feedbackArrowImageView.setColorFilter(redColor)
-                        shareAppImageView.setColorFilter(redColor)
-                        shareAppArrowImageView.setColorFilter(redColor)
-                        privacyPolicyImageView.setColorFilter(redColor)
-                        privacyPolicyArrowImageView.setColorFilter(redColor)
-                        checkUpdateImageView.setColorFilter(redColor)
-                        checkUpdateArrowImageView.setColorFilter(redColor)
+                        smallAIV.setColorFilter(redColor)
+                        capitalAIV.setColorFilter(redColor)
+                        lightAndDarkModeIV.setColorFilter(redColor)
+                        colorSchemeTV.setTextColor(redColor)
+                        colorSchemeIV.setColorFilter(redColor)
+                        moreAppsTV.setTextColor(redColor)
+                        photoEditorAppArrowIV.setColorFilter(redColor)
+                        dailyExpenseManagerAppArrowIV.setColorFilter(redColor)
+                        visitOurAppStoreShapeableIV.setColorFilter(redColor)
+                        visitOurAppStoreArrowIV.setColorFilter(redColor)
+                        aboutTV.setTextColor(redColor)
+                        rateUsIV.setColorFilter(redColor)
+                        rateUsArrowIV.setColorFilter(redColor)
+                        feedbackIV.setColorFilter(redColor)
+                        feedbackArrowIV.setColorFilter(redColor)
+                        shareAppIV.setColorFilter(redColor)
+                        shareAppArrowIV.setColorFilter(redColor)
+                        privacyPolicyIV.setColorFilter(redColor)
+                        privacyPolicyArrowIV.setColorFilter(redColor)
+                        checkUpdateIV.setColorFilter(redColor)
+                        checkUpdateArrowIV.setColorFilter(redColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(redColor)
-                        adLoadingInclude.progressBar.indeterminateTintList =
-                            ColorStateList.valueOf(redColor)
+                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(redColor)
                     }
 
                     9 -> {
                         changeStatusBarColor(activityContext, lightPurpleColor)
                         toolbar.setBackgroundColor(lightPurpleColor)
-                        appearanceTextView.setTextColor(lightPurpleColor)
-                        appearanceImageView.setColorFilter(lightPurpleColor)
-                        textSizeValueTextView.setTextColor(lightPurpleColor)
+                        appearanceTV.setTextColor(lightPurpleColor)
+                        appearanceIV.setColorFilter(lightPurpleColor)
+                        textSizeValueTV.setTextColor(lightPurpleColor)
                         textSizeSeekBar.thumbTintList = ColorStateList.valueOf(lightPurpleColor)
                         textSizeSeekBar.progressTintList = ColorStateList.valueOf(lightPurpleColor)
-                        smallAImageView.setColorFilter(lightPurpleColor)
-                        capitalAImageView.setColorFilter(lightPurpleColor)
-                        dayAndNightModeImageView.setColorFilter(lightPurpleColor)
-                        colorSchemeTextView.setTextColor(lightPurpleColor)
-                        colorSchemeImageView.setColorFilter(lightPurpleColor)
-                        moreAppsTextView.setTextColor(lightPurpleColor)
-                        photoEditorAppArrowImageView.setColorFilter(lightPurpleColor)
-                        ramadanAppArrowImageView.setColorFilter(lightPurpleColor)
-                        notePadAppArrowImageView.setColorFilter(lightPurpleColor)
-                        dailyExpenseManagerAppArrowImageView.setColorFilter(lightPurpleColor)
-                        visitOurAppStoreShapeableImageView.setColorFilter(lightPurpleColor)
-                        visitOurAppStoreArrowImageView.setColorFilter(lightPurpleColor)
-                        aboutTextView.setTextColor(lightPurpleColor)
-                        rateUsImageView.setColorFilter(lightPurpleColor)
-                        rateUsArrowImageView.setColorFilter(lightPurpleColor)
-                        feedbackImageView.setColorFilter(lightPurpleColor)
-                        feedbackArrowImageView.setColorFilter(lightPurpleColor)
-                        shareAppImageView.setColorFilter(lightPurpleColor)
-                        shareAppArrowImageView.setColorFilter(lightPurpleColor)
-                        privacyPolicyImageView.setColorFilter(lightPurpleColor)
-                        privacyPolicyArrowImageView.setColorFilter(lightPurpleColor)
-                        checkUpdateImageView.setColorFilter(lightPurpleColor)
-                        checkUpdateArrowImageView.setColorFilter(lightPurpleColor)
+                        smallAIV.setColorFilter(lightPurpleColor)
+                        capitalAIV.setColorFilter(lightPurpleColor)
+                        lightAndDarkModeIV.setColorFilter(lightPurpleColor)
+                        colorSchemeTV.setTextColor(lightPurpleColor)
+                        colorSchemeIV.setColorFilter(lightPurpleColor)
+                        moreAppsTV.setTextColor(lightPurpleColor)
+                        photoEditorAppArrowIV.setColorFilter(lightPurpleColor)
+                        dailyExpenseManagerAppArrowIV.setColorFilter(lightPurpleColor)
+                        visitOurAppStoreShapeableIV.setColorFilter(lightPurpleColor)
+                        visitOurAppStoreArrowIV.setColorFilter(lightPurpleColor)
+                        aboutTV.setTextColor(lightPurpleColor)
+                        rateUsIV.setColorFilter(lightPurpleColor)
+                        rateUsArrowIV.setColorFilter(lightPurpleColor)
+                        feedbackIV.setColorFilter(lightPurpleColor)
+                        feedbackArrowIV.setColorFilter(lightPurpleColor)
+                        shareAppIV.setColorFilter(lightPurpleColor)
+                        shareAppArrowIV.setColorFilter(lightPurpleColor)
+                        privacyPolicyIV.setColorFilter(lightPurpleColor)
+                        privacyPolicyArrowIV.setColorFilter(lightPurpleColor)
+                        checkUpdateIV.setColorFilter(lightPurpleColor)
+                        checkUpdateArrowIV.setColorFilter(lightPurpleColor)
                         adLoadingInclude.adIsLoadingTextView.setTextColor(lightPurpleColor)
-                        adLoadingInclude.progressBar.indeterminateTintList =
-                            ColorStateList.valueOf(lightPurpleColor)
+                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(lightPurpleColor)
                     }
                 }
             }
@@ -650,85 +608,75 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
                 prefs.colorSchemeValue = id
                 colorSchemeAdapter.notifyDataSetChanged()
             }
-            applyColorSchemeORDayAndNightMode()
-            applyColorSchemeORDayAndNightModeOnSwitch()
+            applyLightAndDarkMode()
+            applyLightAndDarkModeOnSwitch()
         }
         val gridLayoutManager = GridLayoutManager(activityContext, 5, RecyclerView.VERTICAL, false)
         with(binding) {
-            colorSchemeRecyclerView.layoutManager = gridLayoutManager
-            colorSchemeRecyclerView.adapter = colorSchemeAdapter
+            colorSchemeRV.layoutManager = gridLayoutManager
+            colorSchemeRV.adapter = colorSchemeAdapter
         }
     }
 
     private fun applyCustomFont() {
         with(binding) {
-            toolbarTextView.typeface = typeface
-            appearanceTextView.typeface = typeface
-            textSizeTextView.typeface = typeface
-            textSizeValueTextView.typeface = typeface
-            dayAndNightModeTextView.typeface = typeface
-            colorSchemeTextView.typeface = typeface
-            enjoyMultipleColorsTextView.typeface = typeface
-            moreAppsTextView.typeface = typeface
-            photoEditorTextView.typeface = typeface
-            ramadanAppTextView.typeface = typeface
-            notePadAppTextView.typeface = typeface
-            dailyExpenseManagerAppTextView.typeface = typeface
-            visitOurAppStoreTextView.typeface = typeface
-            aboutTextView.typeface = typeface
-            rateUsTextView.typeface = typeface
-            pleaseTellYourExperienceTextView.typeface = typeface
-            feedbackTextView.typeface = typeface
-            giveYourSuggestionsAndFeedbackTextView.typeface = typeface
-            shareAppTextView.typeface = typeface
-            shareOurAppToYourFriendsAndFamilyTextView.typeface = typeface
-            privacyPolicyTextView.typeface = typeface
-            readOurPrivacyPolicyTextView.typeface = typeface
-            checkUpdateTextView.typeface = typeface
-            versionNumberTextView.typeface = typeface
+            toolbarTV.typeface = typeface
+            appearanceTV.typeface = typeface
+            textSizeTV.typeface = typeface
+            textSizeValueTV.typeface = typeface
+            lightAndDarkModeTV.typeface = typeface
+            colorSchemeTV.typeface = typeface
+            enjoyMultipleColorsTV.typeface = typeface
+            moreAppsTV.typeface = typeface
+            photoEditorTV.typeface = typeface
+            dailyExpenseManagerAppTV.typeface = typeface
+            visitOurAppStoreTV.typeface = typeface
+            aboutTV.typeface = typeface
+            rateUsTV.typeface = typeface
+            pleaseTellYourExperienceTV.typeface = typeface
+            feedbackTV.typeface = typeface
+            giveYourSuggestionsAndFeedbackTV.typeface = typeface
+            shareAppTV.typeface = typeface
+            shareOurAppToYourFriendsAndFamilyTV.typeface = typeface
+            privacyPolicyTV.typeface = typeface
+            readOurPrivacyPolicyTV.typeface = typeface
+            checkUpdateTV.typeface = typeface
+            versionNumberTV.typeface = typeface
             adLoadingInclude.adIsLoadingTextView.typeface = typeface
         }
     }
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.back_arrow_image_view -> {
+            R.id.backArrowIV -> {
                 goBackToDashBoardActivity()
             }
 
-            R.id.photo_editor_app_layout -> {
+            R.id.photoEditorAppLayout -> {
                 openAppInPlayStore(activityContext, sa10PhotoEditorAppPackage)
             }
 
-            R.id.ramadan_app_layout -> {
-                openAppInPlayStore(activityContext, ramadanAppPackage)
-            }
-
-            R.id.note_pad_app_layout -> {
-                openAppInPlayStore(activityContext, notePadAppPackage)
-            }
-
-            R.id.daily_expense_manager_app_layout -> {
+            R.id.dailyExpenseManagerAppLayout -> {
                 openAppInPlayStore(activityContext, dailyExpenseManagerAppPackage)
             }
 
-            R.id.visit_our_app_store_layout -> {
+            R.id.visitOurAppStoreLayout -> {
                 openGoogleAppStore(activityContext)
             }
 
-            R.id.rate_us_layout -> {
+            R.id.rateUsLayout -> {
                 showRateUsDialog()
             }
 
-            R.id.feedback_layout -> {
+            R.id.feedbackLayout -> {
                 openFeedbackActivity()
             }
 
-            R.id.share_app_layout -> {
+            R.id.shareAppLayout -> {
                 shareApp()
             }
 
-            R.id.privacy_policy_layout -> {
+            R.id.privacyPolicyLayout -> {
                 openPrivacyPolicyActivity(
                     activityContext,
                     isInternetConnectedORNot((getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager))
@@ -748,10 +696,11 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
         val rateUsDialogLayoutBinding = RateUsDialogLayoutBinding.inflate(layoutInflater)
 
         val rateUsDialogBuilder = AlertDialog.Builder(activityContext)
-        rateUsDialogBuilder.setView(rateUsDialogLayoutBinding.root)
-        rateUsDialogBuilder.setCancelable(false)
+        with(rateUsDialogBuilder) {
+            setView(rateUsDialogLayoutBinding.root)
+            setCancelable(true)
+        }
         val rateUsAlertDialog = rateUsDialogBuilder.create()
-
         if (!activityContext.isFinishing && !activityContext.isDestroyed && !rateUsAlertDialog.isShowing) {
             rateUsAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             rateUsAlertDialog.window?.setWindowAnimations(R.style.dialogBoxesAnimation)
@@ -759,11 +708,11 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
         }
 
         with(rateUsDialogLayoutBinding) {
-            rateUsDialogImageView.startAnimation(CommonFunctions.applyAnimation(activityContext))
+            rateUsDialogIV.startAnimation(CommonFunctions.applyAnimation(activityContext))
             applyCustomFontOnRateUsDialogViews(this)
             applyColorSchemeORDayAndNightModeOnRateUsDialogViews(this)
 
-            dismissRateUsDialogImageView.setOnClickListener { _: View? ->
+            dismissRateUsDialogIV.setOnClickListener { _: View? ->
                 if (!activityContext.isFinishing && !activityContext.isDestroyed) {
                     rateUsAlertDialog.dismiss()
                 }
@@ -794,10 +743,10 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
 
     private fun applyCustomFontOnRateUsDialogViews(rateUsDialogLayoutBinding: RateUsDialogLayoutBinding) {
         with(rateUsDialogLayoutBinding) {
-            rateOurAppTextView.typeface = typeface
-            messageTextView.typeface = typeface
+            rateOurAppTV.typeface = typeface
+            messageTV.typeface = typeface
             rateUsButton.typeface = typeface
-            thanksForYourFeedbackTextView.typeface = typeface
+            thanksForYourFeedbackTV.typeface = typeface
         }
     }
 
@@ -806,91 +755,75 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
     ) {
         with(rateUsDialogLayoutBinding) {
             if (prefs.isDarkModeEnable) {
-                rateUsDialogRootLayout.background.colorFilter =
-                    PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
-                dismissRateUsDialogImageView.setColorFilter(whiteColor)
-                rateOurAppTextView.setTextColor(whiteColor)
-                messageTextView.setTextColor(whiteColor)
-                rateUsButton.background.colorFilter =
-                    PorterDuffColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
-                ratingBar.progressTintList = ColorStateList.valueOf(
-                    ContextCompat.getColor(
-                        activityContext,
-                        R.color.ratingBarStarsCheckedStateDarkModeColor
-                    )
-                )
+                rootLayout.background.colorFilter = PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
+                dismissRateUsDialogIV.setColorFilter(lightBlueColor)
+                rateOurAppTV.setTextColor(lightBlueColor)
+                messageTV.setTextColor(darkModeTextColor)
+                ratingBar.progressTintList = ColorStateList.valueOf(ContextCompat.getColor(activityContext, R.color.lightBlueColor))
+                rateUsButton.setBackgroundColor(lightBlueColor)
                 rateUsButton.setTextColor(blackColor)
+                thanksForYourFeedbackTV.setTextColor(darkModeTextColor)
             } else {
-                rateUsDialogRootLayout.setBackgroundResource(dialogBoxesLightModeBackground)
+                rootLayout.setBackgroundResource(dialogBoxesLightModeBackground)
                 when (prefs.colorSchemeValue) {
                     0 -> {
-                        dismissRateUsDialogImageView.setColorFilter(defaultColor)
+                        dismissRateUsDialogIV.setColorFilter(defaultColor)
                         ratingBar.progressTintList = ColorStateList.valueOf(defaultColor)
-                        rateUsButton.background.colorFilter =
-                            PorterDuffColorFilter(defaultColor, PorterDuff.Mode.SRC_IN)
+                        rateUsButton.setBackgroundColor(defaultColor)
                     }
 
                     1 -> {
-                        dismissRateUsDialogImageView.setColorFilter(darkYellowColor)
+                        dismissRateUsDialogIV.setColorFilter(darkYellowColor)
                         ratingBar.progressTintList = ColorStateList.valueOf(darkYellowColor)
-                        rateUsButton.background.colorFilter =
-                            PorterDuffColorFilter(darkYellowColor, PorterDuff.Mode.SRC_IN)
+                        rateUsButton.setBackgroundColor(darkYellowColor)
                     }
 
                     2 -> {
-                        dismissRateUsDialogImageView.setColorFilter(orangeColor)
+                        dismissRateUsDialogIV.setColorFilter(orangeColor)
                         ratingBar.progressTintList = ColorStateList.valueOf(orangeColor)
-                        rateUsButton.background.colorFilter =
-                            PorterDuffColorFilter(orangeColor, PorterDuff.Mode.SRC_IN)
+                        rateUsButton.setBackgroundColor(orangeColor)
                     }
 
                     3 -> {
-                        dismissRateUsDialogImageView.setColorFilter(lightGreenColor)
+                        dismissRateUsDialogIV.setColorFilter(lightGreenColor)
                         ratingBar.progressTintList = ColorStateList.valueOf(lightGreenColor)
-                        rateUsButton.background.colorFilter =
-                            PorterDuffColorFilter(lightGreenColor, PorterDuff.Mode.SRC_IN)
+                        rateUsButton.setBackgroundColor(lightGreenColor)
                     }
 
                     4 -> {
-                        dismissRateUsDialogImageView.setColorFilter(blueColor)
+                        dismissRateUsDialogIV.setColorFilter(blueColor)
                         ratingBar.progressTintList = ColorStateList.valueOf(blueColor)
-                        rateUsButton.background.colorFilter =
-                            PorterDuffColorFilter(blueColor, PorterDuff.Mode.SRC_IN)
+                        rateUsButton.setBackgroundColor(blueColor)
                     }
 
                     5 -> {
-                        dismissRateUsDialogImageView.setColorFilter(cyanColor)
+                        dismissRateUsDialogIV.setColorFilter(cyanColor)
                         ratingBar.progressTintList = ColorStateList.valueOf(cyanColor)
-                        rateUsButton.background.colorFilter =
-                            PorterDuffColorFilter(cyanColor, PorterDuff.Mode.SRC_IN)
+                        rateUsButton.setBackgroundColor(cyanColor)
                     }
 
                     6 -> {
-                        dismissRateUsDialogImageView.setColorFilter(pinkColor)
+                        dismissRateUsDialogIV.setColorFilter(pinkColor)
                         ratingBar.progressTintList = ColorStateList.valueOf(pinkColor)
-                        rateUsButton.background.colorFilter =
-                            PorterDuffColorFilter(pinkColor, PorterDuff.Mode.SRC_IN)
+                        rateUsButton.setBackgroundColor(pinkColor)
                     }
 
                     7 -> {
-                        dismissRateUsDialogImageView.setColorFilter(darkBlueColor)
+                        dismissRateUsDialogIV.setColorFilter(darkBlueColor)
                         ratingBar.progressTintList = ColorStateList.valueOf(darkBlueColor)
-                        rateUsButton.background.colorFilter =
-                            PorterDuffColorFilter(darkBlueColor, PorterDuff.Mode.SRC_IN)
+                        rateUsButton.setBackgroundColor(darkBlueColor)
                     }
 
                     8 -> {
-                        dismissRateUsDialogImageView.setColorFilter(redColor)
+                        dismissRateUsDialogIV.setColorFilter(redColor)
                         ratingBar.progressTintList = ColorStateList.valueOf(redColor)
-                        rateUsButton.background.colorFilter =
-                            PorterDuffColorFilter(redColor, PorterDuff.Mode.SRC_IN)
+                        rateUsButton.setBackgroundColor(redColor)
                     }
 
                     9 -> {
-                        dismissRateUsDialogImageView.setColorFilter(lightPurpleColor)
+                        dismissRateUsDialogIV.setColorFilter(lightPurpleColor)
                         ratingBar.progressTintList = ColorStateList.valueOf(lightPurpleColor)
-                        rateUsButton.background.colorFilter =
-                            PorterDuffColorFilter(lightPurpleColor, PorterDuff.Mode.SRC_IN)
+                        rateUsButton.setBackgroundColor(lightPurpleColor)
                     }
                 }
             }
@@ -930,27 +863,12 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
 
         with(binding) {
             val isPhotoEditorAppInstalledOrNot = appIsInstalledOrNot(sa10PhotoEditorAppPackage)
-            val isRamadanAppInstalledOrNot = appIsInstalledOrNot(ramadanAppPackage)
-            val isNotePadAppInstalledOrNot = appIsInstalledOrNot(notePadAppPackage)
-            val isDailyExpenseManagerAppInstalledOrNot =
-                appIsInstalledOrNot(dailyExpenseManagerAppPackage)
+            val isDailyExpenseManagerAppInstalledOrNot = appIsInstalledOrNot(dailyExpenseManagerAppPackage)
 
             if (isPhotoEditorAppInstalledOrNot) {
                 photoEditorAppLayout.visibility = GONE
             } else {
                 photoEditorAppLayout.visibility = VISIBLE
-            }
-
-            if (isRamadanAppInstalledOrNot) {
-                ramadanAppLayout.visibility = GONE
-            } else {
-                ramadanAppLayout.visibility = VISIBLE
-            }
-
-            if (isNotePadAppInstalledOrNot) {
-                notePadAppLayout.visibility = GONE
-            } else {
-                notePadAppLayout.visibility = VISIBLE
             }
 
             if (isDailyExpenseManagerAppInstalledOrNot) {
