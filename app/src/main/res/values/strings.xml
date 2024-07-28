@@ -140,5 +140,8 @@
     <string name="please_select_future_date_time_toast_text"><![CDATA[Please!Select future date & time…]]></string>
     <string name="reset_text">Reset</string>
     <string name="reset_password_text">Reset Password</string>
+    <string name="task_text">Task</string>
+    <string name="reminder_text">Reminder</string>
+    <string name="loading_text">Loading...</string>
 
 </resources>

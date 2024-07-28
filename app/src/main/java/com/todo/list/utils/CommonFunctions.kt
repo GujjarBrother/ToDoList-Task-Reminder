@@ -4,6 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.view.View
+import android.view.View.GONE
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.animation.Animation
@@ -66,6 +70,14 @@ object CommonFunctions {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
             )
+        }
+    }
+
+    fun View.changeVisibility(visibilityStatus: Int) {
+        when(visibilityStatus) {
+            0 -> this.visibility = GONE
+            1 -> this.visibility = VISIBLE
+            2 -> this.visibility = INVISIBLE
         }
     }
 }

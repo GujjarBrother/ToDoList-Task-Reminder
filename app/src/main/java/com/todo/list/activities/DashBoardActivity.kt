@@ -83,15 +83,10 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                 })
             }.attach()
 
-            dashBoardViewPager.offscreenPageLimit = 1
-
             dashBoardViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
-                    if (position == 0) {
-                        toolbarTV.text = getString(R.string.tasks_text)
-                    } else if (position == 1) {
-                        toolbarTV.text = getString(R.string.completed_text)
-                    }
+                    super.onPageSelected(position)
+                    manageTabsScrolling(position)
                 }
             })
             signOutIV.setOnClickListener(this@DashBoardActivity)
@@ -127,6 +122,16 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
             onBackPressedDispatcher.addCallback(onBackPressedCallback)
             dashBoardActivityDrawerLayout.setScrimColor(ContextCompat.getColor(activityContext, R.color.navigationDrawerScrimColor))
         }
+    }
+
+    private fun ActivityDashBoardBinding.manageTabsScrolling(position: Int) {
+        if (position == 0) {
+            toolbarTV.text = getString(R.string.tasks_text)
+            startAndStopFABAnimationAndSwitchBetweenLightAndDarkModeListener.goAhead(1)
+        } else if (position == 1) {
+            toolbarTV.text = getString(R.string.completed_text)
+        }
+        dashBoardViewPager.setCurrentItem(position, true)
     }
 
     override fun onResume() {
