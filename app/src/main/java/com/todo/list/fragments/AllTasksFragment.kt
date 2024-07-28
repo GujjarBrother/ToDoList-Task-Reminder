@@ -22,13 +22,12 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.PopupWindow
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.ViewModelProvider
@@ -59,6 +58,7 @@ import com.todo.list.enums.TasksCategoriesEnum
 import com.todo.list.listeners.StartAndStopFABAnimationAndSwitchBetweenLightAndDarkModeListener
 import com.todo.list.repositories.TasksRepo
 import com.todo.list.utils.CommonFunctions.applyAnimation
+import com.todo.list.utils.CommonFunctions.changeVisibility
 import com.todo.list.utils.CommonFunctions.isSomethingChanged
 import com.todo.list.viewModels.TasksViewModel
 import com.todo.list.viewModels.TasksViewModelFactory
@@ -90,6 +90,8 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     private lateinit var addAndUpdateTasksDialogLayoutBinding: AddAndUpdateTasksDialogLayoutBinding
     private lateinit var toDoTask: ToDoTask
     private lateinit var tasksViewModel: TasksViewModel
+    private val WHICHTAB = "whichTab"
+    private var selectedTab: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -130,8 +132,9 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             }
         )
 
-        startFABAnimation()
-
+        selectedTab = arguments?.run {
+            getInt(WHICHTAB)
+        }
 
         with(binding) {
             if (prefs.allTasksStyleValue) {
@@ -152,9 +155,18 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         lifecycleScope.launch(Dispatchers.IO) {
             tasksViewModel.updateCompletedAndTimeUpTasks(true, Date(System.currentTimeMillis()))
         }
-        tasksViewModel.getAllTasks(false).observe(viewLifecycleOwner) {
+        tasksViewModel.getAllTasks().observe(viewLifecycleOwner) {
             allToDosTasksArrayList = it as ArrayList<ToDoTask>
+            Toast.makeText(fragmentContext, "Size: ${allToDosTasksArrayList.size}", Toast.LENGTH_LONG).show()
             readAllTasks()
+        }
+    }
+
+    companion object {
+        fun newInstance(whichTab: Int) = AllTasksFragment().apply {
+            arguments = Bundle().apply {
+                putInt(WHICHTAB, whichTab)
+            }
         }
     }
 
@@ -166,9 +178,21 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
+        with(binding) {
+            when (selectedTab) {
+                0 -> {
+                    startFABAnimation()
+                    addNewTasksFAB.changeVisibility(1)
+                    deletedPermanentlyTextView.changeVisibility(0)
+                }
 
+                1 -> {
+                    addNewTasksFAB.changeVisibility(0)
+                    deletedPermanentlyTextView.changeVisibility(1)
+                }
+            }
+        }
         applyLightAndDarkMode()
-
         if (isSomethingChanged) {
             if (::adapter.isInitialized) {
                 adapter.isTextSizeChanged = true
@@ -301,13 +325,13 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
     private fun readAllTasks() {
         with(binding) {
-            if (allToDosTasksArrayList.size > 0) {
-                group1.visibility = GONE
-                group2.visibility = VISIBLE
+            if (allToDosTasksArrayList.isNotEmpty()) {
+                nothingInHereGroup.changeVisibility(0)
+                dataAvailableGroup.changeVisibility(1)
                 displayAllTasksOnRecyclerView()
             } else {
-                group1.visibility = VISIBLE
-                group2.visibility = GONE
+                nothingInHereGroup.changeVisibility(1)
+                dataAvailableGroup.changeVisibility(0)
             }
         }
     }
@@ -446,18 +470,40 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             )
         }
 
-        val layoutManager: RecyclerView.LayoutManager = if (prefs.allTasksStyleValue) {
-            GridLayoutManager(fragmentContext, 2, GridLayoutManager.VERTICAL, false)
-        } else {
-            LinearLayoutManager(fragmentContext, LinearLayoutManager.VERTICAL, false)
+        val tasksList = ArrayList<ToDoTask>()
+        for (toDoTask in allToDosTasksArrayList) {
+            when(selectedTab) {
+                TabsEnum.TASKS_TAB.ordinal -> {
+                    if (!toDoTask.isTaskCompletedORTimeUp) {
+                        tasksList.add(toDoTask)
+                    }
+                }
+
+                TabsEnum.COMPLETED_TAB.ordinal -> {
+                    if (toDoTask.isTaskCompletedORTimeUp) {
+                        tasksList.add(toDoTask)
+                    }
+                }
+            }
         }
 
         with(binding) {
-            allTasksRecyclerView.layoutManager = layoutManager
+            changeStyle()
             if (::adapter.isInitialized) {
                 allTasksRecyclerView.adapter = adapter
-                adapter.submitList(allToDosTasksArrayList)
+                adapter.submitList(tasksList)
             }
+        }
+    }
+
+    private fun changeStyle() {
+        with(binding) {
+            val layoutManager: RecyclerView.LayoutManager = if (prefs.allTasksStyleValue) {
+                GridLayoutManager(fragmentContext, 2, GridLayoutManager.VERTICAL, false)
+            } else {
+                LinearLayoutManager(fragmentContext, LinearLayoutManager.VERTICAL, false)
+            }
+            allTasksRecyclerView.layoutManager = layoutManager
         }
     }
 
@@ -478,12 +524,12 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                         listAndGridViewStylesIV.setImageDrawable(gridViewStyleImage)
                         listAndGridViewStylesTV.setText(R.string.gridview_text)
                         prefs.allTasksStyleValue = false
-                        displayAllTasksOnRecyclerView()
+                        changeStyle()
                     } else {
                         listAndGridViewStylesIV.setImageDrawable(listViewStyleImage)
                         listAndGridViewStylesTV.setText(R.string.listview_text)
                         prefs.allTasksStyleValue = true
-                        displayAllTasksOnRecyclerView()
+                        changeStyle()
                     }
                 }
             }

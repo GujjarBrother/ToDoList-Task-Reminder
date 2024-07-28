@@ -5,7 +5,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.todo.list.enums.TabsEnum
 import com.todo.list.fragments.AllTasksFragment
-import com.todo.list.fragments.CompletedTasksFragment
 
 class ViewPagerAdapter(val activity: FragmentActivity) : FragmentStateAdapter(activity) {
 
@@ -13,8 +12,8 @@ class ViewPagerAdapter(val activity: FragmentActivity) : FragmentStateAdapter(ac
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            TabsEnum.TASKS_TAB.ordinal -> AllTasksFragment()
-            else -> CompletedTasksFragment()
+            TabsEnum.TASKS_TAB.ordinal -> AllTasksFragment.newInstance(TabsEnum.TASKS_TAB.ordinal)
+            else -> AllTasksFragment.newInstance(TabsEnum.COMPLETED_TAB.ordinal)
         }
     }
 }

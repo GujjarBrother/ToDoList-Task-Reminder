@@ -25,10 +25,8 @@ import com.todo.list.base.BaseFragment
 import com.todo.list.databinding.DeleteTaskDialogLayoutBinding
 import com.todo.list.databinding.FragmentCompletedTasksBinding
 import com.todo.list.db.ToDoTask
-import com.todo.list.db.ToDosDatabase
 import com.todo.list.enums.TabsEnum
 import com.todo.list.utils.CommonFunctions.applyAnimation
-import es.dmoral.toasty.Toasty
 import java.util.Collections
 
 class CompletedTasksFragment : BaseFragment(), View.OnClickListener {

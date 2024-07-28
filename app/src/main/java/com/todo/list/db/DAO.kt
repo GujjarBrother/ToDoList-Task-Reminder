@@ -14,11 +14,11 @@ interface DAO {
     @Insert
     suspend fun saveTask(toDoTask: ToDoTask): Long
 
-    @Query("SELECT * FROM ToDosTasks WHERE Is_Task_Completed_OR_TimeUp = :isCompletedAndTimeUp")
-    fun getAllTasks(isCompletedAndTimeUp: Boolean): LiveData<List<ToDoTask>>
+    /*@Query("SELECT * FROM ToDosTasks WHERE Is_Task_Completed_OR_TimeUp = :isCompletedAndTimeUp")
+    fun getAllTasks(isCompletedAndTimeUp: Boolean): LiveData<List<ToDoTask>>*/
 
-    @Query("SELECT * FROM ToDosTasks WHERE Tasks_Category = :category")
-    fun getAllSpecificTasks(category: Int): List<ToDoTask>
+    @Query("SELECT * FROM ToDosTasks")
+    fun getAllTasks(): LiveData<List<ToDoTask>>
 
     @Delete
     suspend fun deleteTask(toDoTask: ToDoTask): Int
