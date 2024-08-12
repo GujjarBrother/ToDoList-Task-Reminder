@@ -1,7 +1,6 @@
 package com.todo.list.adsPlugin.bannerAd
 
 import android.app.Activity
-import android.view.View
 import android.widget.LinearLayout
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -10,6 +9,7 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.todo.list.R
+import com.todo.list.utils.CommonFunctions.changeVisibility
 
 class BannerAdController {
     companion object {
@@ -38,13 +38,13 @@ class BannerAdController {
                     if (isInternetConnected) {
                         adView.loadAd(adRequest)
                     } else {
-                        containerLayout.visibility = View.GONE
+                        containerLayout.changeVisibility(0)
                     }
                 }
 
                 override fun onAdLoaded() {
                     super.onAdLoaded()
-                    loadingLayout.visibility = View.GONE
+                    loadingLayout.changeVisibility(0)
                 }
             }
         }

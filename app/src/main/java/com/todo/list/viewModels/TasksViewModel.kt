@@ -16,7 +16,7 @@ class TasksViewModel(private val tasksRepo: TasksRepo) : ViewModel() {
         tasksRepo.saveTask(toDoTask)
     }
 
-    fun getAllTasks() = tasksRepo.getAllTasks()
+    fun getAllTasks(isTaskComplete: Boolean) = tasksRepo.getAllTasks(isTaskComplete)
 
     fun isTaskAlreadySaved(
         dayOfWeek: String,

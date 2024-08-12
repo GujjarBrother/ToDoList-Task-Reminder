@@ -12,13 +12,23 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
 import com.todo.list.R
 import com.todo.list.activities.PrivacyPolicyActivity
+import com.todo.list.db.ToDosDatabase
+import com.todo.list.repositories.TasksRepo
+import com.todo.list.viewModels.TasksViewModel
+import com.todo.list.viewModels.TasksViewModelFactory
 import es.dmoral.toasty.Toasty
 
 object CommonFunctions {
 
-    var isSomethingChanged = false
+    var isSomethingChanged = MutableLiveData(false)
+
+    fun getViewModel(context: FragmentActivity) =
+        ViewModelProvider(context, TasksViewModelFactory(TasksRepo(ToDosDatabase.getDatabase(context).dao())))[TasksViewModel::class.java]
 
     fun openGoogleAppStore(activity: Activity) {
         val openGoogleAppStoreIntent = Intent()

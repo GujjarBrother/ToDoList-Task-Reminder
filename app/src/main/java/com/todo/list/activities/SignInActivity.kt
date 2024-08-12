@@ -10,8 +10,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.animation.AnimationUtils
 import android.widget.CompoundButton
 import androidx.appcompat.app.AlertDialog
@@ -22,6 +20,7 @@ import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivitySignInBinding
 import com.todo.list.databinding.RecoverPasswordDialogLayoutBinding
 import com.todo.list.utils.CommonFunctions.changeStatusBarColor
+import com.todo.list.utils.CommonFunctions.changeVisibility
 import com.todo.list.utils.CommonFunctions.keepActivityOn
 import com.todo.list.utils.CommonFunctions.makeFullScreenActivity
 import es.dmoral.toasty.Toasty
@@ -92,7 +91,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                         if (signInPassword.equals(password, ignoreCase = true)) {
                             userNameTIL.error = null
                             passwordTIL.error = null
-                            prefs.isUserSignInOrSignOutValue = true
+                            prefs.isUserSignIn = true
                             Toasty.success(activityContext, R.string.sign_in_successfully_toast_message_text, Toasty.LENGTH_LONG).show()
                             openDashBoardActivity()
                         } else {
@@ -375,9 +374,9 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
             }
 
             if (check) {
-                dontHaveAnAccountAndSignUpLayout.visibility = GONE
+                dontHaveAnAccountAndSignUpLayout.changeVisibility(0)
             } else {
-                dontHaveAnAccountAndSignUpLayout.visibility = VISIBLE
+                dontHaveAnAccountAndSignUpLayout.changeVisibility(1)
             }
         }
     }

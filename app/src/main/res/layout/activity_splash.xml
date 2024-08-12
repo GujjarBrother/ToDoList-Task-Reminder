@@ -62,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_5sdp"
-        android:layout_marginHorizontal="@dimen/_5sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -95,11 +95,11 @@
         <ProgressBar
             android:id="@+id/splashLoadingProgressBar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_5sdp"
+            android:layout_height="@dimen/_6sdp"
             style="?android:attr/progressBarStyleHorizontal"
             android:max="100"
             android:progress="0"
-            android:background="@drawable/splash_activity_progress_bar_background"
+            android:progressDrawable="@drawable/default_progress_bar_background"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/loadingPercentageTV"
             app:layout_constraintEnd_toEndOf="parent"

@@ -12,9 +12,9 @@ class Prefs(private val toDoListSharedPreferences: SharedPreferences) {
         get() = toDoListSharedPreferences.getBoolean("rememberMe", false)
         set(value) = toDoListSharedPreferences.edit().putBoolean("rememberMe", value).apply()
 
-    var isUserSignInOrSignOutValue: Boolean
-        get() = toDoListSharedPreferences.getBoolean("signInSignOut", false)
-        set(value) = toDoListSharedPreferences.edit().putBoolean("signInSignOut", value).apply()
+    var isUserSignIn: Boolean
+        get() = toDoListSharedPreferences.getBoolean("isUserSignIn", false)
+        set(value) = toDoListSharedPreferences.edit().putBoolean("isUserSignIn", value).apply()
 
     var colorSchemeValue: Int
         get() = toDoListSharedPreferences.getInt("colorScheme", 0)
