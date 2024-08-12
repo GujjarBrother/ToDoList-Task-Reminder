@@ -13,9 +13,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.view.View.GONE
-import android.view.View.INVISIBLE
-import android.view.View.VISIBLE
 import android.widget.CompoundButton
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
@@ -35,6 +32,7 @@ import com.todo.list.databinding.RateUsDialogLayoutBinding
 import com.todo.list.models.ColorSchemeModel
 import com.todo.list.utils.CommonFunctions
 import com.todo.list.utils.CommonFunctions.changeStatusBarColor
+import com.todo.list.utils.CommonFunctions.changeVisibility
 import com.todo.list.utils.CommonFunctions.isSomethingChanged
 import com.todo.list.utils.CommonFunctions.keepActivityOn
 import com.todo.list.utils.CommonFunctions.openAppInPlayStore
@@ -101,17 +99,17 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
 
                 override fun onStopTrackingTouch(seekBar: SeekBar) {
                     prefs.textSizeValue = seekBar.progress
-                    isSomethingChanged = true
+                    isSomethingChanged.value = true
                 }
             })
 
             lightAndDarkModeSwitch.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
                 if (isChecked) {
-                    colorSchemeCV.visibility = GONE
+                    colorSchemeCV.changeVisibility(0)
                 } else {
-                    colorSchemeCV.visibility = VISIBLE
+                    colorSchemeCV.changeVisibility(1)
                 }
-                isSomethingChanged = true
+                isSomethingChanged.value = true
                 prefs.isDarkModeEnable = isChecked
                 applyLightAndDarkMode()
                 applyLightAndDarkModeOnSwitch()
@@ -130,7 +128,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
         with(binding) {
             val switchTrackDrawable = lightAndDarkModeSwitch.trackDrawable
             if (prefs.isDarkModeEnable) {
-                include.root.visibility = VISIBLE
+                include.root.changeVisibility(1)
                 lightAndDarkModeIV.setImageResource(R.drawable.sun_image)
                 lightAndDarkModeTV.setText(R.string.light_mode_text)
                 switchTrackDrawable.colorFilter = PorterDuffColorFilter(snowWhiteColor, PorterDuff.Mode.SRC_IN)
@@ -177,7 +175,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
                             R.drawable.light_purple_switch_thumb));
                 }*/
             } else {
-                include.root.visibility = GONE
+                include.root.changeVisibility(0)
                 lightAndDarkModeIV.setImageResource(R.drawable.moon_image)
                 lightAndDarkModeTV.setText(R.string.dark_mode_text)
                 switchTrackDrawable.colorFilter = PorterDuffColorFilter(switchTrackOffColor, PorterDuff.Mode.SRC_IN)
@@ -192,7 +190,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
         with(binding) {
             if (prefs.isDarkModeEnable) {
                 changeStatusBarColor(activityContext, screensNightModeColor)
-                colorSchemeCV.visibility = GONE
+                colorSchemeCV.changeVisibility(0)
                 toolbar.setBackgroundColor(screensNightModeColor)
                 rootLayout.setBackgroundColor(screensNightModeColor)
                 appearanceCV.setCardBackgroundColor(cardsNightModeColor)
@@ -235,7 +233,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
                 adLoadingInclude.adIsLoadingTextView.setTextColor(whiteColor)
                 adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(whiteColor)
             } else {
-                colorSchemeCV.visibility = VISIBLE
+                colorSchemeCV.changeVisibility(1)
                 rootLayout.setBackgroundColor(snowWhiteColor)
                 appearanceCV.setCardBackgroundColor(whiteColor)
                 textSizeTV.setTextColor(defaultColor)
@@ -601,7 +599,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
         }
         colorSchemeArrayList[prefs.colorSchemeValue].isSelected = true
         colorSchemeAdapter = ColorSchemeAdapter(colorSchemeArrayList) { id ->
-            isSomethingChanged = true
+            isSomethingChanged.value = true
             for (i in colorSchemeArrayList.indices) {
                 val colorSchemeModel = colorSchemeArrayList[i]
                 colorSchemeModel.isSelected = id == colorSchemeModel.id
@@ -721,12 +719,11 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
             rateUsButton.setOnClickListener { _: View? ->
                 val rating = rateUsDialogLayoutBinding.ratingBar.rating
                 if (rating in 1.0..3.0) {
-                    rateUsDialogLayoutBinding.rateUsButton.visibility = INVISIBLE
-                    rateUsDialogLayoutBinding.group.visibility = VISIBLE
-                    Handler(Looper.getMainLooper()).postDelayed(
-                        { rateUsAlertDialog.dismiss() },
-                        2000
-                    )
+                    rateUsDialogLayoutBinding.rateUsButton.changeVisibility(2)
+                    rateUsDialogLayoutBinding.group.changeVisibility(1)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                            rateUsAlertDialog.dismiss()
+                        }, 2000)
                 } else if (rating >= 4.0) {
                     openAppInPlayStore(activityContext, BuildConfig.APPLICATION_ID)
                     if (!activityContext.isFinishing && !activityContext.isDestroyed) rateUsAlertDialog.dismiss()
@@ -866,15 +863,15 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
             val isDailyExpenseManagerAppInstalledOrNot = appIsInstalledOrNot(dailyExpenseManagerAppPackage)
 
             if (isPhotoEditorAppInstalledOrNot) {
-                photoEditorAppLayout.visibility = GONE
+                photoEditorAppLayout.changeVisibility(0)
             } else {
-                photoEditorAppLayout.visibility = VISIBLE
+                photoEditorAppLayout.changeVisibility(1)
             }
 
             if (isDailyExpenseManagerAppInstalledOrNot) {
-                dailyExpenseManagerAppLayout.visibility = GONE
+                dailyExpenseManagerAppLayout.changeVisibility(0)
             } else {
-                dailyExpenseManagerAppLayout.visibility = VISIBLE
+                dailyExpenseManagerAppLayout.changeVisibility(1)
             }
         }
     }

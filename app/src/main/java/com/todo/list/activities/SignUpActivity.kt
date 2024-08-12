@@ -26,6 +26,7 @@ import com.todo.list.databinding.SecurityQuestionDialogLayoutBinding
 import com.todo.list.enums.GenderEnum
 import com.todo.list.enums.SecurityQuestionsEnum
 import com.todo.list.utils.CommonFunctions.changeStatusBarColor
+import com.todo.list.utils.CommonFunctions.changeVisibility
 import com.todo.list.utils.CommonFunctions.keepActivityOn
 import com.todo.list.utils.CommonFunctions.makeFullScreenActivity
 import es.dmoral.toasty.Toasty
@@ -842,8 +843,8 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
         } else if (forWhichInvoked.equals(other = "Security Questions", ignoreCase = true)) {
             if (category != 0) {
                 with(securityQuestionDialogLayoutBinding) {
-                    securityQuestionLayout.visibility = View.GONE
-                    group1.visibility = View.VISIBLE
+                    securityQuestionLayout.changeVisibility(0)
+                    group1.changeVisibility(1)
                     when (category) {
                         SecurityQuestionsEnum.QUESTION_1.ordinal -> {
                             securityQuestionAnswerTIL.hint = getString(R.string.what_is_your_favourite_book_question)

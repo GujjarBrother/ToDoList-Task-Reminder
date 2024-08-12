@@ -2,13 +2,13 @@ package com.todo.list.activities
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivityPrivacyPolicyBinding
+import com.todo.list.utils.CommonFunctions.changeVisibility
 import com.todo.list.utils.CommonFunctions.keepActivityOn
 import com.todo.list.utils.CommonFunctions.makeFullScreenActivity
 
@@ -32,7 +32,7 @@ class PrivacyPolicyActivity : BaseActivity() {
             webView.webChromeClient = object : WebChromeClient() {
                 override fun onProgressChanged(view: WebView, newProgress: Int) {
                     if (newProgress > 90) {
-                        progressBar.visibility = View.GONE
+                        progressBar.changeVisibility(0)
                     }
                 }
             }

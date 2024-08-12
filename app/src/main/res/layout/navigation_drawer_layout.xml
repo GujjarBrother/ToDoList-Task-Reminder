@@ -108,10 +108,10 @@
                         android:textColor="@color/blackColor"
                         android:textSize="@dimen/_12ssp"
                         android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/switchBetweenLightAndDarkModeTV"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toTopOf="@id/switchBetweenLightAndDarkModeTV"/>
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/switchBetweenLightAndDarkModeTV"
@@ -122,9 +122,9 @@
                         android:text="@string/switch_between_light_dark_mode_text"
                         android:textColor="@color/subTitlesTextColor"
                         android:textSize="@dimen/_8ssp"
-                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/lightAndDarkModeTV" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -200,10 +200,10 @@
                         android:textColor="@color/blackColor"
                         android:textSize="@dimen/_12ssp"
                         android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/seeTheRequiredSettingsTV"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toTopOf="@id/seeTheRequiredSettingsTV"/>
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/seeTheRequiredSettingsTV"
@@ -277,10 +277,10 @@
                         android:textColor="@color/blackColor"
                         android:textSize="@dimen/_12ssp"
                         android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toTopOf="@id/checkOurMoreAppsOnPlayStoreTV"
-                        app:layout_constraintEnd_toEndOf="parent"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/checkOurMoreAppsOnPlayStoreTV"
@@ -291,9 +291,9 @@
                         android:text="@string/check_our_more_app_s_on_play_store_text"
                         android:textColor="@color/subTitlesTextColor"
                         android:textSize="@dimen/_8ssp"
-                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/visitOurAppStoreTV" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -354,10 +354,10 @@
                         android:textColor="@color/blackColor"
                         android:textSize="@dimen/_12ssp"
                         android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/readOurPrivacyPolicyTV"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toTopOf="@id/readOurPrivacyPolicyTV"/>
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/readOurPrivacyPolicyTV"
@@ -368,9 +368,9 @@
                         android:text="@string/read_our_privacy_policy_text"
                         android:textColor="@color/subTitlesTextColor"
                         android:textSize="@dimen/_8ssp"
-                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/privacyPolicyTV" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -431,10 +431,10 @@
                         android:textColor="@color/blackColor"
                         android:textSize="@dimen/_12ssp"
                         android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/versionNumberTV"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toTopOf="@id/versionNumberTV"/>
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/versionNumberTV"
@@ -444,9 +444,9 @@
                         android:singleLine="true"
                         android:textColor="@color/subTitlesTextColor"
                         android:textSize="@dimen/_8ssp"
-                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/checkUpdateTV" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

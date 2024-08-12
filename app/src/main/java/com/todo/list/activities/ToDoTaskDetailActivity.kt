@@ -14,6 +14,7 @@ import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivityToDoTaskDetailBinding
 import com.todo.list.db.ToDoTask
 import com.todo.list.utils.CommonFunctions.changeStatusBarColor
+import com.todo.list.utils.CommonFunctions.changeVisibility
 import com.todo.list.utils.CommonFunctions.keepActivityOn
 import java.util.Locale
 
@@ -85,7 +86,7 @@ class ToDoTaskDetailActivity : BaseActivity(), View.OnClickListener {
         with(binding) {
             if (prefs.isDarkModeEnable) {
                 changeStatusBarColor(activityContext, screensNightModeColor)
-                include.root.visibility = View.VISIBLE
+                include.root.changeVisibility(1)
                 rootLayout.setBackgroundColor(screensNightModeColor)
                 toolbar.setBackgroundColor(screensNightModeColor)
                 backArrowIV.setColorFilter(whiteColor)
@@ -97,7 +98,7 @@ class ToDoTaskDetailActivity : BaseActivity(), View.OnClickListener {
                 adLoadingInclude.adIsLoadingTextView.setTextColor(whiteColor)
                 adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(whiteColor)
             } else {
-                include.root.visibility = View.GONE
+                include.root.changeVisibility(0)
                 when (prefs.colorSchemeValue) {
                     0 -> {
                         changeStatusBarColor(activityContext, defaultColor)

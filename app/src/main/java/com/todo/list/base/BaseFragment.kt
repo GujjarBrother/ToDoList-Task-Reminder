@@ -1,6 +1,5 @@
 package com.todo.list.base
 
-import android.app.Activity
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -8,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.todo.list.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -15,7 +15,7 @@ import java.util.Locale
 
 open class BaseFragment : Fragment() {
 
-    protected lateinit var fragmentContext: Activity
+    protected lateinit var fragmentContext: FragmentActivity
     protected var defaultColor = 0
 
     protected var darkYellowColor = 0

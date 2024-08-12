@@ -8,7 +8,7 @@ class TasksRepo(private val dao: DAO) {
 
     suspend fun saveTask(toDoTask: ToDoTask) = dao.saveTask(toDoTask)
 
-    fun getAllTasks() = dao.getAllTasks()
+    fun getAllTasks(isTaskComplete: Boolean) = dao.getAllTasks(isTaskComplete)
 
     suspend fun isTaskAlreadySaved(
         dayOfWeek: String,

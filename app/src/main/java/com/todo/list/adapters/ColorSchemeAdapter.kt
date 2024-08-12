@@ -2,12 +2,11 @@ package com.todo.list.adapters
 
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.todo.list.databinding.ColorSchemeRecyclerViewSingleItemLayoutBinding
 import com.todo.list.models.ColorSchemeModel
+import com.todo.list.utils.CommonFunctions.changeVisibility
 
 class ColorSchemeAdapter(
         private val colorSchemeArrayList: ArrayList<ColorSchemeModel>,
@@ -25,9 +24,9 @@ class ColorSchemeAdapter(
             colorCardView.setCardBackgroundColor(colorSchemeModel.color)
 
             if (colorSchemeModel.isSelected) {
-                activeColorImageView.visibility = VISIBLE
+                activeColorImageView.changeVisibility(1)
             } else {
-                activeColorImageView.visibility = GONE
+                activeColorImageView.changeVisibility(0)
             }
 
             holder.itemView.setOnClickListener { _: View? ->

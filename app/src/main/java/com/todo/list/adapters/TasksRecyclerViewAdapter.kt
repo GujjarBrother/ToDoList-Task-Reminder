@@ -3,12 +3,10 @@ package com.todo.list.adapters
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.INVISIBLE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -18,16 +16,17 @@ import com.todo.list.application.Application.Companion.typeface
 import com.todo.list.databinding.ToDosRecyclerViewSingleItemLayoutBinding
 import com.todo.list.db.ToDoTask
 import com.todo.list.enums.TabsEnum
+import com.todo.list.utils.CommonFunctions.changeVisibility
+import com.todo.list.utils.CommonFunctions.isSomethingChanged
 
 class TasksRecyclerViewAdapter(
+    private val lifecycleOwner: LifecycleOwner,
         private val colorsSchemeArray: IntArray,
-        private val isAppColorChanged: Boolean,
         private val fromWhereInvoked: Int,
-        private val taskDetailCallback: ((ToDoTask) -> Unit)? = null,
-        private val taskUpdateAndDeleteCallback: ((ToDoTask, View, Int) -> Unit)? = null
+        private val commonCallback: (ToDoTask) -> Unit,
+        private var taskUpdateAndDeleteCallback: (ToDoTask, View, Int) -> Unit
 ) : ListAdapter<ToDoTask, TasksRecyclerViewAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    var isTextSizeChanged = false
     private var color = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,20 +37,17 @@ class TasksRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        /*val signInCardAnimation = AnimationUtils.loadAnimation(holder.itemView.context, R.anim.recycler_view_single_item_animation)
-        holder.itemView.startAnimation(signInCardAnimation)*/
-
         val toDoTask = getItem(position)
 
         with(holder.binding) {
             if (fromWhereInvoked == TabsEnum.TASKS_TAB.ordinal) {
-                deleteFromCompletedFragmentImageView.visibility = GONE
-                updateAndDeleteOptionsIV.visibility = VISIBLE
+                deleteFromCompletedFragmentIV.changeVisibility(0)
+                updateAndDeleteOptionsIV.changeVisibility(1)
                 updateAndDeleteOptionsIV.isEnabled = true
             } else if (fromWhereInvoked == TabsEnum.COMPLETED_TAB.ordinal) {
-                updateAndDeleteOptionsIV.visibility = INVISIBLE
+                updateAndDeleteOptionsIV.changeVisibility(2)
                 updateAndDeleteOptionsIV.isEnabled = false
-                deleteFromCompletedFragmentImageView.visibility = VISIBLE
+                deleteFromCompletedFragmentIV.changeVisibility(1)
             }
 
             if (toDoTask.day.length >= 3) {
@@ -65,21 +61,22 @@ class TasksRecyclerViewAdapter(
             toDoTaskDescriptionTV.text = toDoTask.description
             toDoTaskTimeTV.text = toDoTask.time
 
-            if (isTextSizeChanged) {
-                holder.binding.toDoTaskTitleTV.textSize = prefs.textSizeValue.toFloat()
-            }
-
             updateAndDeleteOptionsIV.setOnClickListener { v: View ->
-                taskUpdateAndDeleteCallback?.invoke(toDoTask, v, color)
+                taskUpdateAndDeleteCallback.invoke(toDoTask, v, color)
             }
-        }
 
-        if (isAppColorChanged) {
-            applyColorSchemeOnNormalRVItems(holder)
+            deleteFromCompletedFragmentIV.setOnClickListener {
+                commonCallback.invoke(toDoTask)
+            }
         }
 
         holder.itemView.setOnClickListener { _: View? ->
-            taskDetailCallback?.invoke(toDoTask)
+            commonCallback.invoke(toDoTask)
+        }
+
+        isSomethingChanged.observe(lifecycleOwner) {
+            holder.binding.toDoTaskTitleTV.textSize = prefs.textSizeValue.toFloat()
+            applyColorSchemeOnNormalRVItems(holder)
         }
     }
 
@@ -117,7 +114,7 @@ class TasksRecyclerViewAdapter(
                 toDoTaskDescriptionTV.setTextColor(holder.whiteColor)
                 toDoTaskTimeTV.setTextColor(holder.darkModeTextColor)
                 updateAndDeleteOptionsIV.setColorFilter(holder.lightBlueColor)
-                deleteFromCompletedFragmentImageView.setColorFilter(holder.whiteColor)
+                deleteFromCompletedFragmentIV.setColorFilter(holder.whiteColor)
             } else {
                 rootCV.setCardBackgroundColor(holder.whiteColor)
                 dayTV.setTextColor(holder.lightBlackColor)
@@ -131,70 +128,70 @@ class TasksRecyclerViewAdapter(
                         color = colorsSchemeArray[0]
                         dateTV.setTextColor(colorsSchemeArray[0])
                         updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[0])
-                        deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[0])
+                        deleteFromCompletedFragmentIV.setColorFilter(colorsSchemeArray[0])
                     }
 
                     1 -> {
                         color = colorsSchemeArray[1]
                         dateTV.setTextColor(colorsSchemeArray[1])
                         updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[1])
-                        deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[1])
+                        deleteFromCompletedFragmentIV.setColorFilter(colorsSchemeArray[1])
                     }
 
                     2 -> {
                         color = colorsSchemeArray[2]
                         dateTV.setTextColor(colorsSchemeArray[2])
                         updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[2])
-                        deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[2])
+                        deleteFromCompletedFragmentIV.setColorFilter(colorsSchemeArray[2])
                     }
 
                     3 -> {
                         color = colorsSchemeArray[3]
                         dateTV.setTextColor(colorsSchemeArray[3])
                         updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[3])
-                        deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[3])
+                        deleteFromCompletedFragmentIV.setColorFilter(colorsSchemeArray[3])
                     }
 
                     4 -> {
                         color = colorsSchemeArray[4]
                         dateTV.setTextColor(colorsSchemeArray[4])
                         updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[4])
-                        deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[4])
+                        deleteFromCompletedFragmentIV.setColorFilter(colorsSchemeArray[4])
                     }
 
                     5 -> {
                         color = colorsSchemeArray[5]
                         dateTV.setTextColor(colorsSchemeArray[5])
                         updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[5])
-                        deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[5])
+                        deleteFromCompletedFragmentIV.setColorFilter(colorsSchemeArray[5])
                     }
 
                     6 -> {
                         color = colorsSchemeArray[6]
                         dateTV.setTextColor(colorsSchemeArray[6])
                         updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[6])
-                        deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[6])
+                        deleteFromCompletedFragmentIV.setColorFilter(colorsSchemeArray[6])
                     }
 
                     7 -> {
                         color = colorsSchemeArray[7]
                         dateTV.setTextColor(colorsSchemeArray[7])
                         updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[7])
-                        deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[7])
+                        deleteFromCompletedFragmentIV.setColorFilter(colorsSchemeArray[7])
                     }
 
                     8 -> {
                         color = colorsSchemeArray[8]
                         dateTV.setTextColor(colorsSchemeArray[8])
                         updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[8])
-                        deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[8])
+                        deleteFromCompletedFragmentIV.setColorFilter(colorsSchemeArray[8])
                     }
 
                     9 -> {
                         color = colorsSchemeArray[9]
                         dateTV.setTextColor(colorsSchemeArray[9])
                         updateAndDeleteOptionsIV.setColorFilter(colorsSchemeArray[9])
-                        deleteFromCompletedFragmentImageView.setColorFilter(colorsSchemeArray[9])
+                        deleteFromCompletedFragmentIV.setColorFilter(colorsSchemeArray[9])
                     }
                 }
             }

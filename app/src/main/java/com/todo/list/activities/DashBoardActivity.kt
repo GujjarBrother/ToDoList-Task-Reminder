@@ -35,6 +35,7 @@ import com.todo.list.enums.TabsEnum
 import com.todo.list.listeners.StartAndStopFABAnimationAndSwitchBetweenLightAndDarkModeListener
 import com.todo.list.utils.CommonFunctions.applyAnimation
 import com.todo.list.utils.CommonFunctions.changeStatusBarColor
+import com.todo.list.utils.CommonFunctions.isSomethingChanged
 import com.todo.list.utils.CommonFunctions.keepActivityOn
 import com.todo.list.utils.CommonFunctions.openAppInPlayStore
 import com.todo.list.utils.CommonFunctions.openGoogleAppStore
@@ -58,7 +59,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                 isInternetConnected = isInternetConnectedORNot((getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager))
             )
 
-            checkSignInOrSignOutStatus()
             keepActivityOn(activityContext)
             applyCustomFont()
 
@@ -72,9 +72,7 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
             navigationDrawerInclude.versionNumberTV.text = String.format("%s%s", "v", BuildConfig.VERSION_NAME)
 
             dashBoardViewPager.adapter = viewPagerAdapter
-            TabLayoutMediator(
-                tabLayout, dashBoardViewPager
-            ) {
+            TabLayoutMediator(tabLayout, dashBoardViewPager) {
                 tab: TabLayout.Tab, position: Int -> tab.setText(
                 if (position == TabsEnum.TASKS_TAB.ordinal) {
                     getString(R.string.tasks_text)
@@ -99,13 +97,10 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
             navigationDrawerInclude.lightAndDarkModeSwitch.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
                 prefs.isDarkModeEnable = isChecked
                 applyLightAndDarkModeOnDashboardActivity()
+                isSomethingChanged.value = true
                 dashBoardActivityDrawerLayout.closeDrawer(GravityCompat.START)
-                if (::startAndStopFABAnimationAndSwitchBetweenLightAndDarkModeListener.isInitialized) {
-                    startAndStopFABAnimationAndSwitchBetweenLightAndDarkModeListener.goAhead(
-                        1, isChecked, true
-                    )
-                }
             }
+
             val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (dashBoardActivityDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -632,13 +627,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    private fun checkSignInOrSignOutStatus() {
-        if (!prefs.isUserSignInOrSignOutValue) {
-            startActivity(Intent(activityContext, SignInActivity::class.java))
-            finish()
-        }
-    }
-
     private fun applyCustomFont() {
         with(binding) {
             toolbarTV.typeface = typeface
@@ -753,7 +741,7 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
             }
 
             yesButton.setOnClickListener { _: View ->
-                prefs.isUserSignInOrSignOutValue = false
+                prefs.isUserSignIn = false
                 if (!activityContext.isFinishing && !activityContext.isDestroyed) {
                     signOutAlertDialog.dismiss()
                 }

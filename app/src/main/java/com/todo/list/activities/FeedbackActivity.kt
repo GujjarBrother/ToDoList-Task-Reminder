@@ -18,6 +18,7 @@ import com.todo.list.application.Application.Companion.typeface
 import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivityFeedbackBinding
 import com.todo.list.utils.CommonFunctions.changeStatusBarColor
+import com.todo.list.utils.CommonFunctions.changeVisibility
 import com.todo.list.utils.CommonFunctions.keepActivityOn
 import es.dmoral.toasty.Toasty
 
@@ -97,14 +98,14 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
             otherIssuesCB.setOnCheckedChangeListener { _: CompoundButton, isChecked: Boolean ->
                 if (isChecked) {
                     feedbackArrayList.add(otherIssuesCB.text.toString().trim())
-                    feedbackEditTextCV.visibility = View.VISIBLE
+                    feedbackEditTextCV.changeVisibility(1)
                     showSoftKeyboard()
                     feedbackET.requestFocus()
                     otherIssuesCheck = true
                 } else {
                     feedbackET.text = null
                     feedbackArrayList.remove(otherIssuesCB.text.toString().trim())
-                    feedbackEditTextCV.visibility = View.GONE
+                    feedbackEditTextCV.changeVisibility(0)
                     hideSoftKeyboard(feedbackET)
                     otherIssuesCheck = false
                 }
@@ -144,7 +145,7 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
             if (prefs.isDarkModeEnable) {
                 changeStatusBarColor(activityContext, screensNightModeColor)
                 toolbar.setBackgroundColor(screensNightModeColor)
-                include.root.visibility = View.VISIBLE
+                include.root.changeVisibility(1)
                 rootLayout.setBackgroundColor(screensNightModeColor)
                 selectFeedbackTV.setTextColor(darkModeTextColor)
                 signUpIssuesCB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
