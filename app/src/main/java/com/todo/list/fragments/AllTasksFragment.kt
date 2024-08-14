@@ -649,7 +649,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                     timeTIL.error = null
 
                     val parseDate = simpleDateFormat.parse(date) as Date
-                    val parseTime = simpleTimeFormat.parse(time) as Date
                     val dateSDF = SimpleDateFormat("dd", Locale.getDefault())
                     val monthSDF = SimpleDateFormat("MMM", Locale.getDefault())
                     val yearSDF = SimpleDateFormat("yyyy", Locale.getDefault())
@@ -671,37 +670,31 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                                     withContext(Dispatchers.Main) {
                                         Toasty.info(fragmentContext, getString(R.string.this_task_is_already_saved_toast_text), Toasty.LENGTH_LONG).show()
                                     }
-                                } else if (parseDate.time < System.currentTimeMillis()) {
+                                } else if (completeDateAndTimeDate.time < System.currentTimeMillis()) {
                                     withContext(Dispatchers.Main) {
-                                        Toasty.error(fragmentContext, getString(R.string.please_select_future_date_toast_text), Toasty.LENGTH_LONG).show()
+                                        Toasty.error(fragmentContext, getString(R.string.past_date_and_time_is_not_acceptable_toast), Toasty.LENGTH_LONG).show()
                                     }
                                 } else {
-                                    if (parseTime.time <= System.currentTimeMillis()) {
+                                    val newlyAddedTaskID = CommonFunctions.getViewModel(fragmentContext).saveTask(toDoTask).await()
+                                    if (newlyAddedTaskID >= 1) {
+                                        prefs.category = category
                                         withContext(Dispatchers.Main) {
-                                            Toasty.error(fragmentContext, getString(R.string.please_select_future_time_toast_text), Toasty.LENGTH_LONG).show()
+                                            Toasty.success(fragmentContext, getString(R.string.task_is_saved_successfully_toast_text), Toasty.LENGTH_LONG).show()
+                                            titleTIL.editText?.text = null
+                                            descriptionTIL.editText?.text = null
+                                            dayOfWeekTIL.editText?.text = null
+                                            dateTIL.editText?.text = null
+                                            timeTIL.editText?.text = null
+                                            titleTIL.editText?.requestFocus()
+                                            category = 0
+                                            if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
+                                                addTasksAlertDialog.dismiss()
+                                            }
+                                            startFABAnimation()
                                         }
                                     } else {
-                                        val newlyAddedTaskID = CommonFunctions.getViewModel(fragmentContext).saveTask(toDoTask).await()
-                                        if (newlyAddedTaskID >= 1) {
-                                            prefs.category = category
-                                            withContext(Dispatchers.Main) {
-                                                Toasty.success(fragmentContext, getString(R.string.task_is_saved_successfully_toast_text), Toasty.LENGTH_LONG).show()
-                                                titleTIL.editText?.text = null
-                                                descriptionTIL.editText?.text = null
-                                                dayOfWeekTIL.editText?.text = null
-                                                dateTIL.editText?.text = null
-                                                timeTIL.editText?.text = null
-                                                titleTIL.editText?.requestFocus()
-                                                category = 0
-                                                if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
-                                                    addTasksAlertDialog.dismiss()
-                                                }
-                                                startFABAnimation()
-                                            }
-                                        } else {
-                                            withContext(Dispatchers.Main) {
-                                                Toasty.error(fragmentContext, getString(R.string.task_is_not_saved_successfully_toast_text), Toasty.LENGTH_LONG).show()
-                                            }
+                                        withContext(Dispatchers.Main) {
+                                            Toasty.error(fragmentContext, getString(R.string.task_is_not_saved_successfully_toast_text), Toasty.LENGTH_LONG).show()
                                         }
                                     }
                                 }
@@ -715,13 +708,9 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                         )
                         lifecycleScope.launch(Dispatchers.IO) {
                             if (updatedToDoTask != toDoTask) {
-                                if (parseDate.time < System.currentTimeMillis()) {
+                                if (completeDateAndTimeDate.time < System.currentTimeMillis()) {
                                     withContext(Dispatchers.Main) {
-                                        Toasty.error(fragmentContext, getString(R.string.please_select_future_date_toast_text), Toasty.LENGTH_LONG).show()
-                                    }
-                                } else if (parseTime.time <= System.currentTimeMillis()) {
-                                    withContext(Dispatchers.Main) {
-                                        Toasty.error(fragmentContext, getString(R.string.please_select_future_time_toast_text), Toasty.LENGTH_LONG).show()
+                                        Toasty.error(fragmentContext, getString(R.string.past_date_and_time_is_not_acceptable_toast), Toasty.LENGTH_LONG).show()
                                     }
                                 } else {
                                     val isUpdated = CommonFunctions.getViewModel(fragmentContext).updateTask(updatedToDoTask).await()

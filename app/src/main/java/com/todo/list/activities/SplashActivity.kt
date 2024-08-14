@@ -6,8 +6,13 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.animation.AnimationUtils
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.todo.list.R
 import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.application.Application.Companion.typeface
@@ -28,11 +33,20 @@ class SplashActivity : BaseActivity() {
     private var selectedColor = 0
     private var selectedProgressBarBackground: Drawable? = null
     private lateinit var valueAnimator: ValueAnimator
+    private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { _ ->
+        /*if (result.resultCode != RESULT_OK) {
+            Toast.makeText(activityContext, "Update not available...!", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(activityContext, "Update available...!", Toast.LENGTH_LONG).show()
+        }*/
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        checkForAnAppUpdate()
 
         makeFullScreenActivity(activityContext)
 
@@ -97,6 +111,20 @@ class SplashActivity : BaseActivity() {
             applyLightAndDarkMode()
             applySplashAnimation()
             applyAnimationOnProgressBar()
+        }
+    }
+
+    private fun checkForAnAppUpdate() {
+        val appUpdateManager = AppUpdateManagerFactory.create(activityContext)
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+                try {
+                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo, activityResultLauncher, AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build())
+                } catch (e: Exception) {
+                    throw RuntimeException(e)
+                }
+            }
         }
     }
 
