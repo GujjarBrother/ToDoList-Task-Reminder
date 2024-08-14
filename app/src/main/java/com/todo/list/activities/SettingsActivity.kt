@@ -675,10 +675,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
             }
 
             R.id.privacyPolicyLayout -> {
-                openPrivacyPolicyActivity(
-                    activityContext,
-                    isInternetConnectedORNot((getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager))
-                )
+                openPrivacyPolicyActivity(activityContext, isInternetConnectedORNot((getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager)))
             }
 
             R.id.checkUpdateLayout -> {
@@ -687,8 +684,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    private fun openFeedbackActivity() =
-        startActivity(Intent(activityContext, FeedbackActivity::class.java))
+    private fun openFeedbackActivity() = startActivity(Intent(activityContext, FeedbackActivity::class.java))
 
     private fun showRateUsDialog() {
         val rateUsDialogLayoutBinding = RateUsDialogLayoutBinding.inflate(layoutInflater)
@@ -722,17 +718,16 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
                     rateUsDialogLayoutBinding.rateUsButton.changeVisibility(2)
                     rateUsDialogLayoutBinding.group.changeVisibility(1)
                     Handler(Looper.getMainLooper()).postDelayed({
+                        if (!activityContext.isFinishing && !activityContext.isDestroyed) {
                             rateUsAlertDialog.dismiss()
-                        }, 2000)
+                        } }, 2000)
                 } else if (rating >= 4.0) {
                     openAppInPlayStore(activityContext, BuildConfig.APPLICATION_ID)
-                    if (!activityContext.isFinishing && !activityContext.isDestroyed) rateUsAlertDialog.dismiss()
+                    if (!activityContext.isFinishing && !activityContext.isDestroyed) {
+                        rateUsAlertDialog.dismiss()
+                    }
                 } else {
-                    Toasty.error(
-                        activityContext,
-                        getString(R.string.please_rate_our_app_toast_text),
-                        Toasty.LENGTH_LONG
-                    ).show()
+                    Toasty.error(activityContext, getString(R.string.please_rate_our_app_toast_text), Toasty.LENGTH_LONG).show()
                 }
             }
         }
@@ -832,16 +827,12 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
         with(shareAppIntent) {
             action = Intent.ACTION_SEND
             type = "text/plain"
-            putExtra(
-                Intent.EXTRA_TEXT,
-                "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
-            )
-            val chooserIntent = Intent.createChooser(this, getString(R.string.share_via_text))
+            putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}")
             if (this.resolveActivity(packageManager) != null) {
+                val chooserIntent = Intent.createChooser(this, getString(R.string.share_via_text))
                 startActivity(chooserIntent)
             } else {
-                Toasty.error(activityContext, R.string.there_is_no_activity_available_to_handle_this_action_toast_text,
-                    Toasty.LENGTH_LONG).show()
+                Toasty.error(activityContext, R.string.there_is_no_activity_available_to_handle_this_action_toast_text, Toasty.LENGTH_LONG).show()
             }
         }
     }
