@@ -80,6 +80,7 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener {
                 adID = getString(R.string.dashboardScreenBannerAdId)
             )
 
+            
             keepActivityOn(activityContext)
             applyCustomFont()
 
