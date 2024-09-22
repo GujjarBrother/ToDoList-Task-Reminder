@@ -8,7 +8,6 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
-import com.todo.list.R
 import com.todo.list.utils.CommonFunctions.changeVisibility
 
 class BannerAdController {
@@ -18,7 +17,8 @@ class BannerAdController {
             containerLayout: LinearLayout,
             loadingLayout: LinearLayout,
             isLargeBanner: Boolean = false,
-            isInternetConnected: Boolean
+            isInternetConnected: Boolean,
+            adID: String
         ) {
             MobileAds.initialize(activity) {
             }
@@ -28,7 +28,7 @@ class BannerAdController {
             } else {
                 AdSize.BANNER
             })
-            adView.adUnitId = activity.getString(R.string.dashboard_banner_id)
+            adView.adUnitId = adID
             containerLayout.addView(adView)
             val adRequest = AdRequest.Builder().build()
             adView.loadAd(adRequest)

@@ -5,6 +5,9 @@ import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.application.Application.Companion.typeface
 import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivityThankYouBinding
+import com.todo.list.utils.ColorsUtils.getContextCompatColor
+import com.todo.list.utils.ColorsUtils.screensNightModeColor
+import com.todo.list.utils.ColorsUtils.whiteColor
 import com.todo.list.utils.CommonFunctions.keepActivityOn
 import com.todo.list.utils.CommonFunctions.makeFullScreenActivity
 
@@ -34,9 +37,9 @@ class ThankYouActivity : BaseActivity() {
     private fun applyLightAndDarkMode() {
         with(binding) {
             if (prefs.isDarkModeEnable) {
-                thankYouActivityRootLayout.setBackgroundColor(screensNightModeColor)
-                forUsingAnAppTextView.setTextColor(whiteColor)
-                descriptionTextView.setTextColor(whiteColor)
+                thankYouActivityRootLayout.setBackgroundColor(getContextCompatColor(activityContext, screensNightModeColor))
+                forUsingAnAppTextView.setTextColor(getContextCompatColor(activityContext, whiteColor))
+                descriptionTextView.setTextColor(getContextCompatColor(activityContext, whiteColor))
             }
         }
     }

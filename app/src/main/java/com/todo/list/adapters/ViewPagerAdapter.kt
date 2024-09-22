@@ -3,7 +3,7 @@ package com.todo.list.adapters
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.todo.list.enums.TabsEnum
+import com.todo.list.enums.Tabs
 import com.todo.list.fragments.AllTasksFragment
 
 class ViewPagerAdapter(val activity: FragmentActivity) : FragmentStateAdapter(activity) {
@@ -12,8 +12,8 @@ class ViewPagerAdapter(val activity: FragmentActivity) : FragmentStateAdapter(ac
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            TabsEnum.TASKS_TAB.ordinal -> AllTasksFragment.newInstance(TabsEnum.TASKS_TAB.ordinal)
-            else -> AllTasksFragment.newInstance(TabsEnum.COMPLETED_TAB.ordinal)
+            Tabs.TASKS_TAB.ordinal -> AllTasksFragment.newInstance(Tabs.TASKS_TAB.ordinal)
+            else -> AllTasksFragment.newInstance(Tabs.COMPLETED_TAB.ordinal)
         }
     }
 }

@@ -143,5 +143,6 @@
     <string name="task_text">Task</string>
     <string name="reminder_text">Reminder</string>
     <string name="loading_text">Loading…</string>
+    <string name="search_here_hint">Search here...</string>
 
 </resources>

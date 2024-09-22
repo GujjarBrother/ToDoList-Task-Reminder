@@ -1,6 +1,6 @@
 package com.todo.list.enums
 
-enum class GenderEnum {
+enum class Gender {
     NONE,
     MALE,
     FEMALE,

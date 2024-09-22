@@ -53,5 +53,6 @@
     <color name="navigationDrawerScrimColor">#757575</color>
     <color name="lightBlueColor">#72C0EE</color>
     <color name="lightBlueTransparentColor">#8072C0EE</color>
+    <color name="searchLayoutLightModeColor">#4DFFFFFF</color>
 
 </resources>

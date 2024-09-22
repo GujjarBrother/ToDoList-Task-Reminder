@@ -28,6 +28,7 @@ import android.widget.PopupWindow
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -50,9 +51,21 @@ import com.todo.list.databinding.DeleteTaskDialogLayoutBinding
 import com.todo.list.databinding.FragmentAllTasksBinding
 import com.todo.list.databinding.SortingDialogLayoutBinding
 import com.todo.list.db.ToDoTask
-import com.todo.list.enums.TabsEnum
-import com.todo.list.enums.TasksCategoriesEnum
-import com.todo.list.listeners.StartAndStopFABAnimationAndSwitchBetweenLightAndDarkModeListener
+import com.todo.list.enums.Tabs
+import com.todo.list.enums.TasksCategories
+import com.todo.list.enums.Visibility
+import com.todo.list.listeners.StartAndStopFABAnimationListener
+import com.todo.list.models.SelectedColors
+import com.todo.list.utils.ColorsUtils.blackColor
+import com.todo.list.utils.ColorsUtils.cardsNightModeColor
+import com.todo.list.utils.ColorsUtils.darkModeTextColor
+import com.todo.list.utils.ColorsUtils.fragmentsCardViewsColor
+import com.todo.list.utils.ColorsUtils.getContextCompatColor
+import com.todo.list.utils.ColorsUtils.getSelectedColor
+import com.todo.list.utils.ColorsUtils.lightBlueColor
+import com.todo.list.utils.ColorsUtils.screensNightModeColor
+import com.todo.list.utils.ColorsUtils.snowWhiteColor
+import com.todo.list.utils.ColorsUtils.whiteColor
 import com.todo.list.utils.CommonFunctions
 import com.todo.list.utils.CommonFunctions.applyAnimation
 import com.todo.list.utils.CommonFunctions.changeVisibility
@@ -78,7 +91,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     private var tasksBelowSortedValue = 7
     private var isTasksAboveSortingValueSelected = false
     private var isTasksBelowSortingValueSelected = false
-    
     private var completedAboveTempValue = 1
     private var completedBelowTempValue = 7
     private var completedAboveSortedValue = 1
@@ -93,6 +105,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     private lateinit var toDoTask: ToDoTask
     private val WHICHTAB = "whichTab"
     private var selectedTab: Int? = null
+    private lateinit var selectedColors: SelectedColors
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -105,14 +118,22 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        selectedColors = getSelectedColor(context = fragmentContext, prefs = prefs)
+
 //        Here, We Stop FAB Animation By Clicking SignOut ImageView From DashBoardActivity...
         (requireActivity() as DashBoardActivity).initializeStopFABAnimationFromToDosFragmentListener(
-            object : StartAndStopFABAnimationAndSwitchBetweenLightAndDarkModeListener {
-                override fun goAhead(startAndStopFABAnimation: Int) {
+            object : StartAndStopFABAnimationListener {
+                override fun startAndStopFABAnimation(startAndStopFABAnimation: Int) {
                     if (startAndStopFABAnimation == 0) {
                         stopFABAnimation()
                     } else {
                         startFABAnimation()
+                    }
+                }
+
+                override fun search(query: String) {
+                    if (::adapter.isInitialized) {
+                        adapter.filter.filter(query)
                     }
                 }
             }
@@ -159,25 +180,25 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             when (selectedTab) {
                 0 -> {
                     startFABAnimation()
-                    addNewTasksFAB.changeVisibility(1)
-                    deletedPermanentlyTextView.changeVisibility(0)
+                    addNewTasksFAB.changeVisibility(Visibility.VISIBLE.ordinal)
+                    deletedPermanentlyTextView.changeVisibility(Visibility.GONE.ordinal)
                     if (prefs.allTasksStyleValue) {
-                        listAndGridViewStylesIV.setImageDrawable(listViewStyleImage)
+                        listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.list_view_style_image))
                         listAndGridViewStylesTV.text = getString(R.string.listview_text)
                     } else {
-                        listAndGridViewStylesIV.setImageDrawable(gridViewStyleImage)
+                        listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.grid_view_style_image))
                         listAndGridViewStylesTV.text = getString(R.string.gridview_text)
                     }
                 }
 
                 1 -> {
-                    addNewTasksFAB.changeVisibility(0)
-                    deletedPermanentlyTextView.changeVisibility(1)
+                    addNewTasksFAB.changeVisibility(Visibility.GONE.ordinal)
+                    deletedPermanentlyTextView.changeVisibility(Visibility.VISIBLE.ordinal)
                     if (prefs.completedTasksStyleValue) {
-                        listAndGridViewStylesIV.setImageDrawable(listViewStyleImage)
+                        listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.list_view_style_image))
                         listAndGridViewStylesTV.text = getString(R.string.listview_text)
                     } else {
-                        listAndGridViewStylesIV.setImageDrawable(gridViewStyleImage)
+                        listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.grid_view_style_image))
                         listAndGridViewStylesTV.text = getString(R.string.gridview_text)
                     }
                 }
@@ -194,127 +215,34 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     private fun applyLightAndDarkMode() {
         with(binding) {
             if (prefs.isDarkModeEnable) {
-                allTasksFragmentCV.setCardBackgroundColor(screensNightModeColor)
-                nothingInHereTV.setTextColor(darkModeTextColor)
-                addNewTasksFAB.backgroundTintList = ColorStateList.valueOf(lightBlueColor)
-                addNewTasksFAB.setColorFilter(blackColor)
-                sortingCV.setCardBackgroundColor(cardsNightModeColor)
-                sortingIV.setColorFilter(lightBlueColor)
-                sortingTV.setTextColor(darkModeTextColor)
-                stylesCV.setCardBackgroundColor(cardsNightModeColor)
-                listAndGridViewStylesIV.setColorFilter(lightBlueColor)
-                listAndGridViewStylesTV.setTextColor(darkModeTextColor)
-                deletedPermanentlyTextView.setBackgroundColor(lightBlueColor)
-                deletedPermanentlyTextView.setTextColor(blackColor)
+                rootLayout.setBackgroundColor(getContextCompatColor(fragmentContext, screensNightModeColor))
+                allTasksFragmentCV.setCardBackgroundColor(getContextCompatColor(fragmentContext, screensNightModeColor))
+                nothingInHereTV.setTextColor(getContextCompatColor(fragmentContext, darkModeTextColor))
+                addNewTasksFAB.backgroundTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
+                addNewTasksFAB.setColorFilter(getContextCompatColor(fragmentContext, blackColor))
+                sortingCV.setCardBackgroundColor(getContextCompatColor(fragmentContext, cardsNightModeColor))
+                sortingIV.setColorFilter(getContextCompatColor(fragmentContext, lightBlueColor))
+                sortingTV.setTextColor(getContextCompatColor(fragmentContext, darkModeTextColor))
+                stylesCV.setCardBackgroundColor(getContextCompatColor(fragmentContext, cardsNightModeColor))
+                listAndGridViewStylesIV.setColorFilter(getContextCompatColor(fragmentContext, lightBlueColor))
+                listAndGridViewStylesTV.setTextColor(getContextCompatColor(fragmentContext, darkModeTextColor))
+                deletedPermanentlyTextView.setBackgroundColor(getContextCompatColor(fragmentContext, lightBlueColor))
+                deletedPermanentlyTextView.setTextColor(getContextCompatColor(fragmentContext, blackColor))
             } else {
-                allTasksFragmentCV.setCardBackgroundColor(fragmentsCardViewsColor)
-                addNewTasksFAB.setColorFilter(whiteColor)
-                sortingCV.setCardBackgroundColor(whiteColor)
-                sortingTV.setTextColor(blackColor)
-                stylesCV.setCardBackgroundColor(whiteColor)
-                listAndGridViewStylesTV.setTextColor(blackColor)
-                deletedPermanentlyTextView.setTextColor(whiteColor)
-                when (prefs.colorSchemeValue) {
-                    0 -> {
-                        val defaultColorStateList = ColorStateList.valueOf(defaultColor)
-                        errorColorStateList = defaultColorStateList
-                        listAndGridViewStylesIV.setColorFilter(defaultColor)
-                        sortingIV.setColorFilter(defaultColor)
-                        nothingInHereTV.setTextColor(defaultColor)
-                        addNewTasksFAB.backgroundTintList = defaultColorStateList
-                        deletedPermanentlyTextView.setBackgroundColor(defaultColor)
-                    }
-
-                    1 -> {
-                        val darkYellowColorStateList = ColorStateList.valueOf(darkYellowColor)
-                        errorColorStateList = darkYellowColorStateList
-                        listAndGridViewStylesIV.setColorFilter(darkYellowColor)
-                        sortingIV.setColorFilter(darkYellowColor)
-                        nothingInHereTV.setTextColor(darkYellowColor)
-                        addNewTasksFAB.backgroundTintList = darkYellowColorStateList
-                        deletedPermanentlyTextView.setBackgroundColor(darkYellowColor)
-                    }
-
-                    2 -> {
-                        val orangeColorStateList = ColorStateList.valueOf(orangeColor)
-                        errorColorStateList = orangeColorStateList
-                        listAndGridViewStylesIV.setColorFilter(orangeColor)
-                        sortingIV.setColorFilter(orangeColor)
-                        nothingInHereTV.setTextColor(orangeColor)
-                        addNewTasksFAB.backgroundTintList = orangeColorStateList
-                        deletedPermanentlyTextView.setBackgroundColor(orangeColor)
-                    }
-
-                    3 -> {
-                        val lightGreenColorStateList = ColorStateList.valueOf(lightGreenColor)
-                        errorColorStateList = lightGreenColorStateList
-                        listAndGridViewStylesIV.setColorFilter(lightGreenColor)
-                        sortingIV.setColorFilter(lightGreenColor)
-                        nothingInHereTV.setTextColor(lightGreenColor)
-                        addNewTasksFAB.backgroundTintList = lightGreenColorStateList
-                        deletedPermanentlyTextView.setBackgroundColor(lightGreenColor)
-                    }
-
-                    4 -> {
-                        val blueColorStateList = ColorStateList.valueOf(blueColor)
-                        errorColorStateList = blueColorStateList
-                        listAndGridViewStylesIV.setColorFilter(blueColor)
-                        sortingIV.setColorFilter(blueColor)
-                        nothingInHereTV.setTextColor(blueColor)
-                        addNewTasksFAB.backgroundTintList = blueColorStateList
-                        deletedPermanentlyTextView.setBackgroundColor(blueColor)
-                    }
-
-                    5 -> {
-                        val cyanColorStateList = ColorStateList.valueOf(cyanColor)
-                        errorColorStateList = cyanColorStateList
-                        listAndGridViewStylesIV.setColorFilter(cyanColor)
-                        sortingIV.setColorFilter(cyanColor)
-                        nothingInHereTV.setTextColor(cyanColor)
-                        addNewTasksFAB.backgroundTintList = cyanColorStateList
-                        deletedPermanentlyTextView.setBackgroundColor(cyanColor)
-                    }
-
-                    6 -> {
-                        val pinkColorStateList = ColorStateList.valueOf(pinkColor)
-                        errorColorStateList = pinkColorStateList
-                        listAndGridViewStylesIV.setColorFilter(pinkColor)
-                        sortingIV.setColorFilter(pinkColor)
-                        nothingInHereTV.setTextColor(pinkColor)
-                        addNewTasksFAB.backgroundTintList = pinkColorStateList
-                        deletedPermanentlyTextView.setBackgroundColor(pinkColor)
-                    }
-
-                    7 -> {
-                        val darkBlueColorStateList = ColorStateList.valueOf(darkBlueColor)
-                        errorColorStateList = darkBlueColorStateList
-                        listAndGridViewStylesIV.setColorFilter(darkBlueColor)
-                        sortingIV.setColorFilter(darkBlueColor)
-                        nothingInHereTV.setTextColor(darkBlueColor)
-                        addNewTasksFAB.backgroundTintList = darkBlueColorStateList
-                        deletedPermanentlyTextView.setBackgroundColor(darkBlueColor)
-                    }
-
-                    8 -> {
-                        val redColorStateList = ColorStateList.valueOf(redColor)
-                        errorColorStateList = redColorStateList
-                        listAndGridViewStylesIV.setColorFilter(redColor)
-                        sortingIV.setColorFilter(redColor)
-                        nothingInHereTV.setTextColor(redColor)
-                        addNewTasksFAB.backgroundTintList = redColorStateList
-                        deletedPermanentlyTextView.setBackgroundColor(redColor)
-                    }
-
-                    9 -> {
-                        val lightPurpleColorStateList = ColorStateList.valueOf(lightPurpleColor)
-                        errorColorStateList = lightPurpleColorStateList
-                        listAndGridViewStylesIV.setColorFilter(lightPurpleColor)
-                        sortingIV.setColorFilter(lightPurpleColor)
-                        nothingInHereTV.setTextColor(lightPurpleColor)
-                        addNewTasksFAB.backgroundTintList = lightPurpleColorStateList
-                        deletedPermanentlyTextView.setBackgroundColor(lightPurpleColor)
-                    }
-                }
+                rootLayout.setBackgroundColor(getContextCompatColor(fragmentContext, snowWhiteColor))
+                allTasksFragmentCV.setCardBackgroundColor(getContextCompatColor(fragmentContext, fragmentsCardViewsColor))
+                addNewTasksFAB.setColorFilter(getContextCompatColor(fragmentContext, whiteColor))
+                sortingCV.setCardBackgroundColor(getContextCompatColor(fragmentContext, whiteColor))
+                sortingTV.setTextColor(getContextCompatColor(fragmentContext, blackColor))
+                stylesCV.setCardBackgroundColor(getContextCompatColor(fragmentContext, whiteColor))
+                listAndGridViewStylesTV.setTextColor(getContextCompatColor(fragmentContext, blackColor))
+                deletedPermanentlyTextView.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
+                errorColorStateList = ColorStateList.valueOf(selectedColors.originalColor)
+                listAndGridViewStylesIV.setColorFilter(selectedColors.originalColor)
+                sortingIV.setColorFilter(selectedColors.originalColor)
+                nothingInHereTV.setTextColor(selectedColors.originalColor)
+                addNewTasksFAB.backgroundTintList = ColorStateList.valueOf(selectedColors.originalColor)
+                deletedPermanentlyTextView.setBackgroundColor(selectedColors.originalColor)
             }
         }
     }
@@ -322,12 +250,12 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     private fun readAllTasks() {
         with(binding) {
             if (allToDosTasksArrayList.isNotEmpty()) {
-                nothingInHereGroup.changeVisibility(0)
-                dataAvailableGroup.changeVisibility(1)
+                nothingInHereGroup.changeVisibility(Visibility.GONE.ordinal)
+                dataAvailableGroup.changeVisibility(Visibility.VISIBLE.ordinal)
                 displayAllTasksOnRecyclerView()
             } else {
-                nothingInHereGroup.changeVisibility(1)
-                dataAvailableGroup.changeVisibility(0)
+                nothingInHereGroup.changeVisibility(Visibility.VISIBLE.ordinal)
+                dataAvailableGroup.changeVisibility(Visibility.GONE.ordinal)
             }
         }
     }
@@ -403,15 +331,11 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         if (isForSorting) {
             sortAnArrayList()
         }
-        val colorsSchemeArray = intArrayOf(
-            defaultColor, darkYellowColor, orangeColor, lightGreenColor,
-            blueColor, cyanColor, pinkColor, darkBlueColor, redColor, lightPurpleColor
-        )
 
         if (!::adapter.isInitialized) {
             adapter = TasksRecyclerViewAdapter(
-                viewLifecycleOwner, colorsSchemeArray,
-                if (selectedTab == 0) TabsEnum.TASKS_TAB.ordinal else TabsEnum.COMPLETED_TAB.ordinal, { toDoTask ->
+                fragmentContext, viewLifecycleOwner, selectedColors,
+                if (selectedTab == 0) Tabs.TASKS_TAB.ordinal else Tabs.COMPLETED_TAB.ordinal, { toDoTask ->
                     if (selectedTab == 0) {
                         openTaskDetailActivity(toDoTask)
                     } else {
@@ -452,11 +376,11 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                         val popUpMenuIconDrawable = menuItem.icon
                         if (popUpMenuIconDrawable != null) {
                             if (prefs.isDarkModeEnable) {
-                                DrawableCompat.setTint(popUpMenuIconDrawable, lightBlueColor)
+                                DrawableCompat.setTint(popUpMenuIconDrawable, getContextCompatColor(fragmentContext, lightBlueColor))
                                 val itemTitle = menuItem.title.toString().trim()
                                 val spannableString = SpannableString(itemTitle)
                                 spannableString.setSpan(
-                                    ForegroundColorSpan(whiteColor), 0, itemTitle.length,
+                                    ForegroundColorSpan(getContextCompatColor(fragmentContext, whiteColor)), 0, itemTitle.length,
                                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                                 )
                                 menuItem.setTitle(spannableString)
@@ -475,7 +399,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             changeStyle()
             if (::adapter.isInitialized) {
                 allTasksRecyclerView.adapter = adapter
-                adapter.submitList(allToDosTasksArrayList)
+                adapter.setFullList(list = allToDosTasksArrayList)
             }
         }
     }
@@ -484,7 +408,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         with(binding) {
             var layoutManager: RecyclerView.LayoutManager? = null
             when(selectedTab) {
-                TabsEnum.TASKS_TAB.ordinal -> {
+                Tabs.TASKS_TAB.ordinal -> {
                     layoutManager = if (prefs.allTasksStyleValue) {
                         GridLayoutManager(fragmentContext, 2, GridLayoutManager.VERTICAL, false)
                     } else {
@@ -492,7 +416,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                     }
                 }
 
-                TabsEnum.COMPLETED_TAB.ordinal -> {
+                Tabs.COMPLETED_TAB.ordinal -> {
                     layoutManager = if (prefs.completedTasksStyleValue) {
                         GridLayoutManager(fragmentContext, 2, GridLayoutManager.VERTICAL, false)
                     } else {
@@ -518,28 +442,28 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                 with(binding) {
                     isForSorting = false
                     when(selectedTab) {
-                        TabsEnum.TASKS_TAB.ordinal -> {
+                        Tabs.TASKS_TAB.ordinal -> {
                             if (prefs.allTasksStyleValue) {
-                                listAndGridViewStylesIV.setImageDrawable(gridViewStyleImage)
+                                listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.grid_view_style_image))
                                 listAndGridViewStylesTV.setText(R.string.gridview_text)
                                 prefs.allTasksStyleValue = false
                                 changeStyle()
                             } else {
-                                listAndGridViewStylesIV.setImageDrawable(listViewStyleImage)
+                                listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.list_view_style_image))
                                 listAndGridViewStylesTV.setText(R.string.listview_text)
                                 prefs.allTasksStyleValue = true
                                 changeStyle()
                             }
                         }
 
-                        TabsEnum.COMPLETED_TAB.ordinal -> {
+                        Tabs.COMPLETED_TAB.ordinal -> {
                             if (prefs.completedTasksStyleValue) {
-                                listAndGridViewStylesIV.setImageDrawable(gridViewStyleImage)
+                                listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.list_view_style_image))
                                 listAndGridViewStylesTV.setText(R.string.gridview_text)
                                 prefs.completedTasksStyleValue = false
                                 changeStyle()
                             } else {
-                                listAndGridViewStylesIV.setImageDrawable(listViewStyleImage)
+                                listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.list_view_style_image))
                                 listAndGridViewStylesTV.setText(R.string.listview_text)
                                 prefs.completedTasksStyleValue = true
                                 changeStyle()
@@ -590,9 +514,9 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                     String.format("%s %s, %s", toDoTask.month, toDoTask.date, toDoTask.year)
                 )
                 timeTIL.editText?.setText(toDoTask.time)
-                if (toDoTask.category == TasksCategoriesEnum.DEFAULT_CATEGORY.ordinal || toDoTask.category == TasksCategoriesEnum.PERSONAL_CATEGORY.ordinal) {
+                if (toDoTask.category == TasksCategories.DEFAULT_CATEGORY.ordinal || toDoTask.category == TasksCategories.PERSONAL_CATEGORY.ordinal) {
                     selectCategoryTV.text = getString(R.string.personal_text)
-                } else if (toDoTask.category == TasksCategoriesEnum.WORK_CATEGORY.ordinal) {
+                } else if (toDoTask.category == TasksCategories.WORK_CATEGORY.ordinal) {
                     selectCategoryTV.text = getString(R.string.work_text)
                 }
                 when(prefs.isDarkModeEnable) {
@@ -744,7 +668,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         val customPopupMenuLayoutBinding = CustomPopupMenuLayoutBinding.inflate(layoutInflater)
 
         if (prefs.isDarkModeEnable) {
-            customPopupMenuLayoutBinding.root.setCardBackgroundColor(screensNightModeColor)
+            customPopupMenuLayoutBinding.root.setCardBackgroundColor(getContextCompatColor(fragmentContext, screensNightModeColor))
         }
 
         popupWindow = PopupWindow(
@@ -757,36 +681,36 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         popupWindow.elevation = 5f
         val categoryArrayList = ArrayList<Int>()
         with(categoryArrayList) {
-            add(TasksCategoriesEnum.DEFAULT_CATEGORY.ordinal)
-            add(TasksCategoriesEnum.PERSONAL_CATEGORY.ordinal)
-            add(TasksCategoriesEnum.WORK_CATEGORY.ordinal)
+            add(TasksCategories.DEFAULT_CATEGORY.ordinal)
+            add(TasksCategories.PERSONAL_CATEGORY.ordinal)
+            add(TasksCategories.WORK_CATEGORY.ordinal)
             if (fromWhereInvoked == 2) {
                 removeAt(0)
             }
         }
 
         val categoryAdapter = CategoryAdapter("Category") { category, _ ->
-            if (category == TasksCategoriesEnum.DEFAULT_CATEGORY.ordinal || category == TasksCategoriesEnum.PERSONAL_CATEGORY.ordinal) {
-                this.category = TasksCategoriesEnum.PERSONAL_CATEGORY.ordinal
-            } else if (category == TasksCategoriesEnum.WORK_CATEGORY.ordinal) {
-                this.category = TasksCategoriesEnum.WORK_CATEGORY.ordinal
+            if (category == TasksCategories.DEFAULT_CATEGORY.ordinal || category == TasksCategories.PERSONAL_CATEGORY.ordinal) {
+                this.category = TasksCategories.PERSONAL_CATEGORY.ordinal
+            } else if (category == TasksCategories.WORK_CATEGORY.ordinal) {
+                this.category = TasksCategories.WORK_CATEGORY.ordinal
             }
 
             with(addAndUpdateTasksDialogLayoutBinding) {
-                if ((category == TasksCategoriesEnum.DEFAULT_CATEGORY.ordinal)) {
+                if ((category == TasksCategories.DEFAULT_CATEGORY.ordinal)) {
                     selectCategoryTV.text = fragmentContext.getString(R.string.select_category_text)
                     selectCategoryTV.setTextColor(Color.parseColor("#9E9E9E"))
-                } else if ((category == TasksCategoriesEnum.PERSONAL_CATEGORY.ordinal)) {
+                } else if ((category == TasksCategories.PERSONAL_CATEGORY.ordinal)) {
                     selectCategoryTV.text = fragmentContext.getString(R.string.personal_text)
                     when(prefs.isDarkModeEnable) {
-                        true -> selectCategoryTV.setTextColor(whiteColor)
-                        false -> selectCategoryTV.setTextColor(blackColor)
+                        true -> selectCategoryTV.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
+                        false -> selectCategoryTV.setTextColor(getContextCompatColor(fragmentContext, blackColor))
                     }
-                } else if ((category == TasksCategoriesEnum.WORK_CATEGORY.ordinal)) {
+                } else if ((category == TasksCategories.WORK_CATEGORY.ordinal)) {
                     selectCategoryTV.text = fragmentContext.getString(R.string.work_text)
                     when(prefs.isDarkModeEnable) {
-                        true -> selectCategoryTV.setTextColor(whiteColor)
-                        false -> selectCategoryTV.setTextColor(blackColor)
+                        true -> selectCategoryTV.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
+                        false -> selectCategoryTV.setTextColor(getContextCompatColor(fragmentContext, blackColor))
                     }
                 }
             }
@@ -808,7 +732,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             setView(sortingDialogLayoutBinding.root)
             setCancelable(true)
             setOnDismissListener {
-                if (selectedTab == TabsEnum.TASKS_TAB.ordinal) {
+                if (selectedTab == Tabs.TASKS_TAB.ordinal) {
                     startFABAnimation()
                 }
             }
@@ -826,7 +750,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             applyLightAndDarkModeOnSortingDialogViews(this)
 
             when(selectedTab) {
-                TabsEnum.TASKS_TAB.ordinal -> {
+                Tabs.TASKS_TAB.ordinal -> {
                     val allTasksSortingArray = prefs.allTasksSortingValues
                     tasksAboveSortedValue = allTasksSortingArray[0]
                     tasksBelowSortedValue = allTasksSortingArray[1]
@@ -875,7 +799,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                     }
                 }
                 
-                TabsEnum.COMPLETED_TAB.ordinal -> {
+                Tabs.COMPLETED_TAB.ordinal -> {
                     val completedTasksSortingArray = prefs.completedTasksSortingValues
                     completedAboveSortedValue = completedTasksSortingArray[0]
                     completedBelowSortedValue = completedTasksSortingArray[1]
@@ -927,13 +851,13 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
             cancelButton.setOnClickListener { _: View? ->
                 when(selectedTab) {
-                    TabsEnum.TASKS_TAB.ordinal -> {
+                    Tabs.TASKS_TAB.ordinal -> {
                         isTasksAboveSortingValueSelected = false
                         isTasksBelowSortingValueSelected = false
                         startFABAnimation()
                     }
                     
-                    TabsEnum.COMPLETED_TAB.ordinal -> {
+                    Tabs.COMPLETED_TAB.ordinal -> {
                         isCompletedTasksAboveSortingValueSelected = false
                         isCompletedTasksBelowSortingValueSelected = false
                     }
@@ -946,56 +870,56 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             sortRG.setOnCheckedChangeListener { _: RadioGroup?, checkedId: Int ->
                 when (checkedId) {
                     R.id.titleRB -> {
-                        if (selectedTab == TabsEnum.TASKS_TAB.ordinal) {
+                        if (selectedTab == Tabs.TASKS_TAB.ordinal) {
                             tasksAboveTempValue = 1
-                        } else if (selectedTab == TabsEnum.COMPLETED_TAB.ordinal) {
+                        } else if (selectedTab == Tabs.COMPLETED_TAB.ordinal) {
                             completedAboveTempValue = 1
                         }
                     }
 
                     R.id.dayOfWeekRB -> {
-                        if (selectedTab == TabsEnum.TASKS_TAB.ordinal) {
+                        if (selectedTab == Tabs.TASKS_TAB.ordinal) {
                             tasksAboveTempValue = 2
-                        } else if (selectedTab == TabsEnum.COMPLETED_TAB.ordinal) {
+                        } else if (selectedTab == Tabs.COMPLETED_TAB.ordinal) {
                             completedAboveTempValue = 2
                         }
                     }
 
                     R.id.dateRB -> {
-                        if (selectedTab == TabsEnum.TASKS_TAB.ordinal) {
+                        if (selectedTab == Tabs.TASKS_TAB.ordinal) {
                             tasksAboveTempValue = 3
-                        } else if (selectedTab == TabsEnum.COMPLETED_TAB.ordinal) {
+                        } else if (selectedTab == Tabs.COMPLETED_TAB.ordinal) {
                             completedAboveTempValue = 3
                         }
                     }
 
                     R.id.monthRB -> {
-                        if (selectedTab == TabsEnum.TASKS_TAB.ordinal) {
+                        if (selectedTab == Tabs.TASKS_TAB.ordinal) {
                             tasksAboveTempValue = 4
-                        } else if (selectedTab == TabsEnum.COMPLETED_TAB.ordinal) {
+                        } else if (selectedTab == Tabs.COMPLETED_TAB.ordinal) {
                             completedAboveTempValue = 4
                         }
                     }
 
                     R.id.yearRB -> {
-                        if (selectedTab == TabsEnum.TASKS_TAB.ordinal) {
+                        if (selectedTab == Tabs.TASKS_TAB.ordinal) {
                             tasksAboveTempValue = 5
-                        } else if (selectedTab == TabsEnum.COMPLETED_TAB.ordinal) {
+                        } else if (selectedTab == Tabs.COMPLETED_TAB.ordinal) {
                             completedAboveTempValue = 5
                         }
                     }
 
                     R.id.timeRB -> {
-                        if (selectedTab == TabsEnum.TASKS_TAB.ordinal) {
+                        if (selectedTab == Tabs.TASKS_TAB.ordinal) {
                             tasksAboveTempValue = 6
-                        } else if (selectedTab == TabsEnum.COMPLETED_TAB.ordinal) {
+                        } else if (selectedTab == Tabs.COMPLETED_TAB.ordinal) {
                             completedAboveTempValue = 6
                         }
                     }
                 }
 
                 when(selectedTab) {
-                    TabsEnum.TASKS_TAB.ordinal -> {
+                    Tabs.TASKS_TAB.ordinal -> {
                         isTasksAboveSortingValueSelected = true
                         if (tasksAboveTempValue == tasksAboveSortedValue) {
                             if (tasksBelowSortedValue == 7) {
@@ -1008,7 +932,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                         }
                     }
 
-                    TabsEnum.COMPLETED_TAB.ordinal -> {
+                    Tabs.COMPLETED_TAB.ordinal -> {
                         isCompletedTasksAboveSortingValueSelected = true
                         if (completedAboveTempValue == completedAboveSortedValue) {
                             if (completedBelowSortedValue == 7) {
@@ -1025,7 +949,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
             ascendingDescendingRG.setOnCheckedChangeListener { _: RadioGroup?, checkedId: Int ->
                 when(selectedTab) {
-                    TabsEnum.TASKS_TAB.ordinal -> {
+                    Tabs.TASKS_TAB.ordinal -> {
                         isTasksBelowSortingValueSelected = true
                         when (tasksAboveTempValue) {
                             1 -> {
@@ -1078,7 +1002,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                         }
                     }
 
-                    TabsEnum.COMPLETED_TAB.ordinal -> {
+                    Tabs.COMPLETED_TAB.ordinal -> {
                         isCompletedTasksBelowSortingValueSelected = true
                         when (completedAboveTempValue) {
                             1 -> {
@@ -1144,7 +1068,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
     private fun sortRecyclerViewAdapterList() {
         when(selectedTab) {
-            TabsEnum.TASKS_TAB.ordinal -> {
+            Tabs.TASKS_TAB.ordinal -> {
                 if (isTasksAboveSortingValueSelected) {
                     tasksAboveSortedValue = tasksAboveTempValue
                 }
@@ -1156,7 +1080,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                 startFABAnimation()
             }
 
-            TabsEnum.COMPLETED_TAB.ordinal -> {
+            Tabs.COMPLETED_TAB.ordinal -> {
                 if (isCompletedTasksAboveSortingValueSelected) {
                     completedAboveSortedValue = completedAboveTempValue
                 }
@@ -1176,190 +1100,42 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     ) {
         with(sortingDialogLayoutBinding) {
             if (prefs.isDarkModeEnable) {
-                rootLayout.background.colorFilter = PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
-                sortByTV.setTextColor(lightBlueColor)
-                titleRB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
-                titleRB.setTextColor(whiteColor)
-                dayOfWeekRB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
-                dayOfWeekRB.setTextColor(whiteColor)
-                dateRB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
-                dateRB.setTextColor(whiteColor)
-                monthRB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
-                monthRB.setTextColor(whiteColor)
-                yearRB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
-                yearRB.setTextColor(whiteColor)
-                timeRB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
-                timeRB.setTextColor(whiteColor)
-                ascendingAToZRB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
-                ascendingAToZRB.setTextColor(whiteColor)
-                descendingZToARB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
-                descendingZToARB.setTextColor(whiteColor)
-                cancelButton.strokeColor = ColorStateList.valueOf(lightBlueColor)
-                cancelButton.setTextColor(lightBlueColor)
-                sortButton.setBackgroundColor(lightBlueColor)
-                sortButton.setTextColor(blackColor)
+                rootLayout.background.colorFilter = PorterDuffColorFilter(getContextCompatColor(fragmentContext, screensNightModeColor), PorterDuff.Mode.SRC_IN)
+                sortByTV.setTextColor(getContextCompatColor(fragmentContext, lightBlueColor))
+                titleRB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
+                titleRB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
+                dayOfWeekRB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
+                dayOfWeekRB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
+                dateRB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
+                dateRB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
+                monthRB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
+                monthRB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
+                yearRB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
+                yearRB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
+                timeRB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
+                timeRB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
+                ascendingAToZRB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
+                ascendingAToZRB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
+                descendingZToARB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
+                descendingZToARB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
+                cancelButton.strokeColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
+                cancelButton.setTextColor(getContextCompatColor(fragmentContext, lightBlueColor))
+                sortButton.setBackgroundColor(getContextCompatColor(fragmentContext, lightBlueColor))
+                sortButton.setTextColor(getContextCompatColor(fragmentContext, blackColor))
             } else {
-                when (prefs.colorSchemeValue) {
-                    0 -> {
-                        sortByTV.setTextColor(defaultColor)
-                        titleRB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        dayOfWeekRB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        dateRB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        monthRB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        yearRB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        timeRB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        ascendingAToZRB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        descendingZToARB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(defaultColor)
-                        cancelButton.setTextColor(defaultColor)
-                        sortButton.setBackgroundColor(defaultColor)
-                        sortButton.setTextColor(whiteColor)
-                    }
-
-                    1 -> {
-                        sortByTV.setTextColor(darkYellowColor)
-                        titleRB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        dayOfWeekRB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        dateRB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        monthRB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        yearRB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        timeRB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        ascendingAToZRB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        descendingZToARB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(darkYellowColor)
-                        cancelButton.setTextColor(darkYellowColor)
-                        sortButton.setBackgroundColor(darkYellowColor)
-                        sortButton.setTextColor(whiteColor)
-                    }
-
-                    2 -> {
-                        sortByTV.setTextColor(orangeColor)
-                        titleRB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        dayOfWeekRB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        dateRB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        monthRB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        yearRB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        timeRB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        ascendingAToZRB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        descendingZToARB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(orangeColor)
-                        cancelButton.setTextColor(orangeColor)
-                        sortButton.setBackgroundColor(orangeColor)
-                        sortButton.setTextColor(whiteColor)
-                    }
-
-                    3 -> {
-                        sortByTV.setTextColor(lightGreenColor)
-                        titleRB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        dayOfWeekRB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        dateRB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        monthRB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        yearRB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        timeRB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        ascendingAToZRB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        descendingZToARB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(lightGreenColor)
-                        cancelButton.setTextColor(lightGreenColor)
-                        sortButton.setBackgroundColor(lightGreenColor)
-                        sortButton.setTextColor(whiteColor)
-                    }
-
-                    4 -> {
-                        sortByTV.setTextColor(blueColor)
-                        titleRB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        dayOfWeekRB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        dateRB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        monthRB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        yearRB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        timeRB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        ascendingAToZRB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        descendingZToARB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(blueColor)
-                        cancelButton.setTextColor(blueColor)
-                        sortButton.setBackgroundColor(blueColor)
-                        sortButton.setTextColor(whiteColor)
-                    }
-
-                    5 -> {
-                        sortByTV.setTextColor(cyanColor)
-                        titleRB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        dayOfWeekRB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        dateRB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        monthRB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        yearRB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        timeRB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        ascendingAToZRB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        descendingZToARB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(cyanColor)
-                        cancelButton.setTextColor(cyanColor)
-                        sortButton.setBackgroundColor(cyanColor)
-                        sortButton.setTextColor(whiteColor)
-                    }
-
-                    6 -> {
-                        sortByTV.setTextColor(pinkColor)
-                        titleRB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        dayOfWeekRB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        dateRB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        monthRB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        yearRB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        timeRB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        ascendingAToZRB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        descendingZToARB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(pinkColor)
-                        cancelButton.setTextColor(pinkColor)
-                        sortButton.setBackgroundColor(pinkColor)
-                        sortButton.setTextColor(whiteColor)
-                    }
-
-                    7 -> {
-                        sortByTV.setTextColor(darkBlueColor)
-                        titleRB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        dayOfWeekRB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        dateRB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        monthRB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        yearRB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        timeRB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        ascendingAToZRB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        descendingZToARB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(darkBlueColor)
-                        cancelButton.setTextColor(darkBlueColor)
-                        sortButton.setBackgroundColor(darkBlueColor)
-                        sortButton.setTextColor(whiteColor)
-                    }
-
-                    8 -> {
-                        sortByTV.setTextColor(redColor)
-                        titleRB.buttonTintList = ColorStateList.valueOf(redColor)
-                        dayOfWeekRB.buttonTintList = ColorStateList.valueOf(redColor)
-                        dateRB.buttonTintList = ColorStateList.valueOf(redColor)
-                        monthRB.buttonTintList = ColorStateList.valueOf(redColor)
-                        yearRB.buttonTintList = ColorStateList.valueOf(redColor)
-                        timeRB.buttonTintList = ColorStateList.valueOf(redColor)
-                        ascendingAToZRB.buttonTintList = ColorStateList.valueOf(redColor)
-                        descendingZToARB.buttonTintList = ColorStateList.valueOf(redColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(redColor)
-                        cancelButton.setTextColor(redColor)
-                        sortButton.setBackgroundColor(redColor)
-                        sortButton.setTextColor(whiteColor)
-                    }
-
-                    9 -> {
-                        sortByTV.setTextColor(lightPurpleColor)
-                        titleRB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        dayOfWeekRB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        dateRB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        monthRB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        yearRB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        timeRB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        ascendingAToZRB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        descendingZToARB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(lightPurpleColor)
-                        cancelButton.setTextColor(lightPurpleColor)
-                        sortButton.setBackgroundColor(lightPurpleColor)
-                        sortButton.setTextColor(whiteColor)
-                    }
-                }
+                sortByTV.setTextColor(selectedColors.originalColor)
+                titleRB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
+                dayOfWeekRB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
+                dateRB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
+                monthRB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
+                yearRB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
+                timeRB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
+                ascendingAToZRB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
+                descendingZToARB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
+                cancelButton.strokeColor = ColorStateList.valueOf(selectedColors.originalColor)
+                cancelButton.setTextColor(selectedColors.originalColor)
+                sortButton.setBackgroundColor(selectedColors.originalColor)
+                sortButton.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
             }
         }
     }
@@ -1385,11 +1161,11 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     ) {
         with(addAndUpdateTasksDialogLayoutBinding) {
             if (prefs.isDarkModeEnable) {
-                rootLayout.background.colorFilter = PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
-                crossIV.setColorFilter(lightBlueColor)
-                addAndEditIV.setColorFilter(lightBlueColor)
-                addAndUpdateToDoTaskTV.setTextColor(lightBlueColor)
-                infoTV.setTextColor(darkModeTextColor)
+                rootLayout.background.colorFilter = PorterDuffColorFilter(getContextCompatColor(fragmentContext, screensNightModeColor), PorterDuff.Mode.SRC_IN)
+                crossIV.setColorFilter(getContextCompatColor(fragmentContext, lightBlueColor))
+                addAndEditIV.setColorFilter(getContextCompatColor(fragmentContext, lightBlueColor))
+                addAndUpdateToDoTaskTV.setTextColor(getContextCompatColor(fragmentContext, lightBlueColor))
+                infoTV.setTextColor(getContextCompatColor(fragmentContext, darkModeTextColor))
 
 //            Here, We Change The Box Stroke Color Of TextInputLayout When That is Un-Focused...
                 titleTIL.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
@@ -1398,475 +1174,102 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                 dateTIL.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
                 timeTIL.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
 
-                titleTIL.boxStrokeColor = whiteColor
-                titleTIL.boxStrokeErrorColor = whiteColorStateList
-                titleTIL.setStartIconTintList(ColorStateList.valueOf(lightBlueColor))
-                titleTIL.setErrorIconTintList(ColorStateList.valueOf(lightBlueColor))
-                titleTIL.setErrorTextColor(whiteColorStateList)
-                titleTIL.hintTextColor = whiteColorStateList
-                titleTIL.boxStrokeErrorColor = whiteColorStateList
-                titleTIET.setTextColor(whiteColor)
+                titleTIL.boxStrokeColor = getContextCompatColor(fragmentContext, whiteColor)
+                titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                titleTIL.setStartIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
+                titleTIL.setErrorIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
+                titleTIL.setErrorTextColor(ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor)))
+                titleTIL.hintTextColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                titleTIET.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
 
-                descriptionTIL.boxStrokeColor = whiteColor
-                descriptionTIL.boxStrokeErrorColor = whiteColorStateList
-                descriptionTIL.setStartIconTintList(ColorStateList.valueOf(lightBlueColor))
-                descriptionTIL.setErrorIconTintList(ColorStateList.valueOf(lightBlueColor))
-                descriptionTIL.setErrorTextColor(whiteColorStateList)
-                descriptionTIL.hintTextColor = whiteColorStateList
-                descriptionTIL.boxStrokeErrorColor = whiteColorStateList
-                descriptionTIET.setTextColor(whiteColor)
+                descriptionTIL.boxStrokeColor = getContextCompatColor(fragmentContext, whiteColor)
+                descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                descriptionTIL.setStartIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
+                descriptionTIL.setErrorIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
+                descriptionTIL.setErrorTextColor(ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor)))
+                descriptionTIL.hintTextColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                descriptionTIET.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
                 
-                dayOfWeekTIL.boxStrokeColor = whiteColor
-                dayOfWeekTIL.boxStrokeErrorColor = whiteColorStateList
-                dayOfWeekTIL.setStartIconTintList(ColorStateList.valueOf(lightBlueColor))
-                dayOfWeekTIL.setErrorIconTintList(ColorStateList.valueOf(lightBlueColor))
-                dayOfWeekTIL.setErrorTextColor(whiteColorStateList)
-                dayOfWeekTIL.hintTextColor = whiteColorStateList
-                dayOfWeekTIL.boxStrokeErrorColor = whiteColorStateList
-                dayOfWeekTIET.setTextColor(whiteColor)
+                dayOfWeekTIL.boxStrokeColor = getContextCompatColor(fragmentContext, whiteColor)
+                dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                dayOfWeekTIL.setStartIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
+                dayOfWeekTIL.setErrorIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
+                dayOfWeekTIL.setErrorTextColor(ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor)))
+                dayOfWeekTIL.hintTextColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                dayOfWeekTIET.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
 
-                dateTIL.boxStrokeColor = whiteColor
-                dateTIL.boxStrokeErrorColor = whiteColorStateList
-                dateTIL.setStartIconTintList(ColorStateList.valueOf(lightBlueColor))
-                dateTIL.setErrorIconTintList(ColorStateList.valueOf(lightBlueColor))
-                dateTIL.setErrorTextColor(whiteColorStateList)
-                dateTIL.hintTextColor = whiteColorStateList
-                dateTIL.boxStrokeErrorColor = whiteColorStateList
-                dateTIET.setTextColor(whiteColor)
+                dateTIL.boxStrokeColor = getContextCompatColor(fragmentContext, whiteColor)
+                dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                dateTIL.setStartIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
+                dateTIL.setErrorIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
+                dateTIL.setErrorTextColor(ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor)))
+                dateTIL.hintTextColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                dateTIET.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
 
-                timeTIL.boxStrokeColor = whiteColor
-                timeTIL.boxStrokeErrorColor = whiteColorStateList
-                timeTIL.setStartIconTintList(ColorStateList.valueOf(lightBlueColor))
-                timeTIL.setErrorIconTintList(ColorStateList.valueOf(lightBlueColor))
-                timeTIL.setErrorTextColor(whiteColorStateList)
-                timeTIL.hintTextColor = whiteColorStateList
-                timeTIL.boxStrokeErrorColor = whiteColorStateList
-                timeTIET.setTextColor(whiteColor)
+                timeTIL.boxStrokeColor = getContextCompatColor(fragmentContext, whiteColor)
+                timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                timeTIL.setStartIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
+                timeTIL.setErrorIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
+                timeTIL.setErrorTextColor(ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor)))
+                timeTIL.hintTextColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                timeTIET.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    titleTIL.cursorColor = whiteColorStateList
-                    descriptionTIL.cursorColor = whiteColorStateList
-                    dayOfWeekTIL.cursorColor = whiteColorStateList
-                    dateTIL.cursorColor = whiteColorStateList
-                    timeTIL.cursorColor = whiteColorStateList
+                    titleTIL.cursorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                    descriptionTIL.cursorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                    dayOfWeekTIL.cursorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                    dateTIL.cursorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
+                    timeTIL.cursorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
                 }
 
-                selectCategoryLayout.background.colorFilter = PorterDuffColorFilter(darkModeTextColor, PorterDuff.Mode.SRC_IN)
-                dropDownImageView.setColorFilter(lightBlueColor)
-                saveAndUpdateButton.setBackgroundColor(lightBlueColor)
-                saveAndUpdateButton.setTextColor(blackColor)
+                selectCategoryLayout.background.colorFilter = PorterDuffColorFilter(getContextCompatColor(fragmentContext, darkModeTextColor), PorterDuff.Mode.SRC_IN)
+                dropDownImageView.setColorFilter(getContextCompatColor(fragmentContext, lightBlueColor))
+                saveAndUpdateButton.setBackgroundColor(getContextCompatColor(fragmentContext, lightBlueColor))
+                saveAndUpdateButton.setTextColor(getContextCompatColor(fragmentContext, blackColor))
             } else {
-                when (prefs.colorSchemeValue) {
-                    0 -> {
-                        crossIV.setColorFilter(defaultColor)
-                        addAndEditIV.setColorFilter(defaultColor)
-                        dropDownImageView.setColorFilter(defaultColor)
-                        saveAndUpdateButton.setBackgroundColor(defaultColor)
-                        addAndUpdateToDoTaskTV.setTextColor(defaultColor)
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            titleTIL.cursorColor = ColorStateList.valueOf(defaultColor)
-                            descriptionTIL.cursorColor = ColorStateList.valueOf(defaultColor)
-                            dayOfWeekTIL.cursorColor = ColorStateList.valueOf(defaultColor)
-                            dateTIL.cursorColor = ColorStateList.valueOf(defaultColor)
-                            timeTIL.cursorColor = ColorStateList.valueOf(defaultColor)
-                        }
-
-                        titleTIL.setStartIconTintList(ColorStateList.valueOf(defaultColor))
-                        titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(defaultColor)
-                        titleTIL.setErrorIconTintList(ColorStateList.valueOf(defaultColor))
-                        titleTIL.setErrorTextColor(ColorStateList.valueOf(defaultColor))
-
-                        descriptionTIL.setStartIconTintList(ColorStateList.valueOf(defaultColor))
-                        descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(defaultColor)
-                        descriptionTIL.setErrorIconTintList(ColorStateList.valueOf(defaultColor))
-                        descriptionTIL.setErrorTextColor(ColorStateList.valueOf(defaultColor))
-
-                        dayOfWeekTIL.setStartIconTintList(ColorStateList.valueOf(defaultColor))
-                        dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(defaultColor)
-                        dayOfWeekTIL.setErrorIconTintList(ColorStateList.valueOf(defaultColor))
-                        dayOfWeekTIL.setErrorTextColor(ColorStateList.valueOf(defaultColor))
-
-                        dateTIL.setStartIconTintList(ColorStateList.valueOf(defaultColor))
-                        dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(defaultColor)
-                        dateTIL.setErrorIconTintList(ColorStateList.valueOf(defaultColor))
-                        dateTIL.setErrorTextColor(ColorStateList.valueOf(defaultColor))
-
-                        timeTIL.setStartIconTintList(ColorStateList.valueOf(defaultColor))
-                        timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(defaultColor)
-                        timeTIL.setErrorIconTintList(ColorStateList.valueOf(defaultColor))
-                        timeTIL.setErrorTextColor(ColorStateList.valueOf(defaultColor))
-                    }
-
-                    1 -> {
-                        crossIV.setColorFilter(darkYellowColor)
-                        addAndEditIV.setColorFilter(darkYellowColor)
-                        addAndUpdateToDoTaskTV.setTextColor(darkYellowColor)
-                        dropDownImageView.setColorFilter(darkYellowColor)
-                        saveAndUpdateButton.setBackgroundColor(darkYellowColor)
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            titleTIL.cursorColor = ColorStateList.valueOf(darkYellowColor)
-                            descriptionTIL.cursorColor = ColorStateList.valueOf(darkYellowColor)
-                            dayOfWeekTIL.cursorColor = ColorStateList.valueOf(darkYellowColor)
-                            dateTIL.cursorColor = ColorStateList.valueOf(darkYellowColor)
-                            timeTIL.cursorColor = ColorStateList.valueOf(darkYellowColor)
-                        }
-
-                        titleTIL.setStartIconTintList(ColorStateList.valueOf(darkYellowColor))
-                        titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(darkYellowColor)
-                        titleTIL.setErrorIconTintList(ColorStateList.valueOf(darkYellowColor))
-                        titleTIL.setErrorTextColor(ColorStateList.valueOf(darkYellowColor))
-
-                        descriptionTIL.setStartIconTintList(ColorStateList.valueOf(darkYellowColor))
-                        descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(darkYellowColor)
-                        descriptionTIL.setErrorIconTintList(ColorStateList.valueOf(darkYellowColor))
-                        descriptionTIL.setErrorTextColor(ColorStateList.valueOf(darkYellowColor))
-
-                        dayOfWeekTIL.setStartIconTintList(ColorStateList.valueOf(darkYellowColor))
-                        dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(darkYellowColor)
-                        dayOfWeekTIL.setErrorIconTintList(ColorStateList.valueOf(darkYellowColor))
-                        dayOfWeekTIL.setErrorTextColor(ColorStateList.valueOf(darkYellowColor))
-
-                        dateTIL.setStartIconTintList(ColorStateList.valueOf(darkYellowColor))
-                        dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(darkYellowColor)
-                        dateTIL.setErrorIconTintList(ColorStateList.valueOf(darkYellowColor))
-                        dateTIL.setErrorTextColor(ColorStateList.valueOf(darkYellowColor))
-
-                        timeTIL.setStartIconTintList(ColorStateList.valueOf(darkYellowColor))
-                        timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(darkYellowColor)
-                        timeTIL.setErrorIconTintList(ColorStateList.valueOf(darkYellowColor))
-                        timeTIL.setErrorTextColor(ColorStateList.valueOf(darkYellowColor))
-                    }
-
-                    2 -> {
-                        crossIV.setColorFilter(orangeColor)
-                        addAndEditIV.setColorFilter(orangeColor)
-                        addAndUpdateToDoTaskTV.setTextColor(orangeColor)
-                        dropDownImageView.setColorFilter(orangeColor)
-                        saveAndUpdateButton.setBackgroundColor(orangeColor)
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            titleTIL.cursorColor = ColorStateList.valueOf(orangeColor)
-                            descriptionTIL.cursorColor = ColorStateList.valueOf(orangeColor)
-                            dayOfWeekTIL.cursorColor = ColorStateList.valueOf(orangeColor)
-                            dateTIL.cursorColor = ColorStateList.valueOf(orangeColor)
-                            timeTIL.cursorColor = ColorStateList.valueOf(orangeColor)
-                        }
-
-                        titleTIL.setStartIconTintList(ColorStateList.valueOf(orangeColor))
-                        titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(orangeColor)
-                        titleTIL.setErrorIconTintList(ColorStateList.valueOf(orangeColor))
-                        titleTIL.setErrorTextColor(ColorStateList.valueOf(orangeColor))
-
-                        descriptionTIL.setStartIconTintList(ColorStateList.valueOf(orangeColor))
-                        descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(orangeColor)
-                        descriptionTIL.setErrorIconTintList(ColorStateList.valueOf(orangeColor))
-                        descriptionTIL.setErrorTextColor(ColorStateList.valueOf(orangeColor))
-
-                        dayOfWeekTIL.setStartIconTintList(ColorStateList.valueOf(orangeColor))
-                        dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(orangeColor)
-                        dayOfWeekTIL.setErrorIconTintList(ColorStateList.valueOf(orangeColor))
-                        dayOfWeekTIL.setErrorTextColor(ColorStateList.valueOf(orangeColor))
-
-                        dateTIL.setStartIconTintList(ColorStateList.valueOf(orangeColor))
-                        dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(orangeColor)
-                        dateTIL.setErrorIconTintList(ColorStateList.valueOf(orangeColor))
-                        dateTIL.setErrorTextColor(ColorStateList.valueOf(orangeColor))
-
-                        timeTIL.setStartIconTintList(ColorStateList.valueOf(orangeColor))
-                        timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(orangeColor)
-                        timeTIL.setErrorIconTintList(ColorStateList.valueOf(orangeColor))
-                        timeTIL.setErrorTextColor(ColorStateList.valueOf(orangeColor))
-                    }
-
-                    3 -> {
-                        crossIV.setColorFilter(lightGreenColor)
-                        addAndEditIV.setColorFilter(lightGreenColor)
-                        addAndUpdateToDoTaskTV.setTextColor(lightGreenColor)
-                        dropDownImageView.setColorFilter(lightGreenColor)
-                        saveAndUpdateButton.setBackgroundColor(lightGreenColor)
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            titleTIL.cursorColor = ColorStateList.valueOf(lightGreenColor)
-                            descriptionTIL.cursorColor = ColorStateList.valueOf(lightGreenColor)
-                            dayOfWeekTIL.cursorColor = ColorStateList.valueOf(lightGreenColor)
-                            dateTIL.cursorColor = ColorStateList.valueOf(lightGreenColor)
-                            timeTIL.cursorColor = ColorStateList.valueOf(lightGreenColor)
-                        }
-
-                        titleTIL.setStartIconTintList(ColorStateList.valueOf(lightGreenColor))
-                        titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(lightGreenColor)
-                        titleTIL.setErrorIconTintList(ColorStateList.valueOf(lightGreenColor))
-                        titleTIL.setErrorTextColor(ColorStateList.valueOf(lightGreenColor))
-
-                        descriptionTIL.setStartIconTintList(ColorStateList.valueOf(lightGreenColor))
-                        descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(lightGreenColor)
-                        descriptionTIL.setErrorIconTintList(ColorStateList.valueOf(lightGreenColor))
-                        descriptionTIL.setErrorTextColor(ColorStateList.valueOf(lightGreenColor))
-
-                        dayOfWeekTIL.setStartIconTintList(ColorStateList.valueOf(lightGreenColor))
-                        dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(lightGreenColor)
-                        dayOfWeekTIL.setErrorIconTintList(ColorStateList.valueOf(lightGreenColor))
-                        dayOfWeekTIL.setErrorTextColor(ColorStateList.valueOf(lightGreenColor))
-
-                        dateTIL.setStartIconTintList(ColorStateList.valueOf(lightGreenColor))
-                        dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(lightGreenColor)
-                        dateTIL.setErrorIconTintList(ColorStateList.valueOf(lightGreenColor))
-                        dateTIL.setErrorTextColor(ColorStateList.valueOf(lightGreenColor))
-
-                        timeTIL.setStartIconTintList(ColorStateList.valueOf(lightGreenColor))
-                        timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(lightGreenColor)
-                        timeTIL.setErrorIconTintList(ColorStateList.valueOf(lightGreenColor))
-                        timeTIL.setErrorTextColor(ColorStateList.valueOf(lightGreenColor))
-                    }
-
-                    4 -> {
-                        crossIV.setColorFilter(blueColor)
-                        addAndEditIV.setColorFilter(blueColor)
-                        addAndUpdateToDoTaskTV.setTextColor(blueColor)
-                        dropDownImageView.setColorFilter(blueColor)
-                        saveAndUpdateButton.setBackgroundColor(blueColor)
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            titleTIL.cursorColor = ColorStateList.valueOf(blueColor)
-                            descriptionTIL.cursorColor = ColorStateList.valueOf(blueColor)
-                            dayOfWeekTIL.cursorColor = ColorStateList.valueOf(blueColor)
-                            dateTIL.cursorColor = ColorStateList.valueOf(blueColor)
-                            timeTIL.cursorColor = ColorStateList.valueOf(blueColor)
-                        }
-
-                        titleTIL.setStartIconTintList(ColorStateList.valueOf(blueColor))
-                        titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(blueColor)
-                        titleTIL.setErrorIconTintList(ColorStateList.valueOf(blueColor))
-                        titleTIL.setErrorTextColor(ColorStateList.valueOf(blueColor))
-
-                        descriptionTIL.setStartIconTintList(ColorStateList.valueOf(blueColor))
-                        descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(blueColor)
-                        descriptionTIL.setErrorIconTintList(ColorStateList.valueOf(blueColor))
-                        descriptionTIL.setErrorTextColor(ColorStateList.valueOf(blueColor))
-
-                        dayOfWeekTIL.setStartIconTintList(ColorStateList.valueOf(blueColor))
-                        dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(blueColor)
-                        dayOfWeekTIL.setErrorIconTintList(ColorStateList.valueOf(blueColor))
-                        dayOfWeekTIL.setErrorTextColor(ColorStateList.valueOf(blueColor))
-
-                        dateTIL.setStartIconTintList(ColorStateList.valueOf(blueColor))
-                        dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(blueColor)
-                        dateTIL.setErrorIconTintList(ColorStateList.valueOf(blueColor))
-                        dateTIL.setErrorTextColor(ColorStateList.valueOf(blueColor))
-
-                        timeTIL.setStartIconTintList(ColorStateList.valueOf(blueColor))
-                        timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(blueColor)
-                        timeTIL.setErrorIconTintList(ColorStateList.valueOf(blueColor))
-                        timeTIL.setErrorTextColor(ColorStateList.valueOf(blueColor))
-                    }
-
-                    5 -> {
-                        crossIV.setColorFilter(cyanColor)
-                        addAndEditIV.setColorFilter(cyanColor)
-                        addAndUpdateToDoTaskTV.setTextColor(cyanColor)
-                        dropDownImageView.setColorFilter(cyanColor)
-                        saveAndUpdateButton.setBackgroundColor(cyanColor)
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            titleTIL.cursorColor = ColorStateList.valueOf(cyanColor)
-                            descriptionTIL.cursorColor = ColorStateList.valueOf(cyanColor)
-                            dayOfWeekTIL.cursorColor = ColorStateList.valueOf(cyanColor)
-                            dateTIL.cursorColor = ColorStateList.valueOf(cyanColor)
-                            timeTIL.cursorColor = ColorStateList.valueOf(cyanColor)
-                        }
-
-                        titleTIL.setStartIconTintList(ColorStateList.valueOf(cyanColor))
-                        titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(cyanColor)
-                        titleTIL.setErrorIconTintList(ColorStateList.valueOf(cyanColor))
-                        titleTIL.setErrorTextColor(ColorStateList.valueOf(cyanColor))
-
-                        descriptionTIL.setStartIconTintList(ColorStateList.valueOf(cyanColor))
-                        descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(cyanColor)
-                        descriptionTIL.setErrorIconTintList(ColorStateList.valueOf(cyanColor))
-                        descriptionTIL.setErrorTextColor(ColorStateList.valueOf(cyanColor))
-
-                        dayOfWeekTIL.setStartIconTintList(ColorStateList.valueOf(cyanColor))
-                        dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(cyanColor)
-                        dayOfWeekTIL.setErrorIconTintList(ColorStateList.valueOf(cyanColor))
-                        dayOfWeekTIL.setErrorTextColor(ColorStateList.valueOf(cyanColor))
-
-                        dateTIL.setStartIconTintList(ColorStateList.valueOf(cyanColor))
-                        dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(cyanColor)
-                        dateTIL.setErrorIconTintList(ColorStateList.valueOf(cyanColor))
-                        dateTIL.setErrorTextColor(ColorStateList.valueOf(cyanColor))
-
-                        timeTIL.setStartIconTintList(ColorStateList.valueOf(cyanColor))
-                        timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(cyanColor)
-                        timeTIL.setErrorIconTintList(ColorStateList.valueOf(cyanColor))
-                        timeTIL.setErrorTextColor(ColorStateList.valueOf(cyanColor))
-                    }
-
-                    6 -> {
-                        crossIV.setColorFilter(pinkColor)
-                        addAndEditIV.setColorFilter(pinkColor)
-                        addAndUpdateToDoTaskTV.setTextColor(pinkColor)
-                        dropDownImageView.setColorFilter(pinkColor)
-                        saveAndUpdateButton.setBackgroundColor(pinkColor)
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            titleTIL.cursorColor = ColorStateList.valueOf(pinkColor)
-                            descriptionTIL.cursorColor = ColorStateList.valueOf(pinkColor)
-                            dayOfWeekTIL.cursorColor = ColorStateList.valueOf(pinkColor)
-                            dateTIL.cursorColor = ColorStateList.valueOf(pinkColor)
-                            timeTIL.cursorColor = ColorStateList.valueOf(pinkColor)
-                        }
-
-                        titleTIL.setStartIconTintList(ColorStateList.valueOf(pinkColor))
-                        titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(pinkColor)
-                        titleTIL.setErrorIconTintList(ColorStateList.valueOf(pinkColor))
-                        titleTIL.setErrorTextColor(ColorStateList.valueOf(pinkColor))
-
-                        descriptionTIL.setStartIconTintList(ColorStateList.valueOf(pinkColor))
-                        descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(pinkColor)
-                        descriptionTIL.setErrorIconTintList(ColorStateList.valueOf(pinkColor))
-                        descriptionTIL.setErrorTextColor(ColorStateList.valueOf(pinkColor))
-
-                        dayOfWeekTIL.setStartIconTintList(ColorStateList.valueOf(pinkColor))
-                        dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(pinkColor)
-                        dayOfWeekTIL.setErrorIconTintList(ColorStateList.valueOf(pinkColor))
-                        dayOfWeekTIL.setErrorTextColor(ColorStateList.valueOf(pinkColor))
-
-                        dateTIL.setStartIconTintList(ColorStateList.valueOf(pinkColor))
-                        dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(pinkColor)
-                        dateTIL.setErrorIconTintList(ColorStateList.valueOf(pinkColor))
-                        dateTIL.setErrorTextColor(ColorStateList.valueOf(pinkColor))
-
-                        timeTIL.setStartIconTintList(ColorStateList.valueOf(pinkColor))
-                        timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(pinkColor)
-                        timeTIL.setErrorIconTintList(ColorStateList.valueOf(pinkColor))
-                        timeTIL.setErrorTextColor(ColorStateList.valueOf(pinkColor))
-                    }
-
-                    7 -> {
-                        crossIV.setColorFilter(darkBlueColor)
-                        addAndEditIV.setColorFilter(darkBlueColor)
-                        addAndUpdateToDoTaskTV.setTextColor(darkBlueColor)
-                        dropDownImageView.setColorFilter(darkBlueColor)
-                        saveAndUpdateButton.setBackgroundColor(darkBlueColor)
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            titleTIL.cursorColor = ColorStateList.valueOf(darkBlueColor)
-                            descriptionTIL.cursorColor = ColorStateList.valueOf(darkBlueColor)
-                            dayOfWeekTIL.cursorColor = ColorStateList.valueOf(darkBlueColor)
-                            dateTIL.cursorColor = ColorStateList.valueOf(darkBlueColor)
-                            timeTIL.cursorColor = ColorStateList.valueOf(darkBlueColor)
-                        }
-
-                        titleTIL.setStartIconTintList(ColorStateList.valueOf(darkBlueColor))
-                        titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(darkBlueColor)
-                        titleTIL.setErrorIconTintList(ColorStateList.valueOf(darkBlueColor))
-                        titleTIL.setErrorTextColor(ColorStateList.valueOf(darkBlueColor))
-
-                        descriptionTIL.setStartIconTintList(ColorStateList.valueOf(darkBlueColor))
-                        descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(darkBlueColor)
-                        descriptionTIL.setErrorIconTintList(ColorStateList.valueOf(darkBlueColor))
-                        descriptionTIL.setErrorTextColor(ColorStateList.valueOf(darkBlueColor))
-
-                        dayOfWeekTIL.setStartIconTintList(ColorStateList.valueOf(darkBlueColor))
-                        dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(darkBlueColor)
-                        dayOfWeekTIL.setErrorIconTintList(ColorStateList.valueOf(darkBlueColor))
-                        dayOfWeekTIL.setErrorTextColor(ColorStateList.valueOf(darkBlueColor))
-
-                        dateTIL.setStartIconTintList(ColorStateList.valueOf(darkBlueColor))
-                        dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(darkBlueColor)
-                        dateTIL.setErrorIconTintList(ColorStateList.valueOf(darkBlueColor))
-                        dateTIL.setErrorTextColor(ColorStateList.valueOf(darkBlueColor))
-
-                        timeTIL.setStartIconTintList(ColorStateList.valueOf(darkBlueColor))
-                        timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(darkBlueColor)
-                        timeTIL.setErrorIconTintList(ColorStateList.valueOf(darkBlueColor))
-                        timeTIL.setErrorTextColor(ColorStateList.valueOf(darkBlueColor))
-                    }
-
-                    8 -> {
-                        crossIV.setColorFilter(redColor)
-                        addAndEditIV.setColorFilter(redColor)
-                        addAndUpdateToDoTaskTV.setTextColor(redColor)
-                        dropDownImageView.setColorFilter(redColor)
-                        saveAndUpdateButton.setBackgroundColor(redColor)
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            titleTIL.cursorColor = ColorStateList.valueOf(redColor)
-                            descriptionTIL.cursorColor = ColorStateList.valueOf(redColor)
-                            dayOfWeekTIL.cursorColor = ColorStateList.valueOf(redColor)
-                            dateTIL.cursorColor = ColorStateList.valueOf(redColor)
-                            timeTIL.cursorColor = ColorStateList.valueOf(redColor)
-                        }
-
-                        titleTIL.setStartIconTintList(ColorStateList.valueOf(redColor))
-                        titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(redColor)
-                        titleTIL.setErrorIconTintList(ColorStateList.valueOf(redColor))
-                        titleTIL.setErrorTextColor(ColorStateList.valueOf(redColor))
-
-                        descriptionTIL.setStartIconTintList(ColorStateList.valueOf(redColor))
-                        descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(redColor)
-                        descriptionTIL.setErrorIconTintList(ColorStateList.valueOf(redColor))
-                        descriptionTIL.setErrorTextColor(ColorStateList.valueOf(redColor))
-
-                        dayOfWeekTIL.setStartIconTintList(ColorStateList.valueOf(redColor))
-                        dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(redColor)
-                        dayOfWeekTIL.setErrorIconTintList(ColorStateList.valueOf(redColor))
-                        dayOfWeekTIL.setErrorTextColor(ColorStateList.valueOf(redColor))
-
-                        dateTIL.setStartIconTintList(ColorStateList.valueOf(redColor))
-                        dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(redColor)
-                        dateTIL.setErrorIconTintList(ColorStateList.valueOf(redColor))
-                        dateTIL.setErrorTextColor(ColorStateList.valueOf(redColor))
-
-                        timeTIL.setStartIconTintList(ColorStateList.valueOf(redColor))
-                        timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(redColor)
-                        timeTIL.setErrorIconTintList(ColorStateList.valueOf(redColor))
-                        timeTIL.setErrorTextColor(ColorStateList.valueOf(redColor))
-                    }
-
-                    9 -> {
-                        crossIV.setColorFilter(lightPurpleColor)
-                        addAndEditIV.setColorFilter(lightPurpleColor)
-                        addAndUpdateToDoTaskTV.setTextColor(lightPurpleColor)
-                        dropDownImageView.setColorFilter(lightPurpleColor)
-                        saveAndUpdateButton.setBackgroundColor(lightPurpleColor)
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            titleTIL.cursorColor = ColorStateList.valueOf(lightPurpleColor)
-                            descriptionTIL.cursorColor = ColorStateList.valueOf(lightPurpleColor)
-                            dayOfWeekTIL.cursorColor = ColorStateList.valueOf(lightPurpleColor)
-                            dateTIL.cursorColor = ColorStateList.valueOf(lightPurpleColor)
-                            timeTIL.cursorColor = ColorStateList.valueOf(lightPurpleColor)
-                        }
-
-                        titleTIL.setStartIconTintList(ColorStateList.valueOf(lightPurpleColor))
-                        titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(lightPurpleColor)
-                        titleTIL.setErrorIconTintList(ColorStateList.valueOf(lightPurpleColor))
-                        titleTIL.setErrorTextColor(ColorStateList.valueOf(lightPurpleColor))
-
-                        descriptionTIL.setStartIconTintList(ColorStateList.valueOf(lightPurpleColor))
-                        descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(lightPurpleColor)
-                        descriptionTIL.setErrorIconTintList(ColorStateList.valueOf(lightPurpleColor))
-                        descriptionTIL.setErrorTextColor(ColorStateList.valueOf(lightPurpleColor))
-
-                        dayOfWeekTIL.setStartIconTintList(ColorStateList.valueOf(lightPurpleColor))
-                        dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(lightPurpleColor)
-                        dayOfWeekTIL.setErrorIconTintList(ColorStateList.valueOf(lightPurpleColor))
-                        dayOfWeekTIL.setErrorTextColor(ColorStateList.valueOf(lightPurpleColor))
-
-                        dateTIL.setStartIconTintList(ColorStateList.valueOf(lightPurpleColor))
-                        dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(lightPurpleColor)
-                        dateTIL.setErrorIconTintList(ColorStateList.valueOf(lightPurpleColor))
-                        dateTIL.setErrorTextColor(ColorStateList.valueOf(lightPurpleColor))
-
-                        timeTIL.setStartIconTintList(ColorStateList.valueOf(lightPurpleColor))
-                        timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(lightPurpleColor)
-                        timeTIL.setErrorIconTintList(ColorStateList.valueOf(lightPurpleColor))
-                        timeTIL.setErrorTextColor(ColorStateList.valueOf(lightPurpleColor))
-                    }
+                crossIV.setColorFilter(selectedColors.originalColor)
+                addAndEditIV.setColorFilter(selectedColors.originalColor)
+                dropDownImageView.setColorFilter(selectedColors.originalColor)
+                saveAndUpdateButton.setBackgroundColor(selectedColors.originalColor)
+                addAndUpdateToDoTaskTV.setTextColor(selectedColors.originalColor)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    titleTIL.cursorColor = ColorStateList.valueOf(selectedColors.originalColor)
+                    descriptionTIL.cursorColor = ColorStateList.valueOf(selectedColors.originalColor)
+                    dayOfWeekTIL.cursorColor = ColorStateList.valueOf(selectedColors.originalColor)
+                    dateTIL.cursorColor = ColorStateList.valueOf(selectedColors.originalColor)
+                    timeTIL.cursorColor = ColorStateList.valueOf(selectedColors.originalColor)
                 }
+
+                titleTIL.setStartIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
+                titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(selectedColors.originalColor)
+                titleTIL.setErrorIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
+                titleTIL.setErrorTextColor(ColorStateList.valueOf(selectedColors.originalColor))
+
+                descriptionTIL.setStartIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
+                descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(selectedColors.originalColor)
+                descriptionTIL.setErrorIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
+                descriptionTIL.setErrorTextColor(ColorStateList.valueOf(selectedColors.originalColor))
+
+                dayOfWeekTIL.setStartIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
+                dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(selectedColors.originalColor)
+                dayOfWeekTIL.setErrorIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
+                dayOfWeekTIL.setErrorTextColor(ColorStateList.valueOf(selectedColors.originalColor))
+
+                dateTIL.setStartIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
+                dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(selectedColors.originalColor)
+                dateTIL.setErrorIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
+                dateTIL.setErrorTextColor(ColorStateList.valueOf(selectedColors.originalColor))
+
+                timeTIL.setStartIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
+                timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(selectedColors.originalColor)
+                timeTIL.setErrorIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
+                timeTIL.setErrorTextColor(ColorStateList.valueOf(selectedColors.originalColor))
             }
         }
     }
@@ -1938,7 +1341,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             setView(deleteTaskDialogLayoutBinding.root)
             setCancelable(true)
             setOnDismissListener {
-                if (selectedTab == TabsEnum.TASKS_TAB.ordinal) {
+                if (selectedTab == Tabs.TASKS_TAB.ordinal) {
                     startFABAnimation()
                 }
             }
@@ -1960,7 +1363,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                 if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
                     deleteTaskAlertDialog.dismiss()
                 }
-                if (selectedTab == TabsEnum.TASKS_TAB.ordinal) {
+                if (selectedTab == Tabs.TASKS_TAB.ordinal) {
                     startFABAnimation()
                 }
             }
@@ -1974,7 +1377,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                             if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
                                 deleteTaskAlertDialog.dismiss()
                             }
-                            if (selectedTab == TabsEnum.TASKS_TAB.ordinal) {
+                            if (selectedTab == Tabs.TASKS_TAB.ordinal) {
                                 startFABAnimation()
                             }
                         } else {
@@ -1991,95 +1394,19 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     ) {
         with(deleteTaskDialogLayoutBinding) {
             if (prefs.isDarkModeEnable) {
-                rootLayout.background.colorFilter = PorterDuffColorFilter(screensNightModeColor, PorterDuff.Mode.SRC_IN)
-                deleteIV.setColorFilter(lightBlueColor)
-                deleteMessageTV.setTextColor(whiteColor)
-                noButton.strokeColor = ColorStateList.valueOf(lightBlueColor)
-                noButton.setTextColor(lightBlueColor)
-                yesButton.setBackgroundColor(lightBlueColor)
-                yesButton.setTextColor(blackColor)
+                rootLayout.background.colorFilter = PorterDuffColorFilter(getContextCompatColor(fragmentContext, screensNightModeColor), PorterDuff.Mode.SRC_IN)
+                deleteIV.setColorFilter(getContextCompatColor(fragmentContext, lightBlueColor))
+                deleteMessageTV.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
+                noButton.strokeColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
+                noButton.setTextColor(getContextCompatColor(fragmentContext, lightBlueColor))
+                yesButton.setBackgroundColor(getContextCompatColor(fragmentContext, lightBlueColor))
+                yesButton.setTextColor(getContextCompatColor(fragmentContext, blackColor))
             } else {
-                when (prefs.colorSchemeValue) {
-                    0 -> {
-                        deleteIV.setColorFilter(defaultColor)
-                        noButton.strokeColor = ColorStateList.valueOf(defaultColor)
-                        noButton.setTextColor(defaultColor)
-                        yesButton.setBackgroundColor(defaultColor)
-                        yesButton.setTextColor(whiteColor)
-                    }
-
-                    1 -> {
-                        deleteIV.setColorFilter(darkYellowColor)
-                        noButton.strokeColor = ColorStateList.valueOf(darkYellowColor)
-                        noButton.setTextColor(darkYellowColor)
-                        yesButton.setBackgroundColor(darkYellowColor)
-                        yesButton.setTextColor(whiteColor)
-                    }
-
-                    2 -> {
-                        deleteIV.setColorFilter(orangeColor)
-                        noButton.strokeColor = ColorStateList.valueOf(orangeColor)
-                        noButton.setTextColor(orangeColor)
-                        yesButton.setBackgroundColor(orangeColor)
-                        yesButton.setTextColor(whiteColor)
-                    }
-
-                    3 -> {
-                        deleteIV.setColorFilter(lightGreenColor)
-                        noButton.strokeColor = ColorStateList.valueOf(lightGreenColor)
-                        noButton.setTextColor(lightGreenColor)
-                        yesButton.setBackgroundColor(lightGreenColor)
-                        yesButton.setTextColor(whiteColor)
-                    }
-
-                    4 -> {
-                        deleteIV.setColorFilter(blueColor)
-                        noButton.strokeColor = ColorStateList.valueOf(blueColor)
-                        noButton.setTextColor(blueColor)
-                        yesButton.setBackgroundColor(blueColor)
-                        yesButton.setTextColor(whiteColor)
-                    }
-
-                    5 -> {
-                        deleteIV.setColorFilter(cyanColor)
-                        noButton.strokeColor = ColorStateList.valueOf(cyanColor)
-                        noButton.setTextColor(cyanColor)
-                        yesButton.setBackgroundColor(cyanColor)
-                        yesButton.setTextColor(whiteColor)
-                    }
-
-                    6 -> {
-                        deleteIV.setColorFilter(pinkColor)
-                        noButton.strokeColor = ColorStateList.valueOf(pinkColor)
-                        noButton.setTextColor(pinkColor)
-                        yesButton.setBackgroundColor(pinkColor)
-                        yesButton.setTextColor(whiteColor)
-                    }
-
-                    7 -> {
-                        deleteIV.setColorFilter(darkBlueColor)
-                        noButton.strokeColor = ColorStateList.valueOf(darkBlueColor)
-                        noButton.setTextColor(darkBlueColor)
-                        yesButton.setBackgroundColor(darkBlueColor)
-                        yesButton.setTextColor(whiteColor)
-                    }
-
-                    8 -> {
-                        deleteIV.setColorFilter(redColor)
-                        noButton.strokeColor = ColorStateList.valueOf(redColor)
-                        noButton.setTextColor(redColor)
-                        yesButton.setBackgroundColor(redColor)
-                        yesButton.setTextColor(whiteColor)
-                    }
-
-                    9 -> {
-                        deleteIV.setColorFilter(lightPurpleColor)
-                        noButton.strokeColor = ColorStateList.valueOf(lightPurpleColor)
-                        noButton.setTextColor(lightPurpleColor)
-                        yesButton.setBackgroundColor(lightPurpleColor)
-                        yesButton.setTextColor(whiteColor)
-                    }
-                }
+                deleteIV.setColorFilter(selectedColors.originalColor)
+                noButton.strokeColor = ColorStateList.valueOf(selectedColors.originalColor)
+                noButton.setTextColor(selectedColors.originalColor)
+                yesButton.setBackgroundColor(selectedColors.originalColor)
+                yesButton.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
             }
         }
     }
