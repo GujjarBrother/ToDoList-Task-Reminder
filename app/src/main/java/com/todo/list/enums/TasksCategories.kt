@@ -1,6 +1,6 @@
 package com.todo.list.enums
 
-enum class TasksCategoriesEnum {
+enum class TasksCategories {
     DEFAULT_CATEGORY,
     PERSONAL_CATEGORY,
     WORK_CATEGORY,

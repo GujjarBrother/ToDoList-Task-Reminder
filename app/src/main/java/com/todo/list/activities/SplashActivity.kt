@@ -18,6 +18,11 @@ import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.application.Application.Companion.typeface
 import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivitySplashBinding
+import com.todo.list.models.SelectedColors
+import com.todo.list.utils.ColorsUtils.getContextCompatColor
+import com.todo.list.utils.ColorsUtils.getSelectedColor
+import com.todo.list.utils.ColorsUtils.lightBlueColor
+import com.todo.list.utils.ColorsUtils.screensNightModeColor
 import com.todo.list.utils.CommonFunctions
 import com.todo.list.utils.CommonFunctions.changeStatusBarColor
 import com.todo.list.utils.CommonFunctions.makeFullScreenActivity
@@ -30,9 +35,9 @@ import java.util.Locale
 class SplashActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySplashBinding
-    private var selectedColor = 0
     private var selectedProgressBarBackground: Drawable? = null
     private lateinit var valueAnimator: ValueAnimator
+    private lateinit var selectedColors: SelectedColors
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { _ ->
         /*if (result.resultCode != RESULT_OK) {
             Toast.makeText(activityContext, "Update not available...!", Toast.LENGTH_LONG).show()
@@ -46,6 +51,8 @@ class SplashActivity : BaseActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        selectedColors = getSelectedColor(context = activityContext, prefs = prefs)
+
         checkForAnAppUpdate()
 
         makeFullScreenActivity(activityContext)
@@ -54,56 +61,17 @@ class SplashActivity : BaseActivity() {
             CommonFunctions.getViewModel(activityContext).updateCompletedAndTimeUpTasks(true, Date(System.currentTimeMillis()))
         }
 
-        when(prefs.colorSchemeValue) {
-            0 -> {
-                selectedColor = defaultColor
-                selectedProgressBarBackground = ContextCompat.getDrawable(activityContext, R.drawable.default_progress_bar_background)
-            }
-
-            1 -> {
-                selectedColor = darkYellowColor
-                selectedProgressBarBackground = ContextCompat.getDrawable(activityContext, R.drawable.dark_yellow_progress_bar_background)
-            }
-
-            2 -> {
-                selectedColor = orangeColor
-                selectedProgressBarBackground = ContextCompat.getDrawable(activityContext, R.drawable.orange_progress_bar_background)
-            }
-
-            3 -> {
-                selectedColor = lightGreenColor
-                selectedProgressBarBackground = ContextCompat.getDrawable(activityContext, R.drawable.light_green_progress_bar_background)
-            }
-
-            4 -> {
-                selectedColor = blueColor
-                selectedProgressBarBackground = ContextCompat.getDrawable(activityContext, R.drawable.blue_progress_bar_background)
-            }
-
-            5 -> {
-                selectedColor = cyanColor
-                selectedProgressBarBackground = ContextCompat.getDrawable(activityContext, R.drawable.cyan_progress_bar_background)
-            }
-
-            6 -> {
-                selectedColor = pinkColor
-                selectedProgressBarBackground = ContextCompat.getDrawable(activityContext, R.drawable.pink_progress_bar_background)
-            }
-
-            7 -> {
-                selectedColor = darkBlueColor
-                selectedProgressBarBackground = ContextCompat.getDrawable(activityContext, R.drawable.dark_blue_progress_bar_background)
-            }
-
-            8 -> {
-                selectedColor = redColor
-                selectedProgressBarBackground = ContextCompat.getDrawable(activityContext, R.drawable.red_progress_bar_background)
-            }
-
-            9 -> {
-                selectedColor = lightPurpleColor
-                selectedProgressBarBackground = ContextCompat.getDrawable(activityContext, R.drawable.light_purple_progress_bar_background)
-            }
+        selectedProgressBarBackground = when(prefs.colorSchemeValue) {
+            0 -> ContextCompat.getDrawable(activityContext, R.drawable.default_progress_bar_background)
+            1 -> ContextCompat.getDrawable(activityContext, R.drawable.dark_yellow_progress_bar_background)
+            2 -> ContextCompat.getDrawable(activityContext, R.drawable.orange_progress_bar_background)
+            3 -> ContextCompat.getDrawable(activityContext, R.drawable.light_green_progress_bar_background)
+            4 -> ContextCompat.getDrawable(activityContext, R.drawable.blue_progress_bar_background)
+            5 -> ContextCompat.getDrawable(activityContext, R.drawable.cyan_progress_bar_background)
+            6 -> ContextCompat.getDrawable(activityContext, R.drawable.pink_progress_bar_background)
+            7 -> ContextCompat.getDrawable(activityContext, R.drawable.dark_blue_progress_bar_background)
+            8 -> ContextCompat.getDrawable(activityContext, R.drawable.red_progress_bar_background)
+            else -> ContextCompat.getDrawable(activityContext, R.drawable.light_purple_progress_bar_background)
         }
 
         with(binding) {
@@ -158,18 +126,18 @@ class SplashActivity : BaseActivity() {
 
     private fun ActivitySplashBinding.applyLightAndDarkMode() {
         if (prefs.isDarkModeEnable) {
-            changeStatusBarColor(activityContext, screensNightModeColor)
-            rootLayout.setBackgroundColor(screensNightModeColor)
-            taskTV.setTextColor(lightBlueColor)
-            reminderTV.setTextColor(lightBlueColor)
-            loadingTV.setTextColor(lightBlueColor)
-            loadingPercentageTV.setTextColor(lightBlueColor)
+            changeStatusBarColor(activityContext, getContextCompatColor(activityContext, screensNightModeColor))
+            rootLayout.setBackgroundColor(getContextCompatColor(activityContext, screensNightModeColor))
+            taskTV.setTextColor(getContextCompatColor(activityContext, lightBlueColor))
+            reminderTV.setTextColor(getContextCompatColor(activityContext, lightBlueColor))
+            loadingTV.setTextColor(getContextCompatColor(activityContext, lightBlueColor))
+            loadingPercentageTV.setTextColor(getContextCompatColor(activityContext, lightBlueColor))
             splashLoadingProgressBar.progressDrawable = ContextCompat.getDrawable(activityContext, R.drawable.dark_mode_progress_bar_background)
         } else {
-            changeStatusBarColor(activityContext, defaultColor)
-            taskTV.setTextColor(selectedColor)
-            loadingTV.setTextColor(selectedColor)
-            loadingPercentageTV.setTextColor(selectedColor)
+            changeStatusBarColor(activityContext, selectedColors.originalColor)
+            taskTV.setTextColor(selectedColors.originalColor)
+            loadingTV.setTextColor(selectedColors.originalColor)
+            loadingPercentageTV.setTextColor(selectedColors.originalColor)
             splashLoadingProgressBar.progressDrawable = selectedProgressBarBackground
         }
     }

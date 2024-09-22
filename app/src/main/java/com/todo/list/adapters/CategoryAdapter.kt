@@ -12,9 +12,9 @@ import com.todo.list.adapters.CategoryAdapter.CustomViewHolder
 import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.application.Application.Companion.typeface
 import com.todo.list.databinding.CustomPopupMenuRecyclerviewSingleItemLayoutBinding
-import com.todo.list.enums.GenderEnum
-import com.todo.list.enums.SecurityQuestionsEnum
-import com.todo.list.enums.TasksCategoriesEnum
+import com.todo.list.enums.Gender
+import com.todo.list.enums.SecurityQuestions
+import com.todo.list.enums.TasksCategories
 
 class CategoryAdapter(
     private val forWhichInvoked: String,
@@ -31,71 +31,71 @@ class CategoryAdapter(
         with(holder.binding) {
             if (forWhichInvoked.equals(other = "Category", ignoreCase = true)) {
                 when (item) {
-                    TasksCategoriesEnum.DEFAULT_CATEGORY.ordinal -> {
+                    TasksCategories.DEFAULT_CATEGORY.ordinal -> {
                         categoryNameTV.text = root.context.getString(R.string.select_category_text)
                         categoryNameTV.textSize = 16f
                         categoryNameTV.setTextColor(Color.parseColor("#9E9E9E"))
                     }
 
-                    TasksCategoriesEnum.PERSONAL_CATEGORY.ordinal -> {
+                    TasksCategories.PERSONAL_CATEGORY.ordinal -> {
                         categoryNameTV.text = root.context.getString(R.string.personal_text)
                     }
 
-                    TasksCategoriesEnum.WORK_CATEGORY.ordinal -> {
+                    TasksCategories.WORK_CATEGORY.ordinal -> {
                         categoryNameTV.text = root.context.getString(R.string.work_text)
                     }
                 }
             } else if (forWhichInvoked.equals(other = "Gender", ignoreCase = true)) {
                 when (item) {
-                    GenderEnum.NONE.ordinal -> {
+                    Gender.NONE.ordinal -> {
                         categoryNameTV.text = root.context.getString(R.string.select_gender_text)
                         categoryNameTV.textSize = 16f
                         categoryNameTV.setTextColor(Color.parseColor("#9E9E9E"))
                     }
 
-                    GenderEnum.MALE.ordinal -> {
+                    Gender.MALE.ordinal -> {
                         categoryNameTV.text = root.context.getString(R.string.male_text)
                     }
 
-                    GenderEnum.FEMALE.ordinal -> {
+                    Gender.FEMALE.ordinal -> {
                         categoryNameTV.text = root.context.getString(R.string.fe_male_text)
                     }
 
-                    GenderEnum.TRANSGENDER.ordinal -> {
+                    Gender.TRANSGENDER.ordinal -> {
                         categoryNameTV.text = root.context.getString(R.string.transgender_text)
                     }
                 }
             } else if (forWhichInvoked.equals(other = "Security Questions", ignoreCase = true)) {
                 when (item) {
-                    SecurityQuestionsEnum.SELECT_SECURITY_QUESTION.ordinal -> {
+                    SecurityQuestions.SELECT_SECURITY_QUESTION.ordinal -> {
                         categoryNameTV.text = root.context.getString(R.string.select_security_question_text)
                         categoryNameTV.textSize = 16f
                         categoryNameTV.setTextColor(Color.parseColor("#9E9E9E"))
                     }
 
-                    SecurityQuestionsEnum.QUESTION_1.ordinal -> {
+                    SecurityQuestions.QUESTION_1.ordinal -> {
                         categoryNameTV.text = root.context
                             .getString(R.string.what_is_your_favourite_book_question)
                     }
 
-                    SecurityQuestionsEnum.QUESTION_2.ordinal -> {
+                    SecurityQuestions.QUESTION_2.ordinal -> {
                         categoryNameTV.text = root.context
                             .getString(R.string.what_is_your_favourite_teacher_name_question)
                     }
 
-                    SecurityQuestionsEnum.QUESTION_3.ordinal -> {
+                    SecurityQuestions.QUESTION_3.ordinal -> {
                         categoryNameTV.text = root.context
                             .getString(R.string.what_is_your_school_name_question)
                     }
 
-                    SecurityQuestionsEnum.QUESTION_4.ordinal -> {
+                    SecurityQuestions.QUESTION_4.ordinal -> {
                         categoryNameTV.text = root.context
                             .getString(R.string.what_is_your_favourite_game_question)
                     }
                 }
             }
             if (prefs.isDarkModeEnable) {
-                if (item != TasksCategoriesEnum.DEFAULT_CATEGORY.ordinal) {
+                if (item != TasksCategories.DEFAULT_CATEGORY.ordinal) {
                     categoryNameTV.setTextColor(ContextCompat.getColor(
                         root.context, R.color.whiteColor))
                 }

@@ -1,6 +1,6 @@
 package com.todo.list.enums
 
-enum class SecurityQuestionsEnum {
+enum class SecurityQuestions {
     SELECT_SECURITY_QUESTION,
     QUESTION_1,
     QUESTION_2,

@@ -80,10 +80,10 @@
                 android:textColor="@color/blackColor"
                 android:textSize="@dimen/_15ssp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/signUpIssuesCB"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/signUpIssuesCB"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/signUpIssuesCB"
@@ -94,9 +94,9 @@
                 android:paddingStart="@dimen/_5sdp"
                 android:paddingEnd="@dimen/_5sdp"
                 android:text="@string/sign_up_issues_text"
+                app:layout_constraintBottom_toTopOf="@id/signInIssuesCB"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/signInIssuesCB"
                 app:layout_constraintTop_toBottomOf="@id/selectFeedbackTV" />
 
             <com.google.android.material.checkbox.MaterialCheckBox
@@ -108,9 +108,9 @@
                 android:paddingStart="@dimen/_5sdp"
                 android:paddingEnd="@dimen/_5sdp"
                 android:text="@string/sign_in_issues_text"
+                app:layout_constraintBottom_toTopOf="@id/tasksSaveIssuesCB"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/tasksSaveIssuesCB"
                 app:layout_constraintTop_toBottomOf="@id/signUpIssuesCB" />
 
             <com.google.android.material.checkbox.MaterialCheckBox
@@ -122,9 +122,9 @@
                 android:paddingStart="@dimen/_5sdp"
                 android:paddingEnd="@dimen/_5sdp"
                 android:text="@string/tasks_save_issues_text"
+                app:layout_constraintBottom_toTopOf="@id/tasksUpdateIssuesCB"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/tasksUpdateIssuesCB"
                 app:layout_constraintTop_toBottomOf="@id/signInIssuesCB" />
 
             <com.google.android.material.checkbox.MaterialCheckBox
@@ -136,9 +136,9 @@
                 android:paddingStart="@dimen/_5sdp"
                 android:paddingEnd="@dimen/_5sdp"
                 android:text="@string/tasks_update_issues_text"
+                app:layout_constraintBottom_toTopOf="@id/tasksDeleteIssuesCB"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/tasksDeleteIssuesCB"
                 app:layout_constraintTop_toBottomOf="@id/tasksSaveIssuesCB" />
 
             <com.google.android.material.checkbox.MaterialCheckBox
@@ -150,9 +150,9 @@
                 android:paddingStart="@dimen/_5sdp"
                 android:paddingEnd="@dimen/_5sdp"
                 android:text="@string/tasks_delete_issues_text"
+                app:layout_constraintBottom_toTopOf="@id/signOutIssuesCB"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/signOutIssuesCB"
                 app:layout_constraintTop_toBottomOf="@id/tasksUpdateIssuesCB" />
 
             <com.google.android.material.checkbox.MaterialCheckBox
@@ -164,9 +164,9 @@
                 android:paddingStart="@dimen/_5sdp"
                 android:paddingEnd="@dimen/_5sdp"
                 android:text="@string/sign_out_issues_text"
+                app:layout_constraintBottom_toTopOf="@id/otherIssuesCB"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/otherIssuesCB"
                 app:layout_constraintTop_toBottomOf="@id/tasksDeleteIssuesCB" />
 
             <com.google.android.material.checkbox.MaterialCheckBox
@@ -178,9 +178,9 @@
                 android:paddingStart="@dimen/_5sdp"
                 android:paddingEnd="@dimen/_5sdp"
                 android:text="@string/other_issues_text"
+                app:layout_constraintBottom_toTopOf="@id/feedbackEditTextCV"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/feedbackEditTextCV"
                 app:layout_constraintTop_toBottomOf="@id/signOutIssuesCB" />
 
             <com.google.android.material.card.MaterialCardView
@@ -193,9 +193,9 @@
                 app:cardBackgroundColor="@color/feedbackEditTextCardViewLightModeColor"
                 app:cardCornerRadius="@dimen/_10sdp"
                 app:cardElevation="@dimen/_1sdp"
+                app:layout_constraintBottom_toTopOf="@id/buttonsLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/buttonsLayout"
                 app:layout_constraintTop_toBottomOf="@id/otherIssuesCB"
                 tools:visibility="visible">
 
@@ -210,7 +210,7 @@
                     android:padding="@dimen/_10sdp"
                     android:textColorHint="#BEBEBE"
                     android:textCursorDrawable="@null"
-                    android:textSize="@dimen/_11ssp"/>
+                    android:textSize="@dimen/_11ssp" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -218,12 +218,12 @@
                 android:id="@+id/buttonsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginHorizontal="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_15sdp"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/feedbackEditTextCV">
 
                 <com.google.android.material.button.MaterialButton

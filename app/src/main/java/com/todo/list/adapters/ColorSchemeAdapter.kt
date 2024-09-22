@@ -5,12 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.todo.list.databinding.ColorSchemeRecyclerViewSingleItemLayoutBinding
+import com.todo.list.enums.Visibility
 import com.todo.list.models.ColorSchemeModel
 import com.todo.list.utils.CommonFunctions.changeVisibility
 
 class ColorSchemeAdapter(
         private val colorSchemeArrayList: ArrayList<ColorSchemeModel>,
-        private val callback: (Int) -> Unit
+        private val callback: (ColorSchemeModel, Int) -> Unit
 ) : RecyclerView.Adapter<ColorSchemeAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -24,13 +25,13 @@ class ColorSchemeAdapter(
             colorCardView.setCardBackgroundColor(colorSchemeModel.color)
 
             if (colorSchemeModel.isSelected) {
-                activeColorImageView.changeVisibility(1)
+                activeColorImageView.changeVisibility(Visibility.VISIBLE.ordinal)
             } else {
-                activeColorImageView.changeVisibility(0)
+                activeColorImageView.changeVisibility(Visibility.GONE.ordinal)
             }
 
             holder.itemView.setOnClickListener { _: View? ->
-                callback.invoke(colorSchemeModel.id)
+                callback.invoke(colorSchemeModel, position)
             }
         }
     }

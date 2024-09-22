@@ -4,6 +4,7 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/snowWhiteColor"
     tools:context="com.todo.list.fragments.AllTasksFragment">
 
     <com.google.android.material.card.MaterialCardView
@@ -143,10 +144,10 @@
                 android:textSize="@dimen/_10ssp"
                 android:textStyle="bold"
                 android:visibility="gone"
-                tools:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/allTasksLottieAnimationView"

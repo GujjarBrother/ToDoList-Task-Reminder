@@ -17,6 +17,16 @@ import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.application.Application.Companion.typeface
 import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivityFeedbackBinding
+import com.todo.list.enums.Visibility
+import com.todo.list.models.SelectedColors
+import com.todo.list.utils.ColorsUtils.blackColor
+import com.todo.list.utils.ColorsUtils.cardsNightModeColor
+import com.todo.list.utils.ColorsUtils.darkModeTextColor
+import com.todo.list.utils.ColorsUtils.getContextCompatColor
+import com.todo.list.utils.ColorsUtils.getSelectedColor
+import com.todo.list.utils.ColorsUtils.lightBlueColor
+import com.todo.list.utils.ColorsUtils.screensNightModeColor
+import com.todo.list.utils.ColorsUtils.whiteColor
 import com.todo.list.utils.CommonFunctions.changeStatusBarColor
 import com.todo.list.utils.CommonFunctions.changeVisibility
 import com.todo.list.utils.CommonFunctions.keepActivityOn
@@ -27,11 +37,14 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
     private lateinit var binding: ActivityFeedbackBinding
     private val feedbackArrayList = ArrayList<String>()
     private var otherIssuesCheck = false
+    private lateinit var selectedColors: SelectedColors
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFeedbackBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        selectedColors = getSelectedColor(context = activityContext, prefs = prefs)
 
         applyLightAndDarkMode()
         keepActivityOn(activityContext)
@@ -42,7 +55,10 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
                 activity = activityContext,
                 containerLayout = adLayout,
                 loadingLayout = adLoadingInclude.rootLayout,
-                isInternetConnected = isInternetConnectedORNot((getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager))
+                isInternetConnected = isInternetConnectedORNot(
+                    (getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager)
+                ),
+                adID = getString(R.string.feedbackScreenBannerAdId)
             )
             backArrowIV.setOnClickListener(this@FeedbackActivity)
             submitButton.setOnClickListener(this@FeedbackActivity)
@@ -98,14 +114,14 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
             otherIssuesCB.setOnCheckedChangeListener { _: CompoundButton, isChecked: Boolean ->
                 if (isChecked) {
                     feedbackArrayList.add(otherIssuesCB.text.toString().trim())
-                    feedbackEditTextCV.changeVisibility(1)
+                    feedbackEditTextCV.changeVisibility(Visibility.VISIBLE.ordinal)
                     showSoftKeyboard()
                     feedbackET.requestFocus()
                     otherIssuesCheck = true
                 } else {
                     feedbackET.text = null
                     feedbackArrayList.remove(otherIssuesCB.text.toString().trim())
-                    feedbackEditTextCV.changeVisibility(0)
+                    feedbackEditTextCV.changeVisibility(Visibility.GONE.ordinal)
                     hideSoftKeyboard(feedbackET)
                     otherIssuesCheck = false
                 }
@@ -143,206 +159,101 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
     private fun applyLightAndDarkMode() {
         with(binding) {
             if (prefs.isDarkModeEnable) {
-                changeStatusBarColor(activityContext, screensNightModeColor)
-                toolbar.setBackgroundColor(screensNightModeColor)
-                include.root.changeVisibility(1)
-                rootLayout.setBackgroundColor(screensNightModeColor)
-                selectFeedbackTV.setTextColor(darkModeTextColor)
-                signUpIssuesCB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
-                signUpIssuesCB.setTextColor(whiteColor)
-                signInIssuesCB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
-                signInIssuesCB.setTextColor(whiteColor)
-                tasksSaveIssuesCB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
-                tasksSaveIssuesCB.setTextColor(whiteColor)
-                tasksUpdateIssuesCB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
-                tasksUpdateIssuesCB.setTextColor(whiteColor)
-                tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
-                tasksDeleteIssuesCB.setTextColor(whiteColor)
-                signOutIssuesCB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
-                signOutIssuesCB.setTextColor(whiteColor)
-                otherIssuesCB.buttonTintList = ColorStateList.valueOf(lightBlueColor)
-                otherIssuesCB.setTextColor(whiteColor)
-                feedbackEditTextCV.setCardBackgroundColor(cardsNightModeColor)
-                feedbackET.setHintTextColor(darkModeTextColor)
-                feedbackET.setTextColor(whiteColor)
-                cancelButton.strokeColor = ColorStateList.valueOf(lightBlueColor)
-                cancelButton.setTextColor(lightBlueColor)
-                submitButton.setBackgroundColor(lightBlueColor)
-                submitButton.setTextColor(blackColor)
-                adLoadingInclude.adIsLoadingTextView.setTextColor(whiteColor)
-                adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(whiteColor)
+                changeStatusBarColor(
+                    activityContext,
+                    getContextCompatColor(activityContext, screensNightModeColor)
+                )
+                toolbar.setBackgroundColor(
+                    getContextCompatColor(
+                        activityContext,
+                        screensNightModeColor
+                    )
+                )
+                include.root.changeVisibility(Visibility.VISIBLE.ordinal)
+                rootLayout.setBackgroundColor(
+                    getContextCompatColor(
+                        activityContext,
+                        screensNightModeColor
+                    )
+                )
+                selectFeedbackTV.setTextColor(
+                    getContextCompatColor(
+                        activityContext,
+                        darkModeTextColor
+                    )
+                )
+                signUpIssuesCB.buttonTintList =
+                    ColorStateList.valueOf(getContextCompatColor(activityContext, lightBlueColor))
+                signUpIssuesCB.setTextColor(getContextCompatColor(activityContext, whiteColor))
+                signInIssuesCB.buttonTintList =
+                    ColorStateList.valueOf(getContextCompatColor(activityContext, lightBlueColor))
+                signInIssuesCB.setTextColor(getContextCompatColor(activityContext, whiteColor))
+                tasksSaveIssuesCB.buttonTintList =
+                    ColorStateList.valueOf(getContextCompatColor(activityContext, lightBlueColor))
+                tasksSaveIssuesCB.setTextColor(getContextCompatColor(activityContext, whiteColor))
+                tasksUpdateIssuesCB.buttonTintList =
+                    ColorStateList.valueOf(getContextCompatColor(activityContext, lightBlueColor))
+                tasksUpdateIssuesCB.setTextColor(getContextCompatColor(activityContext, whiteColor))
+                tasksDeleteIssuesCB.buttonTintList =
+                    ColorStateList.valueOf(getContextCompatColor(activityContext, lightBlueColor))
+                tasksDeleteIssuesCB.setTextColor(getContextCompatColor(activityContext, whiteColor))
+                signOutIssuesCB.buttonTintList =
+                    ColorStateList.valueOf(getContextCompatColor(activityContext, lightBlueColor))
+                signOutIssuesCB.setTextColor(getContextCompatColor(activityContext, whiteColor))
+                otherIssuesCB.buttonTintList =
+                    ColorStateList.valueOf(getContextCompatColor(activityContext, lightBlueColor))
+                otherIssuesCB.setTextColor(getContextCompatColor(activityContext, whiteColor))
+                feedbackEditTextCV.setCardBackgroundColor(
+                    getContextCompatColor(
+                        activityContext,
+                        cardsNightModeColor
+                    )
+                )
+                feedbackET.setHintTextColor(
+                    getContextCompatColor(
+                        activityContext,
+                        darkModeTextColor
+                    )
+                )
+                feedbackET.setTextColor(getContextCompatColor(activityContext, whiteColor))
+                cancelButton.strokeColor =
+                    ColorStateList.valueOf(getContextCompatColor(activityContext, lightBlueColor))
+                cancelButton.setTextColor(getContextCompatColor(activityContext, lightBlueColor))
+                submitButton.setBackgroundColor(
+                    getContextCompatColor(
+                        activityContext,
+                        lightBlueColor
+                    )
+                )
+                submitButton.setTextColor(getContextCompatColor(activityContext, blackColor))
+                adLoadingInclude.adIsLoadingTextView.setTextColor(
+                    getContextCompatColor(
+                        activityContext,
+                        whiteColor
+                    )
+                )
+                adLoadingInclude.progressBar.indeterminateTintList =
+                    ColorStateList.valueOf(getContextCompatColor(activityContext, whiteColor))
             } else {
-                when (prefs.colorSchemeValue) {
-                    0 -> {
-                        changeStatusBarColor(activityContext, defaultColor)
-                        toolbar.setBackgroundColor(defaultColor)
-                        signUpIssuesCB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        signInIssuesCB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        tasksSaveIssuesCB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        tasksUpdateIssuesCB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        signOutIssuesCB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        otherIssuesCB.buttonTintList = ColorStateList.valueOf(defaultColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(defaultColor)
-                        cancelButton.setTextColor(defaultColor)
-                        submitButton.setBackgroundColor(defaultColor)
-                        adLoadingInclude.adIsLoadingTextView.setTextColor(defaultColor)
-                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(defaultColor)
-                    }
-
-                    1 -> {
-                        changeStatusBarColor(activityContext, darkYellowColor)
-                        toolbar.setBackgroundColor(darkYellowColor)
-                        signUpIssuesCB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        signInIssuesCB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        tasksSaveIssuesCB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        tasksUpdateIssuesCB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        signOutIssuesCB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        otherIssuesCB.buttonTintList = ColorStateList.valueOf(darkYellowColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(darkYellowColor)
-                        cancelButton.setTextColor(darkYellowColor)
-                        submitButton.setBackgroundColor(darkYellowColor)
-                        adLoadingInclude.adIsLoadingTextView.setTextColor(darkYellowColor)
-                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(darkYellowColor)
-                    }
-
-                    2 -> {
-                        changeStatusBarColor(activityContext, orangeColor)
-                        toolbar.setBackgroundColor(orangeColor)
-                        signUpIssuesCB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        signInIssuesCB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        tasksSaveIssuesCB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        tasksUpdateIssuesCB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        signOutIssuesCB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        otherIssuesCB.buttonTintList = ColorStateList.valueOf(orangeColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(orangeColor)
-                        cancelButton.setTextColor(orangeColor)
-                        submitButton.setBackgroundColor(orangeColor)
-                        adLoadingInclude.adIsLoadingTextView.setTextColor(orangeColor)
-                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(orangeColor)
-                    }
-
-                    3 -> {
-                        changeStatusBarColor(activityContext, lightGreenColor)
-                        toolbar.setBackgroundColor(lightGreenColor)
-                        signUpIssuesCB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        signInIssuesCB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        tasksSaveIssuesCB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        tasksUpdateIssuesCB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        signOutIssuesCB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        otherIssuesCB.buttonTintList = ColorStateList.valueOf(lightGreenColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(lightGreenColor)
-                        cancelButton.setTextColor(lightGreenColor)
-                        submitButton.setBackgroundColor(lightGreenColor)
-                        adLoadingInclude.adIsLoadingTextView.setTextColor(lightGreenColor)
-                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(lightGreenColor)
-                    }
-
-                    4 -> {
-                        changeStatusBarColor(activityContext, blueColor)
-                        toolbar.setBackgroundColor(blueColor)
-                        signUpIssuesCB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        signInIssuesCB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        tasksSaveIssuesCB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        tasksUpdateIssuesCB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        signOutIssuesCB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        otherIssuesCB.buttonTintList = ColorStateList.valueOf(blueColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(blueColor)
-                        cancelButton.setTextColor(blueColor)
-                        submitButton.setBackgroundColor(blueColor)
-                        adLoadingInclude.adIsLoadingTextView.setTextColor(blueColor)
-                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(blueColor)
-                    }
-
-                    5 -> {
-                        changeStatusBarColor(activityContext, cyanColor)
-                        toolbar.setBackgroundColor(cyanColor)
-                        signUpIssuesCB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        signInIssuesCB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        tasksSaveIssuesCB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        tasksUpdateIssuesCB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        signOutIssuesCB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        otherIssuesCB.buttonTintList = ColorStateList.valueOf(cyanColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(cyanColor)
-                        cancelButton.setTextColor(cyanColor)
-                        submitButton.setBackgroundColor(cyanColor)
-                        adLoadingInclude.adIsLoadingTextView.setTextColor(cyanColor)
-                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(cyanColor)
-                    }
-
-                    6 -> {
-                        changeStatusBarColor(activityContext, pinkColor)
-                        toolbar.setBackgroundColor(pinkColor)
-                        signUpIssuesCB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        signInIssuesCB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        tasksSaveIssuesCB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        tasksUpdateIssuesCB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        signOutIssuesCB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        otherIssuesCB.buttonTintList = ColorStateList.valueOf(pinkColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(pinkColor)
-                        cancelButton.setTextColor(pinkColor)
-                        submitButton.setBackgroundColor(pinkColor)
-                        adLoadingInclude.adIsLoadingTextView.setTextColor(pinkColor)
-                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(pinkColor)
-                    }
-
-                    7 -> {
-                        changeStatusBarColor(activityContext, darkBlueColor)
-                        toolbar.setBackgroundColor(darkBlueColor)
-                        signUpIssuesCB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        signInIssuesCB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        tasksSaveIssuesCB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        tasksUpdateIssuesCB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        signOutIssuesCB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        otherIssuesCB.buttonTintList = ColorStateList.valueOf(darkBlueColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(darkBlueColor)
-                        cancelButton.setTextColor(darkBlueColor)
-                        submitButton.setBackgroundColor(darkBlueColor)
-                        adLoadingInclude.adIsLoadingTextView.setTextColor(darkBlueColor)
-                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(darkBlueColor)
-                    }
-
-                    8 -> {
-                        changeStatusBarColor(activityContext, redColor)
-                        toolbar.setBackgroundColor(redColor)
-                        signUpIssuesCB.buttonTintList = ColorStateList.valueOf(redColor)
-                        signInIssuesCB.buttonTintList = ColorStateList.valueOf(redColor)
-                        tasksSaveIssuesCB.buttonTintList = ColorStateList.valueOf(redColor)
-                        tasksUpdateIssuesCB.buttonTintList = ColorStateList.valueOf(redColor)
-                        tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(redColor)
-                        signOutIssuesCB.buttonTintList = ColorStateList.valueOf(redColor)
-                        otherIssuesCB.buttonTintList = ColorStateList.valueOf(redColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(redColor)
-                        cancelButton.setTextColor(redColor)
-                        submitButton.setBackgroundColor(redColor)
-                        adLoadingInclude.adIsLoadingTextView.setTextColor(redColor)
-                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(redColor)
-                    }
-
-                    9 -> {
-                        changeStatusBarColor(activityContext, lightPurpleColor)
-                        toolbar.setBackgroundColor(lightPurpleColor)
-                        signUpIssuesCB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        signInIssuesCB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        tasksSaveIssuesCB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        tasksUpdateIssuesCB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        tasksDeleteIssuesCB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        signOutIssuesCB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        otherIssuesCB.buttonTintList = ColorStateList.valueOf(lightPurpleColor)
-                        cancelButton.strokeColor = ColorStateList.valueOf(lightPurpleColor)
-                        cancelButton.setTextColor(lightPurpleColor)
-                        submitButton.setBackgroundColor(lightPurpleColor)
-                        adLoadingInclude.adIsLoadingTextView.setTextColor(lightPurpleColor)
-                        adLoadingInclude.progressBar.indeterminateTintList = ColorStateList.valueOf(lightPurpleColor)
-                    }
-                }
+                changeStatusBarColor(activityContext, selectedColors.originalColor)
+                toolbar.setBackgroundColor(selectedColors.originalColor)
+                signUpIssuesCB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
+                signInIssuesCB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
+                tasksSaveIssuesCB.buttonTintList =
+                    ColorStateList.valueOf(selectedColors.originalColor)
+                tasksUpdateIssuesCB.buttonTintList =
+                    ColorStateList.valueOf(selectedColors.originalColor)
+                tasksDeleteIssuesCB.buttonTintList =
+                    ColorStateList.valueOf(selectedColors.originalColor)
+                signOutIssuesCB.buttonTintList =
+                    ColorStateList.valueOf(selectedColors.originalColor)
+                otherIssuesCB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
+                cancelButton.strokeColor = ColorStateList.valueOf(selectedColors.originalColor)
+                cancelButton.setTextColor(selectedColors.originalColor)
+                submitButton.setBackgroundColor(selectedColors.originalColor)
+                adLoadingInclude.adIsLoadingTextView.setTextColor(selectedColors.originalColor)
+                adLoadingInclude.progressBar.indeterminateTintList =
+                    ColorStateList.valueOf(selectedColors.originalColor)
             }
         }
     }
