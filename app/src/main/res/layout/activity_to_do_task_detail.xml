@@ -5,53 +5,69 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/snowWhiteColor"
+    android:background="@color/screensBackgroundColor"
     tools:context="com.todo.list.activities.ToDoTaskDetailActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/defaultColor"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/backArrowIV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="@dimen/_10sdp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/back_arrow_icon"
-            app:tint="@color/whiteColor" />
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/toolbarTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginHorizontal="@dimen/_50sdp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAllCaps="false"
-            android:textColor="@color/whiteColor"
-            android:textSize="@dimen/_15ssp"
-            android:textStyle="bold" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    </androidx.appcompat.widget.Toolbar>
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/backArrowIV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="@dimen/_10sdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/back_arrow_icon"
+                    app:tint="@color/whiteColor" />
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/divider_among_toolbars_and_screens_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/scrollView"
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/toolbarTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/cabin_medium"
+                    android:maxLines="1"
+                    android:textAllCaps="false"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="@dimen/_15ssp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/backArrowIV"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:background="#BDBDBD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -64,7 +80,7 @@
         app:layout_constraintBottom_toTopOf="@id/adLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/include">
+        app:layout_constraintTop_toBottomOf="@id/view">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -93,6 +109,7 @@
                 android:textColor="@color/blackColor"
                 android:textSize="@dimen/_20ssp"
                 android:textStyle="bold"
+                android:fontFamily="@font/cabin_medium"
                 app:layout_constraintBottom_toTopOf="@id/descriptionTV"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -109,6 +126,7 @@
                 android:textColor="@color/blackColor"
                 android:textSize="@dimen/_20ssp"
                 android:textStyle="bold"
+                android:fontFamily="@font/cabin_medium"
                 app:layout_constraintBottom_toTopOf="@id/dateAndDayTV"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -125,6 +143,7 @@
                 android:textColor="@color/blackColor"
                 android:textSize="@dimen/_20ssp"
                 android:textStyle="bold"
+                android:fontFamily="@font/cabin_medium"
                 app:layout_constraintBottom_toTopOf="@id/timeTV"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -141,6 +160,7 @@
                 android:textColor="@color/blackColor"
                 android:textSize="@dimen/_20ssp"
                 android:textStyle="bold"
+                android:fontFamily="@font/cabin_medium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

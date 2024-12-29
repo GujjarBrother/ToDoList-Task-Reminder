@@ -1,21 +1,16 @@
 package com.todo.list.fragments
 
+import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.text.Spannable
 import android.text.SpannableString
-import android.text.Spanned
 import android.text.TextPaint
 import android.text.TextUtils
-import android.text.style.ForegroundColorSpan
 import android.text.style.TypefaceSpan
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -29,7 +24,6 @@ import android.widget.RadioGroup
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,7 +37,6 @@ import com.todo.list.activities.ToDoTaskDetailActivity
 import com.todo.list.adapters.CategoryAdapter
 import com.todo.list.adapters.TasksRecyclerViewAdapter
 import com.todo.list.application.Application.Companion.prefs
-import com.todo.list.application.Application.Companion.typeface
 import com.todo.list.base.BaseFragment
 import com.todo.list.databinding.AddAndUpdateTasksDialogLayoutBinding
 import com.todo.list.databinding.CustomPopupMenuLayoutBinding
@@ -54,22 +47,13 @@ import com.todo.list.db.ToDoTask
 import com.todo.list.enums.Tabs
 import com.todo.list.enums.TasksCategories
 import com.todo.list.enums.Visibility
+import com.todo.list.listeners.SearchViewVisibilityListener
 import com.todo.list.listeners.StartAndStopFABAnimationListener
-import com.todo.list.models.SelectedColors
 import com.todo.list.utils.ColorsUtils.blackColor
-import com.todo.list.utils.ColorsUtils.cardsNightModeColor
-import com.todo.list.utils.ColorsUtils.darkModeTextColor
-import com.todo.list.utils.ColorsUtils.fragmentsCardViewsColor
 import com.todo.list.utils.ColorsUtils.getContextCompatColor
-import com.todo.list.utils.ColorsUtils.getSelectedColor
-import com.todo.list.utils.ColorsUtils.lightBlueColor
-import com.todo.list.utils.ColorsUtils.screensNightModeColor
-import com.todo.list.utils.ColorsUtils.snowWhiteColor
-import com.todo.list.utils.ColorsUtils.whiteColor
 import com.todo.list.utils.CommonFunctions
 import com.todo.list.utils.CommonFunctions.applyAnimation
 import com.todo.list.utils.CommonFunctions.changeVisibility
-import com.todo.list.utils.CommonFunctions.isSomethingChanged
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -84,7 +68,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentAllTasksBinding
     private var category = 0
-    private lateinit var errorColorStateList: ColorStateList
     private var tasksAboveTempValue = 1
     private var tasksBelowTempValue = 7
     private var tasksAboveSortedValue = 1
@@ -103,9 +86,17 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     private lateinit var popupWindow: PopupWindow
     private lateinit var addAndUpdateTasksDialogLayoutBinding: AddAndUpdateTasksDialogLayoutBinding
     private lateinit var toDoTask: ToDoTask
-    private val WHICHTAB = "whichTab"
+    private val whichTabOpened = "whichTab"
     private var selectedTab: Int? = null
-    private lateinit var selectedColors: SelectedColors
+    private var searchViewVisibilityListener: SearchViewVisibilityListener? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            searchViewVisibilityListener = context as SearchViewVisibilityListener
+        } catch (_: Exception) {
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -117,8 +108,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        selectedColors = getSelectedColor(context = fragmentContext, prefs = prefs)
 
 //        Here, We Stop FAB Animation By Clicking SignOut ImageView From DashBoardActivity...
         (requireActivity() as DashBoardActivity).initializeStopFABAnimationFromToDosFragmentListener(
@@ -140,30 +129,24 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         )
 
         selectedTab = arguments?.run {
-            getInt(WHICHTAB)
+            getInt(whichTabOpened)
         }
 
         with(binding) {
-            isSomethingChanged.observe(viewLifecycleOwner) {
-                applyLightAndDarkMode()
-            }
-
-            applyCustomFont()
             addNewTasksFAB.setOnClickListener(this@AllTasksFragment)
             sortingCV.setOnClickListener(this@AllTasksFragment)
             stylesCV.setOnClickListener(this@AllTasksFragment)
-        }
-
-        CommonFunctions.getViewModel(fragmentContext).getAllTasks(selectedTab != 0).observe(viewLifecycleOwner) {
-            allToDosTasksArrayList = it as ArrayList<ToDoTask>
-            readAllTasks()
+            CommonFunctions.getViewModel(fragmentContext).getAllTasks(selectedTab != 0).observe(viewLifecycleOwner) {
+                allToDosTasksArrayList = it as ArrayList<ToDoTask>
+                readAllTasks()
+            }
         }
     }
 
     companion object {
         fun newInstance(whichTab: Int) = AllTasksFragment().apply {
             arguments = Bundle().apply {
-                putInt(WHICHTAB, whichTab)
+                putInt(whichTabOpened, whichTab)
             }
         }
     }
@@ -181,7 +164,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                 0 -> {
                     startFABAnimation()
                     addNewTasksFAB.changeVisibility(Visibility.VISIBLE.ordinal)
-                    deletedPermanentlyTextView.changeVisibility(Visibility.GONE.ordinal)
                     if (prefs.allTasksStyleValue) {
                         listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.list_view_style_image))
                         listAndGridViewStylesTV.text = getString(R.string.listview_text)
@@ -189,11 +171,13 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                         listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.grid_view_style_image))
                         listAndGridViewStylesTV.text = getString(R.string.gridview_text)
                     }
+                    if (::allToDosTasksArrayList.isInitialized) {
+                        searchViewVisibilityListener?.isShowSearchViewORNot(allToDosTasksArrayList.isNotEmpty())
+                    }
                 }
 
                 1 -> {
                     addNewTasksFAB.changeVisibility(Visibility.GONE.ordinal)
-                    deletedPermanentlyTextView.changeVisibility(Visibility.VISIBLE.ordinal)
                     if (prefs.completedTasksStyleValue) {
                         listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.list_view_style_image))
                         listAndGridViewStylesTV.text = getString(R.string.listview_text)
@@ -201,67 +185,32 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                         listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.grid_view_style_image))
                         listAndGridViewStylesTV.text = getString(R.string.gridview_text)
                     }
+                    if (::allToDosTasksArrayList.isInitialized) {
+                        searchViewVisibilityListener?.isShowSearchViewORNot(allToDosTasksArrayList.isNotEmpty())
+                    }
                 }
             }
         }
     }
 
-    private fun FragmentAllTasksBinding.applyCustomFont() {
-        listAndGridViewStylesTV.typeface = typeface
-        sortingTV.typeface = typeface
-        nothingInHereTV.typeface = typeface
-    }
-
-    private fun applyLightAndDarkMode() {
-        with(binding) {
-            if (prefs.isDarkModeEnable) {
-                rootLayout.setBackgroundColor(getContextCompatColor(fragmentContext, screensNightModeColor))
-                allTasksFragmentCV.setCardBackgroundColor(getContextCompatColor(fragmentContext, screensNightModeColor))
-                nothingInHereTV.setTextColor(getContextCompatColor(fragmentContext, darkModeTextColor))
-                addNewTasksFAB.backgroundTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
-                addNewTasksFAB.setColorFilter(getContextCompatColor(fragmentContext, blackColor))
-                sortingCV.setCardBackgroundColor(getContextCompatColor(fragmentContext, cardsNightModeColor))
-                sortingIV.setColorFilter(getContextCompatColor(fragmentContext, lightBlueColor))
-                sortingTV.setTextColor(getContextCompatColor(fragmentContext, darkModeTextColor))
-                stylesCV.setCardBackgroundColor(getContextCompatColor(fragmentContext, cardsNightModeColor))
-                listAndGridViewStylesIV.setColorFilter(getContextCompatColor(fragmentContext, lightBlueColor))
-                listAndGridViewStylesTV.setTextColor(getContextCompatColor(fragmentContext, darkModeTextColor))
-                deletedPermanentlyTextView.setBackgroundColor(getContextCompatColor(fragmentContext, lightBlueColor))
-                deletedPermanentlyTextView.setTextColor(getContextCompatColor(fragmentContext, blackColor))
-            } else {
-                rootLayout.setBackgroundColor(getContextCompatColor(fragmentContext, snowWhiteColor))
-                allTasksFragmentCV.setCardBackgroundColor(getContextCompatColor(fragmentContext, fragmentsCardViewsColor))
-                addNewTasksFAB.setColorFilter(getContextCompatColor(fragmentContext, whiteColor))
-                sortingCV.setCardBackgroundColor(getContextCompatColor(fragmentContext, whiteColor))
-                sortingTV.setTextColor(getContextCompatColor(fragmentContext, blackColor))
-                stylesCV.setCardBackgroundColor(getContextCompatColor(fragmentContext, whiteColor))
-                listAndGridViewStylesTV.setTextColor(getContextCompatColor(fragmentContext, blackColor))
-                deletedPermanentlyTextView.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-                errorColorStateList = ColorStateList.valueOf(selectedColors.originalColor)
-                listAndGridViewStylesIV.setColorFilter(selectedColors.originalColor)
-                sortingIV.setColorFilter(selectedColors.originalColor)
-                nothingInHereTV.setTextColor(selectedColors.originalColor)
-                addNewTasksFAB.backgroundTintList = ColorStateList.valueOf(selectedColors.originalColor)
-                deletedPermanentlyTextView.setBackgroundColor(selectedColors.originalColor)
-            }
-        }
-    }
-
-    private fun readAllTasks() {
-        with(binding) {
-            if (allToDosTasksArrayList.isNotEmpty()) {
-                nothingInHereGroup.changeVisibility(Visibility.GONE.ordinal)
-                dataAvailableGroup.changeVisibility(Visibility.VISIBLE.ordinal)
-                displayAllTasksOnRecyclerView()
-            } else {
-                nothingInHereGroup.changeVisibility(Visibility.VISIBLE.ordinal)
-                dataAvailableGroup.changeVisibility(Visibility.GONE.ordinal)
-            }
+    private fun FragmentAllTasksBinding.readAllTasks() {
+        if (allToDosTasksArrayList.isNotEmpty()) {
+            nothingInHereGroup.changeVisibility(Visibility.GONE.ordinal)
+            dataAvailableGroup.changeVisibility(Visibility.VISIBLE.ordinal)
+            searchViewVisibilityListener?.isShowSearchViewORNot(true)
+            displayAllTasksOnRecyclerView()
+        } else {
+            nothingInHereGroup.changeVisibility(Visibility.VISIBLE.ordinal)
+            dataAvailableGroup.changeVisibility(Visibility.GONE.ordinal)
+            searchViewVisibilityListener?.isShowSearchViewORNot(false)
         }
     }
 
     private fun sortAnArrayList() {
-        val toDosSortingArray = prefs.allTasksSortingValues
+        val toDosSortingArray = when (selectedTab) {
+            Tabs.TASKS_TAB.ordinal -> prefs.allTasksSortingValues
+            else -> prefs.completedTasksSortingValues
+        }
         tasksAboveSortedValue = toDosSortingArray[0]
         tasksBelowSortedValue = toDosSortingArray[1]
         if (tasksAboveSortedValue == 1) {
@@ -333,15 +282,14 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         }
 
         if (!::adapter.isInitialized) {
-            adapter = TasksRecyclerViewAdapter(
-                fragmentContext, viewLifecycleOwner, selectedColors,
+            adapter = TasksRecyclerViewAdapter(viewLifecycleOwner,
                 if (selectedTab == 0) Tabs.TASKS_TAB.ordinal else Tabs.COMPLETED_TAB.ordinal, { toDoTask ->
                     if (selectedTab == 0) {
                         openTaskDetailActivity(toDoTask)
                     } else {
                         showDeleteTaskDialog(toDoTask)
                     }
-                }, { toDoTask, view, color ->
+                }, { toDoTask, view ->
                     var popupMenu: PopupMenu? = null
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                         popupMenu = PopupMenu(
@@ -370,25 +318,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                     val menu = popupMenu?.menu as Menu
                     for (i in 0 until menu.size()) {
                         applyFontToPopupMenuItem(menu.getItem(i))
-
-//                        Here, We Change The Color Of PopUpMenu Items Icons...
-                        val menuItem = menu.getItem(i)
-                        val popUpMenuIconDrawable = menuItem.icon
-                        if (popUpMenuIconDrawable != null) {
-                            if (prefs.isDarkModeEnable) {
-                                DrawableCompat.setTint(popUpMenuIconDrawable, getContextCompatColor(fragmentContext, lightBlueColor))
-                                val itemTitle = menuItem.title.toString().trim()
-                                val spannableString = SpannableString(itemTitle)
-                                spannableString.setSpan(
-                                    ForegroundColorSpan(getContextCompatColor(fragmentContext, whiteColor)), 0, itemTitle.length,
-                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                                )
-                                menuItem.setTitle(spannableString)
-                            } else {
-                                DrawableCompat.setTint(popUpMenuIconDrawable, color)
-                            }
-                        }
-                        menuItem.setIcon(popUpMenuIconDrawable)
                     }
                     popupMenu.show()
                 }
@@ -430,14 +359,8 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.addNewTasksFAB -> {
-                showAddNewAndUpdateTaskDialog(1)
-            }
-
-            R.id.sortingCV -> {
-                showSortingDialog()
-            }
-
+            R.id.addNewTasksFAB -> showAddNewAndUpdateTaskDialog(1)
+            R.id.sortingCV -> showSortingDialog()
             R.id.stylesCV -> {
                 with(binding) {
                     isForSorting = false
@@ -497,8 +420,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         with(addAndUpdateTasksDialogLayoutBinding) {
             infoTV.isSelected = true
             stopFABAnimation()
-            applyCustomFontOnAddAndUpdateTasksDialogViews(this)
-            applyLightAndDarkModeOnAddAndUpdateTasksDialogViews(this)
 
             if (fromWhereInvoked == 2) {
                 addAndEditIV.setImageResource(R.drawable.update_image)
@@ -519,10 +440,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                 } else if (toDoTask.category == TasksCategories.WORK_CATEGORY.ordinal) {
                     selectCategoryTV.text = getString(R.string.work_text)
                 }
-                when(prefs.isDarkModeEnable) {
-                    true -> selectCategoryTV.setTextColor(whiteColor)
-                    false -> selectCategoryTV.setTextColor(blackColor)
-                }
+                selectCategoryTV.setTextColor(getContextCompatColor(fragmentContext, blackColor))
                 saveAndUpdateButton.text = getString(R.string.update_text)
             }
 
@@ -667,9 +585,9 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     private fun showCustomPopupForCategorySelection(view: View, fromWhereInvoked: Int) {
         val customPopupMenuLayoutBinding = CustomPopupMenuLayoutBinding.inflate(layoutInflater)
 
-        if (prefs.isDarkModeEnable) {
+        /*if (prefs.isDarkModeEnable) {
             customPopupMenuLayoutBinding.root.setCardBackgroundColor(getContextCompatColor(fragmentContext, screensNightModeColor))
-        }
+        }*/
 
         popupWindow = PopupWindow(
             customPopupMenuLayoutBinding.root,
@@ -702,16 +620,10 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                     selectCategoryTV.setTextColor(Color.parseColor("#9E9E9E"))
                 } else if ((category == TasksCategories.PERSONAL_CATEGORY.ordinal)) {
                     selectCategoryTV.text = fragmentContext.getString(R.string.personal_text)
-                    when(prefs.isDarkModeEnable) {
-                        true -> selectCategoryTV.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-                        false -> selectCategoryTV.setTextColor(getContextCompatColor(fragmentContext, blackColor))
-                    }
+                    selectCategoryTV.setTextColor(getContextCompatColor(fragmentContext, blackColor))
                 } else if ((category == TasksCategories.WORK_CATEGORY.ordinal)) {
                     selectCategoryTV.text = fragmentContext.getString(R.string.work_text)
-                    when(prefs.isDarkModeEnable) {
-                        true -> selectCategoryTV.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-                        false -> selectCategoryTV.setTextColor(getContextCompatColor(fragmentContext, blackColor))
-                    }
+                    selectCategoryTV.setTextColor(getContextCompatColor(fragmentContext, blackColor))
                 }
             }
 
@@ -746,8 +658,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
         with(sortingDialogLayoutBinding) {
             stopFABAnimation()
-            applyCustomFontOnSortingDialogViews(this)
-            applyLightAndDarkModeOnSortingDialogViews(this)
 
             when(selectedTab) {
                 Tabs.TASKS_TAB.ordinal -> {
@@ -1095,185 +1005,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         displayAllTasksOnRecyclerView()
     }
 
-    private fun applyLightAndDarkModeOnSortingDialogViews(
-        sortingDialogLayoutBinding: SortingDialogLayoutBinding
-    ) {
-        with(sortingDialogLayoutBinding) {
-            if (prefs.isDarkModeEnable) {
-                rootLayout.background.colorFilter = PorterDuffColorFilter(getContextCompatColor(fragmentContext, screensNightModeColor), PorterDuff.Mode.SRC_IN)
-                sortByTV.setTextColor(getContextCompatColor(fragmentContext, lightBlueColor))
-                titleRB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
-                titleRB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-                dayOfWeekRB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
-                dayOfWeekRB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-                dateRB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
-                dateRB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-                monthRB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
-                monthRB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-                yearRB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
-                yearRB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-                timeRB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
-                timeRB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-                ascendingAToZRB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
-                ascendingAToZRB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-                descendingZToARB.buttonTintList = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
-                descendingZToARB.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-                cancelButton.strokeColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
-                cancelButton.setTextColor(getContextCompatColor(fragmentContext, lightBlueColor))
-                sortButton.setBackgroundColor(getContextCompatColor(fragmentContext, lightBlueColor))
-                sortButton.setTextColor(getContextCompatColor(fragmentContext, blackColor))
-            } else {
-                sortByTV.setTextColor(selectedColors.originalColor)
-                titleRB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
-                dayOfWeekRB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
-                dateRB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
-                monthRB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
-                yearRB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
-                timeRB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
-                ascendingAToZRB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
-                descendingZToARB.buttonTintList = ColorStateList.valueOf(selectedColors.originalColor)
-                cancelButton.strokeColor = ColorStateList.valueOf(selectedColors.originalColor)
-                cancelButton.setTextColor(selectedColors.originalColor)
-                sortButton.setBackgroundColor(selectedColors.originalColor)
-                sortButton.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-            }
-        }
-    }
-
-    private fun applyCustomFontOnSortingDialogViews(sortingDialogLayoutBinding: SortingDialogLayoutBinding) {
-        with(sortingDialogLayoutBinding) {
-            sortByTV.typeface = typeface
-            titleRB.typeface = typeface
-            dayOfWeekRB.typeface = typeface
-            dateRB.typeface = typeface
-            monthRB.typeface = typeface
-            yearRB.typeface = typeface
-            timeRB.typeface = typeface
-            ascendingAToZRB.typeface = typeface
-            descendingZToARB.typeface = typeface
-            cancelButton.typeface = typeface
-            sortButton.typeface = typeface
-        }
-    }
-
-    private fun applyLightAndDarkModeOnAddAndUpdateTasksDialogViews(
-        addAndUpdateTasksDialogLayoutBinding: AddAndUpdateTasksDialogLayoutBinding
-    ) {
-        with(addAndUpdateTasksDialogLayoutBinding) {
-            if (prefs.isDarkModeEnable) {
-                rootLayout.background.colorFilter = PorterDuffColorFilter(getContextCompatColor(fragmentContext, screensNightModeColor), PorterDuff.Mode.SRC_IN)
-                crossIV.setColorFilter(getContextCompatColor(fragmentContext, lightBlueColor))
-                addAndEditIV.setColorFilter(getContextCompatColor(fragmentContext, lightBlueColor))
-                addAndUpdateToDoTaskTV.setTextColor(getContextCompatColor(fragmentContext, lightBlueColor))
-                infoTV.setTextColor(getContextCompatColor(fragmentContext, darkModeTextColor))
-
-//            Here, We Change The Box Stroke Color Of TextInputLayout When That is Un-Focused...
-                titleTIL.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
-                descriptionTIL.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
-                dayOfWeekTIL.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
-                dateTIL.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
-                timeTIL.setBoxStrokeColorStateList(textInputLayoutBoxStrokeDarkModeColor)
-
-                titleTIL.boxStrokeColor = getContextCompatColor(fragmentContext, whiteColor)
-                titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                titleTIL.setStartIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
-                titleTIL.setErrorIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
-                titleTIL.setErrorTextColor(ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor)))
-                titleTIL.hintTextColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                titleTIET.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-
-                descriptionTIL.boxStrokeColor = getContextCompatColor(fragmentContext, whiteColor)
-                descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                descriptionTIL.setStartIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
-                descriptionTIL.setErrorIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
-                descriptionTIL.setErrorTextColor(ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor)))
-                descriptionTIL.hintTextColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                descriptionTIET.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-                
-                dayOfWeekTIL.boxStrokeColor = getContextCompatColor(fragmentContext, whiteColor)
-                dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                dayOfWeekTIL.setStartIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
-                dayOfWeekTIL.setErrorIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
-                dayOfWeekTIL.setErrorTextColor(ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor)))
-                dayOfWeekTIL.hintTextColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                dayOfWeekTIET.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-
-                dateTIL.boxStrokeColor = getContextCompatColor(fragmentContext, whiteColor)
-                dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                dateTIL.setStartIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
-                dateTIL.setErrorIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
-                dateTIL.setErrorTextColor(ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor)))
-                dateTIL.hintTextColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                dateTIET.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-
-                timeTIL.boxStrokeColor = getContextCompatColor(fragmentContext, whiteColor)
-                timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                timeTIL.setStartIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
-                timeTIL.setErrorIconTintList(ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor)))
-                timeTIL.setErrorTextColor(ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor)))
-                timeTIL.hintTextColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                timeTIET.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    titleTIL.cursorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                    descriptionTIL.cursorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                    dayOfWeekTIL.cursorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                    dateTIL.cursorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                    timeTIL.cursorColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, whiteColor))
-                }
-
-                selectCategoryLayout.background.colorFilter = PorterDuffColorFilter(getContextCompatColor(fragmentContext, darkModeTextColor), PorterDuff.Mode.SRC_IN)
-                dropDownImageView.setColorFilter(getContextCompatColor(fragmentContext, lightBlueColor))
-                saveAndUpdateButton.setBackgroundColor(getContextCompatColor(fragmentContext, lightBlueColor))
-                saveAndUpdateButton.setTextColor(getContextCompatColor(fragmentContext, blackColor))
-            } else {
-                crossIV.setColorFilter(selectedColors.originalColor)
-                addAndEditIV.setColorFilter(selectedColors.originalColor)
-                dropDownImageView.setColorFilter(selectedColors.originalColor)
-                saveAndUpdateButton.setBackgroundColor(selectedColors.originalColor)
-                addAndUpdateToDoTaskTV.setTextColor(selectedColors.originalColor)
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    titleTIL.cursorColor = ColorStateList.valueOf(selectedColors.originalColor)
-                    descriptionTIL.cursorColor = ColorStateList.valueOf(selectedColors.originalColor)
-                    dayOfWeekTIL.cursorColor = ColorStateList.valueOf(selectedColors.originalColor)
-                    dateTIL.cursorColor = ColorStateList.valueOf(selectedColors.originalColor)
-                    timeTIL.cursorColor = ColorStateList.valueOf(selectedColors.originalColor)
-                }
-
-                titleTIL.setStartIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
-                titleTIL.boxStrokeErrorColor = ColorStateList.valueOf(selectedColors.originalColor)
-                titleTIL.setErrorIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
-                titleTIL.setErrorTextColor(ColorStateList.valueOf(selectedColors.originalColor))
-
-                descriptionTIL.setStartIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
-                descriptionTIL.boxStrokeErrorColor = ColorStateList.valueOf(selectedColors.originalColor)
-                descriptionTIL.setErrorIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
-                descriptionTIL.setErrorTextColor(ColorStateList.valueOf(selectedColors.originalColor))
-
-                dayOfWeekTIL.setStartIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
-                dayOfWeekTIL.boxStrokeErrorColor = ColorStateList.valueOf(selectedColors.originalColor)
-                dayOfWeekTIL.setErrorIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
-                dayOfWeekTIL.setErrorTextColor(ColorStateList.valueOf(selectedColors.originalColor))
-
-                dateTIL.setStartIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
-                dateTIL.boxStrokeErrorColor = ColorStateList.valueOf(selectedColors.originalColor)
-                dateTIL.setErrorIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
-                dateTIL.setErrorTextColor(ColorStateList.valueOf(selectedColors.originalColor))
-
-                timeTIL.setStartIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
-                timeTIL.boxStrokeErrorColor = ColorStateList.valueOf(selectedColors.originalColor)
-                timeTIL.setErrorIconTintList(ColorStateList.valueOf(selectedColors.originalColor))
-                timeTIL.setErrorTextColor(ColorStateList.valueOf(selectedColors.originalColor))
-            }
-        }
-    }
-
     private fun showMaterialDatePicker(addAndUpdateTasksDialogLayoutBinding: AddAndUpdateTasksDialogLayoutBinding) {
         val datePicker = MaterialDatePicker.Builder.datePicker()
         datePicker.setTitleText(R.string.select_date_text)
@@ -1301,27 +1032,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             calendar.set(Calendar.MINUTE, materialTimePicker.minute)
             val time: String = simpleTimeFormat.format(calendar.time)
             addAndUpdateTasksDialogLayoutBinding.timeTIL.editText?.setText(time)
-        }
-    }
-
-    private fun applyCustomFontOnAddAndUpdateTasksDialogViews(
-        addAndUpdateTasksDialogLayoutBinding: AddAndUpdateTasksDialogLayoutBinding
-    ) {
-        with(addAndUpdateTasksDialogLayoutBinding) {
-            addAndUpdateToDoTaskTV.typeface = typeface
-            infoTV.typeface = typeface
-            titleTIL.typeface = typeface
-            titleTIET.typeface = typeface
-            descriptionTIL.typeface = typeface
-            descriptionTIET.typeface = typeface
-            dayOfWeekTIL.typeface = typeface
-            dayOfWeekTIET.typeface = typeface
-            dateTIL.typeface = typeface
-            dateTIET.typeface = typeface
-            timeTIL.typeface = typeface
-            timeTIET.typeface = typeface
-            selectCategoryTV.typeface = typeface
-            saveAndUpdateButton.typeface = typeface
         }
     }
 
@@ -1356,8 +1066,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         with(deleteTaskDialogLayoutBinding) {
             deleteIV.startAnimation(applyAnimation(fragmentContext))
             stopFABAnimation()
-            applyCustomFontOnDeleteTaskDialogViews(this)
-            appLightAndDarkModeOnDeleteTaskDialogViews(this)
 
             noButton.setOnClickListener { _: View? ->
                 if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
@@ -1389,42 +1097,12 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun appLightAndDarkModeOnDeleteTaskDialogViews(
-        deleteTaskDialogLayoutBinding: DeleteTaskDialogLayoutBinding
-    ) {
-        with(deleteTaskDialogLayoutBinding) {
-            if (prefs.isDarkModeEnable) {
-                rootLayout.background.colorFilter = PorterDuffColorFilter(getContextCompatColor(fragmentContext, screensNightModeColor), PorterDuff.Mode.SRC_IN)
-                deleteIV.setColorFilter(getContextCompatColor(fragmentContext, lightBlueColor))
-                deleteMessageTV.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-                noButton.strokeColor = ColorStateList.valueOf(getContextCompatColor(fragmentContext, lightBlueColor))
-                noButton.setTextColor(getContextCompatColor(fragmentContext, lightBlueColor))
-                yesButton.setBackgroundColor(getContextCompatColor(fragmentContext, lightBlueColor))
-                yesButton.setTextColor(getContextCompatColor(fragmentContext, blackColor))
-            } else {
-                deleteIV.setColorFilter(selectedColors.originalColor)
-                noButton.strokeColor = ColorStateList.valueOf(selectedColors.originalColor)
-                noButton.setTextColor(selectedColors.originalColor)
-                yesButton.setBackgroundColor(selectedColors.originalColor)
-                yesButton.setTextColor(getContextCompatColor(fragmentContext, whiteColor))
-            }
-        }
-    }
-
-    private fun applyCustomFontOnDeleteTaskDialogViews(deleteTaskDialogLayoutBinding: DeleteTaskDialogLayoutBinding) {
-        with(deleteTaskDialogLayoutBinding) {
-            deleteMessageTV.typeface = typeface
-            yesButton.typeface = typeface
-            noButton.typeface = typeface
-        }
-    }
-
     private fun applyFontToPopupMenuItem(menuItem: MenuItem) {
         val spannableString = SpannableString(menuItem.title)
-        spannableString.setSpan(
+        /*spannableString.setSpan(
             CustomTypeFaceSpan("", typeface, Color.BLACK), 0, spannableString.length,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
+        )*/
         menuItem.setTitle(spannableString)
     }
 

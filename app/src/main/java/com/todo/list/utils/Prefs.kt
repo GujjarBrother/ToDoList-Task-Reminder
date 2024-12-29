@@ -16,14 +16,6 @@ class Prefs(private val toDoListSharedPreferences: SharedPreferences) {
         get() = toDoListSharedPreferences.getBoolean("isUserSignIn", false)
         set(value) = toDoListSharedPreferences.edit().putBoolean("isUserSignIn", value).apply()
 
-    var colorSchemeValue: Int
-        get() = toDoListSharedPreferences.getInt("colorScheme", 0)
-        set(value) = toDoListSharedPreferences.edit().putInt("colorScheme", value).apply()
-
-    var lastTimeSelectedColorValue: Int
-        get() = toDoListSharedPreferences.getInt("lastTimeSelectedColorValue", 0)
-        set(value) = toDoListSharedPreferences.edit().putInt("lastTimeSelectedColorValue", value).apply()
-
     var allTasksStyleValue: Boolean
         get() = toDoListSharedPreferences.getBoolean("allTasksStyle", false)
         set(value) = toDoListSharedPreferences.edit().putBoolean("allTasksStyle", value).apply()

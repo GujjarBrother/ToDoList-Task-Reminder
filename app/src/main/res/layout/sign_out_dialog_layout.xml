@@ -12,74 +12,70 @@
         android:id="@+id/signOutIV"
         android:layout_width="@dimen/_80sdp"
         android:layout_height="@dimen/_80sdp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/sign_out_icon"
+        app:layout_constraintBottom_toTopOf="@id/signOutMessageTV"
+        app:srcCompat="@drawable/sign_out_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/signOutMessageTV"
         app:tint="@color/defaultColor" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/signOutMessageTV"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/are_you_sure_you_want_to_sign_out_text"
         android:textAllCaps="false"
-        android:textColor="@color/blackColor"
+        android:fontFamily="@font/cabin_medium"
         android:textSize="@dimen/_15ssp"
         android:textStyle="bold"
+        android:textColor="@color/blackAndWhiteViewsColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/noButton"
         app:layout_constraintTop_toBottomOf="@id/signOutIV" />
 
-    <LinearLayout
-        android:id="@+id/buttonsLayout"
-        android:layout_width="match_parent"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/noButton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="@dimen/_15sdp"
+        android:backgroundTint="@android:color/transparent"
+        android:fontFamily="@font/cabin_medium"
+        android:minHeight="@dimen/_50sdp"
+        android:stateListAnimator="@null"
+        android:text="@string/no_text"
+        android:textAllCaps="false"
+        android:textColor="@color/defaultColor"
+        android:textSize="@dimen/_11ssp"
+        android:textStyle="bold"
+        app:cornerRadius="@dimen/_5sdp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/yesButton"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signOutMessageTV"
+        app:strokeColor="@color/defaultColor"
+        app:strokeWidth="@dimen/_1sdp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/yesButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:backgroundTint="@color/defaultColor"
+        android:fontFamily="@font/cabin_medium"
+        android:minHeight="@dimen/_50sdp"
+        android:stateListAnimator="@null"
+        android:text="@string/yes_text"
+        android:textAllCaps="false"
+        android:textColor="@color/whiteColor"
+        android:textSize="@dimen/_11ssp"
+        android:textStyle="bold"
+        app:cornerRadius="@dimen/_5sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/signOutMessageTV">
+        app:layout_constraintStart_toEndOf="@id/noButton"
+        app:layout_constraintTop_toBottomOf="@id/signOutMessageTV" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/noButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@android:color/transparent"
-            android:minHeight="@dimen/_50sdp"
-            android:stateListAnimator="@null"
-            android:text="@string/no_text"
-            android:textAllCaps="false"
-            android:textColor="@color/defaultColor"
-            android:textSize="@dimen/_11ssp"
-            android:textStyle="bold"
-            app:cornerRadius="@dimen/_5sdp"
-            app:strokeColor="@color/defaultColor"
-            app:strokeWidth="@dimen/_1sdp" />
-
-        <View
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="match_parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/yesButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/defaultColor"
-            android:minHeight="@dimen/_50sdp"
-            android:stateListAnimator="@null"
-            android:text="@string/yes_text"
-            android:textAllCaps="false"
-            android:textColor="@color/whiteColor"
-            android:textSize="@dimen/_11ssp"
-            android:textStyle="bold"
-            app:cornerRadius="@dimen/_5sdp" />
-
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

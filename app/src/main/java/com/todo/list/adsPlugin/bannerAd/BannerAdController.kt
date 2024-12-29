@@ -2,6 +2,7 @@ package com.todo.list.adsPlugin.bannerAd
 
 import android.app.Activity
 import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
@@ -15,7 +16,7 @@ class BannerAdController {
         fun loadAndShowBannerAd(
             activity: Activity,
             containerLayout: LinearLayout,
-            loadingLayout: LinearLayout,
+            loadingLayout: ConstraintLayout,
             isLargeBanner: Boolean = false,
             isInternetConnected: Boolean,
             adID: String

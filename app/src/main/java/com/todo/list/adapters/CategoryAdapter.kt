@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.todo.list.R
 import com.todo.list.adapters.CategoryAdapter.CustomViewHolder
 import com.todo.list.application.Application.Companion.prefs
-import com.todo.list.application.Application.Companion.typeface
 import com.todo.list.databinding.CustomPopupMenuRecyclerviewSingleItemLayoutBinding
 import com.todo.list.enums.Gender
 import com.todo.list.enums.SecurityQuestions
@@ -106,8 +105,6 @@ class CategoryAdapter(
     inner class CustomViewHolder(val binding: CustomPopupMenuRecyclerviewSingleItemLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             with(binding) {
-                categoryNameTV.typeface = typeface
-
                 root.setOnClickListener { _: View? ->
                     if (adapterPosition != -1) {
                         if (forWhichInvoked.equals(other = "Category", ignoreCase = true)) {
@@ -131,6 +128,5 @@ class CategoryAdapter(
         override fun areContentsTheSame(oldItem: Int, newItem: Int): Boolean {
             return oldItem == newItem
         }
-
     }
 }

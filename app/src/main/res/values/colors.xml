@@ -11,7 +11,7 @@
 
     <!--    Here, We Define Our Custom Color Scheme Color's...-->
     <color name="defaultColor">#611671</color>
-    <color name="darkYellowColor">#BA8B02</color>
+    <!--<color name="darkYellowColor">#BA8B02</color>
     <color name="orangeColor">#EC5628</color>
     <color name="lightGreenColor">#8BC34A</color>
     <color name="blueColor">#3453FF</color>
@@ -19,11 +19,11 @@
     <color name="pinkColor">#FF2684</color>
     <color name="darkBlueColor">#4E1DF7</color>
     <color name="redColor">#D22020</color>
-    <color name="lightPurpleColor">#983EB1</color>
+    <color name="lightPurpleColor">#983EB1</color>-->
 
     <!--    Here, We Define Transparent Color's...-->
     <color name="defaultTransparentColor">#80611671</color>
-    <color name="darkYellowTransparentColor">#80BA8B02</color>
+    <!--<color name="darkYellowTransparentColor">#80BA8B02</color>
     <color name="orangeTransparentColor">#80EC5628</color>
     <color name="lightGreenTransparentColor">#808BC34A</color>
     <color name="blueTransparentColor">#803453FF</color>
@@ -31,28 +31,23 @@
     <color name="pinkTransparentColor">#80FF2684</color>
     <color name="darkBlueTransparentColor">#804E1DF7</color>
     <color name="redTransparentColor">#80D22020</color>
-    <color name="lightPurpleTransparentColor">#80983EB1</color>
+    <color name="lightPurpleTransparentColor">#80983EB1</color>-->
 
     <!--    Here, We Define View's Color's...-->
     <color name="blackColor">#000000</color>
     <color name="whiteColor">#FFFFFF</color>
-    <color name="snowWhiteColor">#FFFAFA</color>
-    <color name="switchTrackOffColor">#BDBDBD</color>
-    <color name="screensNightModeColor">#28293D</color>
-    <color name="cardsNightModeColor">#161525</color>
-    <color name="ratingBarStarsCheckedStateDarkModeColor">#FFBD39</color>
-    <color name="feedbackEditTextCardViewLightModeColor">#EEEEEE</color>
+    <color name="screensBackgroundColor">#FFFAFA</color>
+    <color name="cardsBackgroundColor">#FFFFFF</color>
+    <color name="ratingBarStarsCheckedStateColor">#611671</color>
+    <color name="feedbackEditTextCardViewColor">#EEEEEE</color>
     <color name="tabLayoutUnSelectedTabTextColor">#80FFFFFF</color>
     <color name="fragmentsCardViewsColor">#F5F5F5</color>
-    <color name="lightBlackColor">#40000000</color>
-    <color name="recyclerViewsDividerColor">#20000000</color>
-
-
-
-    <color name="subTitlesTextColor">#80343434</color>
+    <color name="lightColor">#40000000</color>
+    <color name="toDosTasksRVDividerColor">#20000000</color>
     <color name="navigationDrawerScrimColor">#757575</color>
-    <color name="lightBlueColor">#72C0EE</color>
-    <color name="lightBlueTransparentColor">#8072C0EE</color>
-    <color name="searchLayoutLightModeColor">#4DFFFFFF</color>
+    <color name="searchLayoutColor">#4DFFFFFF</color>
+    <color name="blackAndWhiteViewsColor">#000000</color>
+    <color name="switchThumbColor">#BDBDBD</color>
+    <color name="switchTrackColor">#EEEEEE</color>
 
 </resources>

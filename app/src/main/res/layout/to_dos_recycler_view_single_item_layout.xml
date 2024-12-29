@@ -29,7 +29,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"
-                android:textColor="@color/lightBlackColor"
+                android:fontFamily="@font/cabin_medium"
+                android:textColor="@color/lightColor"
                 android:textSize="@dimen/_15ssp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -37,6 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"
+                android:fontFamily="@font/cabin_medium"
                 android:textColor="@color/defaultColor"
                 android:textSize="@dimen/_15ssp" />
 
@@ -45,7 +47,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"
-                android:textColor="@color/lightBlackColor"
+                android:fontFamily="@font/cabin_medium"
+                android:textColor="@color/lightColor"
                 android:textSize="@dimen/_15ssp" />
 
         </LinearLayout>
@@ -56,7 +59,7 @@
             android:layout_height="0dp"
             android:layout_marginVertical="@dimen/_5sdp"
             android:layout_marginStart="@dimen/_10sdp"
-            android:background="@color/recyclerViewsDividerColor"
+            android:background="@color/toDosTasksRVDividerColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/dayDateAndMonthLayout"
             app:layout_constraintTop_toTopOf="parent" />
@@ -79,6 +82,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textAllCaps="false"
+                android:fontFamily="@font/cabin_medium"
                 android:textColor="@color/blackColor"
                 android:textSize="@dimen/_15ssp" />
 
@@ -89,7 +93,8 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textAllCaps="false"
-                android:textColor="@color/lightBlackColor"
+                android:fontFamily="@font/cabin_medium"
+                android:textColor="@color/lightColor"
                 android:textSize="@dimen/_15ssp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -97,7 +102,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAllCaps="false"
-                android:textColor="@color/lightBlackColor"
+                android:fontFamily="@font/cabin_medium"
+                android:textColor="@color/lightColor"
                 android:textSize="@dimen/_10ssp" />
 
         </LinearLayout>

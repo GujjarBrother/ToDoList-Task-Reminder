@@ -5,7 +5,7 @@
     android:id="@+id/thankYouActivityRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/snowWhiteColor"
+    android:background="@color/screensBackgroundColor"
     tools:context=".activities.ThankYouActivity">
 
     <com.airbnb.lottie.LottieAnimationView
@@ -22,7 +22,7 @@
         app:lottie_speed="1.5"
         app:lottie_rawRes="@raw/thank_you_animation" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/forUsingAnAppTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,12 +33,13 @@
         android:textColor="@color/blackColor"
         android:textSize="@dimen/_14ssp"
         android:textStyle="bold"
+        android:fontFamily="@font/cabin_medium"
         app:layout_constraintBottom_toTopOf="@id/descriptionTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lottieAnimationView" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/descriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,6 +49,7 @@
         android:textAllCaps="false"
         android:textColor="@color/blackColor"
         android:textSize="@dimen/_14ssp"
+        android:fontFamily="@font/cabin_medium"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

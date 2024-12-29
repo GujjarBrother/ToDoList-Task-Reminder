@@ -8,8 +8,9 @@ import android.os.Looper
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.todo.list.R
+import com.todo.list.utils.ColorsUtils.getContextCompatColor
+import com.todo.list.utils.CommonFunctions.changeStatusBarColor
 
 open class BaseActivity : AppCompatActivity() {
 
@@ -24,10 +25,11 @@ open class BaseActivity : AppCompatActivity() {
 
         activityContext = this
 
+        changeStatusBarColor(activityContext, getContextCompatColor(activityContext, R.color.defaultColor))
         handler = Handler(Looper.getMainLooper())
         inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
-        textInputLayoutBoxStrokeDarkModeColor = ColorStateList(
+        /*textInputLayoutBoxStrokeDarkModeColor = ColorStateList(
                 arrayOf(intArrayOf(android.R.attr.state_focused), intArrayOf(-android.R.attr.state_focused)),
                 intArrayOf(
                     // Color when focused
@@ -35,7 +37,7 @@ open class BaseActivity : AppCompatActivity() {
                     // Color when not focused
                  ,ContextCompat.getColor(activityContext, R.color.purple_500)
                 )
-        )
+        )*/
     }
 
     protected fun showSoftKeyboard() = inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
