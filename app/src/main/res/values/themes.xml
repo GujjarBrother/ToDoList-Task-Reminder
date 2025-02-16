@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Application application theme. -->
-    <style name="Theme.ToDoList" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.ToDoList" parent="Theme.Material3.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -14,15 +14,9 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <!--Here, We Apply Customization On 'Popup Menu'...!-->
-    <style name="popUpMenuDayModeCustomization" parent="Widget.AppCompat.PopupMenu">
+    <style name="popUpMenuStyle" parent="Widget.AppCompat.PopupMenu">
         <item name="android:textSize">@dimen/_15ssp</item>
-        <item name="android:popupBackground">@drawable/pop_up_menu_day_background</item>
-    </style>
-
-    <style name="popUpMenuDarkModeCustomization" parent="Widget.AppCompat.PopupMenu">
-        <item name="android:textSize">@dimen/_15ssp</item>
-        <item name="android:popupBackground">@drawable/pop_up_menu_dark_background</item>
+        <item name="android:popupBackground">@drawable/pop_up_menus_background</item>
     </style>
 
     <style name="roundedImageView">

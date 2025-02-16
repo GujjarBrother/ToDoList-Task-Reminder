@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.devtools.ksp'
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -31,7 +33,6 @@ android {
             resValue "string", "appId", "ca-app-pub-3940256099942544~3347511713"
             resValue "string", "dashboardScreenBannerAdId", "ca-app-pub-3342111410257125/9943801959"
             resValue "string", "settingsScreenBannerAdId", ""
-            resValue "string", "feedbackScreenBannerAdId", ""
             resValue "string", "detailScreenBannerAdId", ""
 
             minifyEnabled true
@@ -43,7 +44,6 @@ android {
             resValue "string", "appId", "ca-app-pub-3342111410257125~8073205135"
             resValue "string", "dashboardScreenBannerAdId", "ca-app-pub-3940256099942544/9214589741"
             resValue "string", "settingsScreenBannerAdId", "ca-app-pub-3940256099942544/9214589741"
-            resValue "string", "feedbackScreenBannerAdId", "ca-app-pub-3940256099942544/9214589741"
             resValue "string", "detailScreenBannerAdId", "ca-app-pub-3940256099942544/9214589741"
 
             minifyEnabled false
@@ -53,8 +53,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = '21'
     }
     buildFeatures {
         viewBinding true
@@ -64,8 +67,8 @@ android {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.activity:activity-ktx:1.9.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'androidx.activity:activity-ktx:1.9.3'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
@@ -80,11 +83,11 @@ dependencies {
     api 'com.github.GrenderG:Toasty:1.5.2'
 
 //    'Lottie Animation' dependency...
-    api 'com.airbnb.android:lottie:6.4.0'
+    api 'com.airbnb.android:lottie:6.6.2'
 
 //    'ViewModel & LiveData' dependency...
-    api 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4'
-    api 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.4'
+    api 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
+    api 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.7'
 
 //    'CircularImageView' dependency...
     api 'com.github.AtifSayings:CircularImageView:1.0.2'
@@ -92,11 +95,11 @@ dependencies {
 //    'MultiDex' dependency...
     api "androidx.multidex:multidex:2.0.1"
 
-//    'ShapeableImageView' dependency...
+//    'ShapeAbleImageView' dependency...
     api 'com.google.android.material:material:1.12.0'
 
 //    'Ads' dependency...
-    api "com.google.android.gms:play-services-ads:23.3.0"
+    api "com.google.android.gms:play-services-ads:23.6.0"
 
 //    'Coroutines' dependencies...
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC"
@@ -111,4 +114,8 @@ dependencies {
 
 //    'In-App update' dependency...
     api 'com.google.android.play:app-update-ktx:2.1.0'
+
+//    "Hilt" dependency...
+    api "com.google.dagger:hilt-android:2.51.1"
+    ksp "com.google.dagger:hilt-android-compiler:2.51.1"
 }

@@ -4,7 +4,7 @@
     <item>
         <shape android:shape="rectangle">
 
-            <solid android:color="@color/searchLayoutLightModeColor" />
+            <solid android:color="@color/searchLayoutColor" />
 
             <corners android:radius="@dimen/_50sdp" />
 

@@ -6,24 +6,30 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
-import com.todo.list.base.BaseActivity
+import androidx.appcompat.app.AppCompatActivity
+import com.todo.list.R
 import com.todo.list.databinding.ActivityPrivacyPolicyBinding
 import com.todo.list.enums.Visibility
+import com.todo.list.utils.ColorsUtils.getContextCompatColor
+import com.todo.list.utils.CommonFunctions.changeStatusBarColor
 import com.todo.list.utils.CommonFunctions.changeVisibility
 import com.todo.list.utils.CommonFunctions.keepActivityOn
 import com.todo.list.utils.CommonFunctions.makeFullScreenActivity
 
-class PrivacyPolicyActivity : BaseActivity() {
+class PrivacyPolicyActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityPrivacyPolicyBinding
+    private val binding by lazy {
+        ActivityPrivacyPolicyBinding.inflate(layoutInflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.decorView
         super.onCreate(savedInstanceState)
-        binding = ActivityPrivacyPolicyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        keepActivityOn(activityContext)
-        makeFullScreenActivity(activityContext)
+        changeStatusBarColor(this, getContextCompatColor(this, R.color.defaultColor))
+        keepActivityOn(this)
+        makeFullScreenActivity(this)
 
         with(binding) {
             webView.loadUrl("https://sites.google.com/view/saginc-todolisttaskreminderapp/home")

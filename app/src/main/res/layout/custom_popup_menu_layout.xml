@@ -5,9 +5,10 @@
     android:id="@+id/cardView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="@color/snowWhiteColor"
+    app:cardBackgroundColor="@color/screensBackgroundColor"
     app:cardCornerRadius="@dimen/_10sdp"
-    app:cardElevation="@dimen/_1sdp"
+    app:cardElevation="@dimen/_2sdp"
+    app:strokeColor="@android:color/transparent"
     app:cardUseCompatPadding="true">
 
     <androidx.recyclerview.widget.RecyclerView

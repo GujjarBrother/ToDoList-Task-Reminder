@@ -5,51 +5,69 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/snowWhiteColor"
+    android:background="@color/screensBackgroundColor"
     tools:context="com.todo.list.activities.SettingsActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/defaultColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/backArrowIV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="@dimen/_10sdp"
+                    app:srcCompat="@drawable/back_arrow_icon"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/toolbarTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/setting_s_text"
+                    android:textAllCaps="false"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="@dimen/_15ssp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/cabin_medium"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    app:layout_constraintStart_toEndOf="@id/backArrowIV"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:background="#BDBDBD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/backArrowIV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="@dimen/_10sdp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/back_arrow_icon" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/toolbarTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/setting_s_text"
-            android:textAllCaps="false"
-            android:textColor="@color/whiteColor"
-            android:textSize="@dimen/_15ssp"
-            android:textStyle="bold" />
-
-    </androidx.appcompat.widget.Toolbar>
-
-    <include
-        android:id="@+id/include"
-        layout="@layout/divider_among_toolbars_and_screens_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 
     <ScrollView
         android:id="@+id/scroll_view"
@@ -60,24 +78,24 @@
         app:layout_constraintBottom_toTopOf="@+id/adLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        app:layout_constraintTop_toBottomOf="@id/view">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/_5sdp">
 
-            <!--          Appearance CardView...!-->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/appearanceCV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_5sdp"
-                app:cardBackgroundColor="@color/whiteColor"
+                app:cardBackgroundColor="@color/cardsBackgroundColor"
                 app:cardCornerRadius="@dimen/_10sdp"
-                app:cardElevation="@dimen/_1sdp"
-                app:layout_constraintBottom_toTopOf="@id/colorSchemeCV"
+                app:cardElevation="@dimen/_2sdp"
+                app:strokeColor="@android:color/transparent"
+                app:layout_constraintBottom_toTopOf="@id/moreAppsCV"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -99,6 +117,7 @@
                         android:textColor="@color/defaultColor"
                         android:textSize="@dimen/_13ssp"
                         android:textStyle="bold"
+                        android:fontFamily="@font/cabin_medium"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -111,7 +130,7 @@
                         android:layout_marginVertical="@dimen/_10sdp"
                         android:layout_marginStart="@dimen/_7sdp"
                         android:layout_marginEnd="@dimen/_7sdp"
-                        app:layout_constraintBottom_toTopOf="@id/lightAndDarkModeLayout"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/appearanceTV">
@@ -120,8 +139,8 @@
                             android:id="@+id/appearanceIV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/text_size_image"
-                            app:layout_constraintBottom_toTopOf="@id/textSizeSeekBar"
+                            app:srcCompat="@drawable/text_size_image"
+                            app:layout_constraintBottom_toTopOf="@id/textSizeSlider"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintEnd_toStartOf="@id/textSizeTV"
@@ -134,8 +153,9 @@
                             android:layout_marginHorizontal="@dimen/_5sdp"
                             android:text="@string/text_size_text"
                             android:textAllCaps="false"
-                            android:textColor="@color/blackColor"
+                            android:textColor="@color/blackAndWhiteViewsColor"
                             android:textSize="@dimen/_10ssp"
+                            android:fontFamily="@font/cabin_medium"
                             app:layout_constraintBottom_toBottomOf="@id/appearanceIV"
                             app:layout_constraintStart_toEndOf="@id/appearanceIV"
                             app:layout_constraintTop_toTopOf="@id/appearanceIV"
@@ -146,22 +166,24 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAllCaps="false"
-                            android:text="13"
                             android:textColor="@color/defaultColor"
                             android:textSize="@dimen/_10ssp"
+                            android:fontFamily="@font/cabin_medium"
                             app:layout_constraintStart_toEndOf="@id/textSizeTV"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"/>
 
-                        <androidx.appcompat.widget.AppCompatSeekBar
-                            android:id="@+id/textSizeSeekBar"
+                        <!--android:progressBackgroundTint="#BDBDBD"
+                        android:progressTint="@color/defaultColor"
+                        android:thumbTint="@color/defaultColor"-->
+
+                        <com.google.android.material.slider.Slider
+                            android:id="@+id/textSizeSlider"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_10sdp"
-                            android:progress="14"
-                            android:progressBackgroundTint="#BDBDBD"
-                            android:progressTint="@color/defaultColor"
-                            android:thumbTint="@color/defaultColor"
+                            android:valueFrom="14.0"
+                            android:valueTo="100.0"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/appearanceIV" />
@@ -170,181 +192,40 @@
                             android:id="@+id/smallAIV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/small_a_image"
+                            app:srcCompat="@drawable/small_a_image"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/textSizeSeekBar"
+                            app:layout_constraintTop_toBottomOf="@id/textSizeSlider"
                             app:tint="@color/defaultColor" />
 
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/capitalAIV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/capital_a_image"
+                            app:srcCompat="@drawable/capital_a_image"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/textSizeSeekBar"
+                            app:layout_constraintTop_toBottomOf="@id/textSizeSlider"
                             app:tint="@color/defaultColor" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/lightAndDarkModeLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/_5sdp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/appearanceChildLayout">
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/lightAndDarkModeIV"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/moon_image"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/lightAndDarkModeTV"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="@color/defaultColor" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/lightAndDarkModeTV"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/_10sdp"
-                            android:text="@string/dark_mode_text"
-                            android:textAllCaps="false"
-                            android:textColor="@color/blackColor"
-                            android:textSize="@dimen/_12ssp"
-                            app:layout_constraintEnd_toStartOf="@id/lightAndDarkModeSwitch"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/lightAndDarkModeIV"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <androidx.appcompat.widget.SwitchCompat
-                            android:id="@+id/lightAndDarkModeSwitch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:thumb="@drawable/switch_thumb"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:track="@drawable/switch_track" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!--          Color Scheme CardView...!-->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/colorSchemeCV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_5sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                app:cardBackgroundColor="@color/whiteColor"
-                app:cardCornerRadius="@dimen/_10sdp"
-                app:cardElevation="@dimen/_1sdp"
-                app:layout_constraintBottom_toTopOf="@id/moreAppsCV"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/appearanceCV">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/colorSchemeRootLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:paddingStart="@dimen/_5sdp"
-                    android:paddingEnd="@dimen/_5sdp"
-                    android:paddingBottom="@dimen/_5sdp">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/colorSchemeTV"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_7sdp"
-                        android:text="@string/color_scheme_text"
-                        android:textAllCaps="false"
-                        android:textColor="@color/defaultColor"
-                        android:textSize="@dimen/_13ssp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toTopOf="@id/colorSchemeChildLayout"/>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/colorSchemeChildLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_7sdp"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:layout_marginEnd="@dimen/_7sdp"
-                        android:layout_marginBottom="@dimen/_7sdp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/colorSchemeTV">
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/colorSchemeIV"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/color_scheme_image"
-                            app:layout_constraintBottom_toTopOf="@id/colorSchemeRV"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/enjoyMultipleColorsTV"
-                            app:tint="@color/defaultColor" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/enjoyMultipleColorsTV"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_5sdp"
-                            android:text="@string/enjoy_multiple_colors_text"
-                            android:textAllCaps="false"
-                            android:textColor="@color/blackColor"
-                            android:textSize="@dimen/_10ssp"
-                            app:layout_constraintStart_toEndOf="@id/colorSchemeIV"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintBottom_toTopOf="@id/colorSchemeRV"/>
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/colorSchemeRV"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:overScrollMode="never"
-                            android:scrollbarThumbVertical="@android:color/transparent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintStart_toStartOf="@id/enjoyMultipleColorsTV"
-                            app:layout_constraintTop_toBottomOf="@id/colorSchemeIV"
-                            tools:listitem="@layout/color_scheme_recycler_view_single_item_layout" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!--          More App's Card View...-->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/moreAppsCV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_5sdp"
-                app:cardBackgroundColor="@color/whiteColor"
+                app:cardBackgroundColor="@color/cardsBackgroundColor"
                 app:cardCornerRadius="@dimen/_10sdp"
-                app:cardElevation="@dimen/_1sdp"
+                app:cardElevation="@dimen/_2sdp"
+                app:strokeColor="@android:color/transparent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/aboutCV"
-                app:layout_constraintTop_toBottomOf="@id/colorSchemeCV">
+                app:layout_constraintTop_toBottomOf="@id/appearanceCV">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/moreAppsRootLayout"
@@ -363,6 +244,7 @@
                         android:textColor="@color/defaultColor"
                         android:textSize="@dimen/_13ssp"
                         android:textStyle="bold"
+                        android:fontFamily="@font/cabin_medium"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -390,16 +272,15 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toTopOf="@id/dailyExpenseManagerAppLayout">
 
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/photoEditorShapeableIV"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/photoEditorIV"
                                 android:layout_width="@dimen/_30sdp"
                                 android:layout_height="@dimen/_30sdp"
-                                android:src="@drawable/sa10_photo_editor_app_icon"
+                                app:srcCompat="@drawable/sa10_photo_editor_app_icon"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintEnd_toStartOf="@id/photoEditorTV"
-                                app:shapeAppearanceOverlay="@style/roundedImageView" />
+                                app:layout_constraintEnd_toStartOf="@id/photoEditorTV" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/photoEditorTV"
@@ -408,10 +289,11 @@
                                 android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/sa_10_photo_editor"
                                 android:textAllCaps="false"
-                                android:textColor="@color/blackColor"
+                                android:fontFamily="@font/cabin_medium"
+                                android:textColor="@color/blackAndWhiteViewsColor"
                                 android:textSize="@dimen/_12ssp"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/photoEditorShapeableIV"
+                                app:layout_constraintStart_toEndOf="@id/photoEditorIV"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintEnd_toStartOf="@id/photoEditorAppArrowIV"/>
 
@@ -419,7 +301,7 @@
                                 android:id="@+id/photoEditorAppArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/forward_arrow_image"
+                                app:srcCompat="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -438,16 +320,15 @@
                             app:layout_constraintBottom_toTopOf="@id/visitOurAppStoreLayout"
                             app:layout_constraintTop_toBottomOf="@id/photoEditorAppLayout">
 
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/dailyExpenseManagerAppShapeableIV"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/dailyExpenseManagerAppIV"
                                 android:layout_width="@dimen/_30sdp"
                                 android:layout_height="@dimen/_30sdp"
-                                android:src="@drawable/daily_expense_manager_app_icon"
+                                app:srcCompat="@drawable/daily_expense_manager_app_icon"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintEnd_toStartOf="@id/dailyExpenseManagerAppTV"
-                                app:shapeAppearanceOverlay="@style/roundedImageView" />
+                                app:layout_constraintEnd_toStartOf="@id/dailyExpenseManagerAppTV" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/dailyExpenseManagerAppTV"
@@ -456,10 +337,11 @@
                                 android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/daily_expense_manager"
                                 android:textAllCaps="false"
-                                android:textColor="@color/blackColor"
+                                android:textColor="@color/blackAndWhiteViewsColor"
                                 android:textSize="@dimen/_12ssp"
+                                android:fontFamily="@font/cabin_medium"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/dailyExpenseManagerAppShapeableIV"
+                                app:layout_constraintStart_toEndOf="@id/dailyExpenseManagerAppIV"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintEnd_toStartOf="@id/dailyExpenseManagerAppArrowIV"/>
 
@@ -467,7 +349,7 @@
                                 android:id="@+id/dailyExpenseManagerAppArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/forward_arrow_image"
+                                app:srcCompat="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -486,17 +368,16 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/dailyExpenseManagerAppLayout">
 
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/visitOurAppStoreShapeableIV"
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/visitOurAppStoreIV"
                                 android:layout_width="@dimen/_20sdp"
                                 android:layout_height="@dimen/_20sdp"
-                                android:src="@drawable/visit_our_app_store_image"
+                                app:srcCompat="@drawable/visit_our_app_store_image"
                                 android:tint="@color/defaultColor"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintEnd_toStartOf="@id/visitOurAppStoreTV"
-                                app:shapeAppearanceOverlay="@style/roundedImageView" />
+                                app:layout_constraintEnd_toStartOf="@id/visitOurAppStoreTV" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/visitOurAppStoreTV"
@@ -505,10 +386,11 @@
                                 android:layout_marginStart="@dimen/_10sdp"
                                 android:text="@string/visit_our_app_store_text"
                                 android:textAllCaps="false"
-                                android:textColor="@color/blackColor"
+                                android:textColor="@color/blackAndWhiteViewsColor"
                                 android:textSize="@dimen/_12ssp"
+                                android:fontFamily="@font/cabin_medium"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/visitOurAppStoreShapeableIV"
+                                app:layout_constraintStart_toEndOf="@id/visitOurAppStoreIV"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintEnd_toStartOf="@id/visitOurAppStoreArrowIV"/>
 
@@ -516,7 +398,7 @@
                                 android:id="@+id/visitOurAppStoreArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/forward_arrow_image"
+                                app:srcCompat="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -527,16 +409,16 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!--          About's Card View...-->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/aboutCV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_5sdp"
                 android:layout_marginVertical="@dimen/_5sdp"
-                app:cardBackgroundColor="@color/whiteColor"
+                app:cardBackgroundColor="@color/cardsBackgroundColor"
                 app:cardCornerRadius="@dimen/_10sdp"
-                app:cardElevation="@dimen/_1sdp"
+                app:cardElevation="@dimen/_2sdp"
+                app:strokeColor="@android:color/transparent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -559,6 +441,7 @@
                         android:textColor="@color/defaultColor"
                         android:textSize="@dimen/_13ssp"
                         android:textStyle="bold"
+                        android:fontFamily="@font/cabin_medium"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -590,7 +473,7 @@
                                 android:id="@+id/rateUsIV"
                                 android:layout_width="@dimen/_16sdp"
                                 android:layout_height="@dimen/_16sdp"
-                                android:src="@drawable/rate_us_image"
+                                app:srcCompat="@drawable/rate_us_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -604,8 +487,9 @@
                                 android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/rate_us_text"
                                 android:textAllCaps="false"
-                                android:textColor="@color/blackColor"
+                                android:textColor="@color/blackAndWhiteViewsColor"
                                 android:textSize="@dimen/_12ssp"
+                                android:fontFamily="@font/cabin_medium"
                                 app:layout_constraintBottom_toTopOf="@id/pleaseTellYourExperienceTV"
                                 app:layout_constraintStart_toEndOf="@id/rateUsIV"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -620,6 +504,7 @@
                                 android:textAllCaps="false"
                                 android:textColor="#8E8E8E"
                                 android:textSize="@dimen/_8ssp"
+                                android:fontFamily="@font/cabin_medium"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toStartOf="@id/rateUsArrowIV"
                                 app:layout_constraintStart_toEndOf="@id/rateUsIV"
@@ -629,7 +514,7 @@
                                 android:id="@+id/rateUsArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/forward_arrow_image"
+                                app:srcCompat="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -652,7 +537,7 @@
                                 android:id="@+id/feedbackIV"
                                 android:layout_width="@dimen/_16sdp"
                                 android:layout_height="@dimen/_16sdp"
-                                android:src="@drawable/feedback_image"
+                                app:srcCompat="@drawable/feedback_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -666,8 +551,9 @@
                                 android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/feedback_text"
                                 android:textAllCaps="false"
-                                android:textColor="@color/blackColor"
+                                android:textColor="@color/blackAndWhiteViewsColor"
                                 android:textSize="@dimen/_12ssp"
+                                android:fontFamily="@font/cabin_medium"
                                 app:layout_constraintBottom_toTopOf="@id/giveYourSuggestionsAndFeedbackTV"
                                 app:layout_constraintStart_toEndOf="@id/feedbackIV"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -682,6 +568,7 @@
                                 android:textAllCaps="false"
                                 android:textColor="#8E8E8E"
                                 android:textSize="@dimen/_8ssp"
+                                android:fontFamily="@font/cabin_medium"
                                 app:layout_constraintStart_toEndOf="@id/feedbackIV"
                                 app:layout_constraintTop_toBottomOf="@id/feedbackTV"
                                 app:layout_constraintBottom_toBottomOf="parent"
@@ -691,7 +578,7 @@
                                 android:id="@+id/feedbackArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/forward_arrow_image"
+                                app:srcCompat="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -714,7 +601,7 @@
                                 android:id="@+id/shareAppIV"
                                 android:layout_width="@dimen/_16sdp"
                                 android:layout_height="@dimen/_16sdp"
-                                android:src="@drawable/share_image"
+                                app:srcCompat="@drawable/share_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -728,8 +615,9 @@
                                 android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/share_app_text"
                                 android:textAllCaps="false"
-                                android:textColor="@color/blackColor"
+                                android:textColor="@color/blackAndWhiteViewsColor"
                                 android:textSize="@dimen/_12ssp"
+                                android:fontFamily="@font/cabin_medium"
                                 app:layout_constraintBottom_toTopOf="@id/shareOurAppToYourFriendsAndFamilyTV"
                                 app:layout_constraintStart_toEndOf="@id/shareAppIV"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -744,6 +632,7 @@
                                 android:textAllCaps="false"
                                 android:textColor="#8E8E8E"
                                 android:textSize="@dimen/_8ssp"
+                                android:fontFamily="@font/cabin_medium"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toEndOf="@id/shareAppIV"
                                 app:layout_constraintTop_toBottomOf="@id/shareAppTV"
@@ -753,7 +642,7 @@
                                 android:id="@+id/shareAppArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/forward_arrow_image"
+                                app:srcCompat="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -776,7 +665,7 @@
                                 android:id="@+id/privacyPolicyIV"
                                 android:layout_width="@dimen/_16sdp"
                                 android:layout_height="@dimen/_16sdp"
-                                android:src="@drawable/privacy_policy_image"
+                                app:srcCompat="@drawable/privacy_policy_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -790,8 +679,9 @@
                                 android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/privacy_policy_text"
                                 android:textAllCaps="false"
-                                android:textColor="@color/blackColor"
+                                android:textColor="@color/blackAndWhiteViewsColor"
                                 android:textSize="@dimen/_12ssp"
+                                android:fontFamily="@font/cabin_medium"
                                 app:layout_constraintBottom_toTopOf="@id/readOurPrivacyPolicyTV"
                                 app:layout_constraintStart_toEndOf="@id/privacyPolicyIV"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -806,6 +696,7 @@
                                 android:textAllCaps="false"
                                 android:textColor="#8E8E8E"
                                 android:textSize="@dimen/_8ssp"
+                                android:fontFamily="@font/cabin_medium"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toEndOf="@id/privacyPolicyIV"
                                 app:layout_constraintTop_toBottomOf="@id/privacyPolicyTV"
@@ -815,7 +706,7 @@
                                 android:id="@+id/privacyPolicyArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/forward_arrow_image"
+                                app:srcCompat="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -838,7 +729,7 @@
                                 android:id="@+id/checkUpdateIV"
                                 android:layout_width="@dimen/_16sdp"
                                 android:layout_height="@dimen/_16sdp"
-                                android:src="@drawable/app_version_image"
+                                app:srcCompat="@drawable/app_version_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -852,8 +743,9 @@
                                 android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:text="@string/check_update_text"
                                 android:textAllCaps="false"
-                                android:textColor="@color/blackColor"
+                                android:textColor="@color/blackAndWhiteViewsColor"
                                 android:textSize="@dimen/_12ssp"
+                                android:fontFamily="@font/cabin_medium"
                                 app:layout_constraintBottom_toTopOf="@id/versionNumberTV"
                                 app:layout_constraintStart_toEndOf="@id/checkUpdateIV"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -867,6 +759,7 @@
                                 android:textAllCaps="false"
                                 android:textColor="#8E8E8E"
                                 android:textSize="@dimen/_8ssp"
+                                android:fontFamily="@font/cabin_medium"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toStartOf="@id/checkUpdateArrowIV"
                                 app:layout_constraintStart_toEndOf="@id/checkUpdateIV"
@@ -876,7 +769,7 @@
                                 android:id="@+id/checkUpdateArrowIV"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/forward_arrow_image"
+                                app:srcCompat="@drawable/forward_arrow_image"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"

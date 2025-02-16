@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialog_boxes_light_mode_background"
+    android:background="@drawable/dialog_boxes_background"
     android:paddingBottom="@dimen/_8sdp">
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/dismissRateUsDialogIV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintBottom_toTopOf="@id/rateUsSV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/cross_image" />
+
     <ScrollView
+        android:id="@+id/rateUsSV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"
@@ -15,46 +27,35 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/dismissRateUsDialogIV">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/_5sdp">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/dismissRateUsDialogIV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginEnd="@dimen/_10sdp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:scaleType="centerCrop"
-                android:src="@drawable/cross_image"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/rateUsDialogIV"/>
+            android:padding="@dimen/_5sdp">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/rateUsDialogIV"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="@dimen/_100sdp"
-                android:src="@drawable/rate_us_dialog_image"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/rateOurAppTV"
-                app:layout_constraintTop_toBottomOf="@id/dismissRateUsDialogIV" />
+                app:srcCompat="@drawable/rate_us_dialog_image" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/rateOurAppTV"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:text="@string/rate_our_app_text"
                 android:textAllCaps="false"
-                android:textColor="@color/blackColor"
+                android:gravity="center"
+                android:fontFamily="@font/cabin_medium"
                 android:textSize="@dimen/_20ssp"
                 android:textStyle="bold"
+                android:textColor="@color/blackAndWhiteViewsColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/messageTV"
@@ -62,14 +63,17 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/messageTV"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:gravity="center"
                 android:text="@string/rate_us_message_text"
                 android:textAllCaps="false"
-                android:textColor="@color/blackColor"
+                android:fontFamily="@font/cabin_medium"
                 android:textSize="@dimen/_11ssp"
+                android:textColor="@color/blackAndWhiteViewsColor"
+                android:ellipsize="end"
+                android:maxLines="3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/ratingBar"
@@ -103,8 +107,9 @@
                 android:stateListAnimator="@null"
                 android:text="@string/rate_us_text"
                 android:textAllCaps="false"
+                android:fontFamily="@font/cabin_medium"
                 android:textColor="@color/whiteColor"
-                android:textSize="@dimen/_14ssp"
+                android:textSize="@dimen/_15ssp"
                 app:cornerRadius="@dimen/_7sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -119,6 +124,7 @@
                 android:background="#D9D9D9"
                 app:layout_constraintEnd_toEndOf="@id/rateUsButton"
                 app:layout_constraintStart_toStartOf="@id/rateUsButton"
+                app:layout_constraintBottom_toTopOf="@id/thanksForYourFeedbackTV"
                 app:layout_constraintTop_toBottomOf="@id/ratingBar" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -131,6 +137,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/blackColor"
                 android:textSize="@dimen/_12ssp"
+                android:fontFamily="@font/cabin_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

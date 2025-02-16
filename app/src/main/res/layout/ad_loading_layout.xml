@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/_11sdp"
-    android:gravity="center">
+    android:gravity="center"
+    android:padding="@dimen/_11sdp">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/adIsLoadingTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/ad_is_loading_text"
         android:textAllCaps="false"
         android:textColor="@color/defaultColor"
-        android:textSize="@dimen/_13ssp"/>
+        android:textSize="@dimen/_13ssp"
+        android:fontFamily="@font/cabin_medium"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/progressBar"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="@dimen/_20sdp"
         android:layout_height="@dimen/_20sdp"
         android:layout_marginStart="@dimen/_5sdp"
-        android:indeterminateTint="@color/defaultColor" />
+        android:indeterminateTint="@color/defaultColor"
+        app:layout_constraintStart_toEndOf="@id/adIsLoadingTextView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

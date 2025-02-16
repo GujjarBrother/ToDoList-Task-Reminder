@@ -1,50 +1,50 @@
 package com.todo.list.utils
 
-import android.content.SharedPreferences
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class Prefs(private val toDoListSharedPreferences: SharedPreferences) {
+class Prefs @Inject constructor(@ApplicationContext applicationContext: Context) {
+
+    private val toDosListSharedPreferences = applicationContext.getSharedPreferences(
+        "TO_DO_LIST_APP_PREFS", MODE_PRIVATE
+    )
 
     var category: Int
-        get() = toDoListSharedPreferences.getInt("category", -1)
-        set(value) = toDoListSharedPreferences.edit().putInt("category", value).apply()
+        get() = toDosListSharedPreferences.getInt("category", -1)
+        set(value) = toDosListSharedPreferences.edit().putInt("category", value).apply()
 
     var rememberMe: Boolean
-        get() = toDoListSharedPreferences.getBoolean("rememberMe", false)
-        set(value) = toDoListSharedPreferences.edit().putBoolean("rememberMe", value).apply()
+        get() = toDosListSharedPreferences.getBoolean("rememberMe", false)
+        set(value) = toDosListSharedPreferences.edit().putBoolean("rememberMe", value).apply()
 
     var isUserSignIn: Boolean
-        get() = toDoListSharedPreferences.getBoolean("isUserSignIn", false)
-        set(value) = toDoListSharedPreferences.edit().putBoolean("isUserSignIn", value).apply()
-
-    var colorSchemeValue: Int
-        get() = toDoListSharedPreferences.getInt("colorScheme", 0)
-        set(value) = toDoListSharedPreferences.edit().putInt("colorScheme", value).apply()
-
-    var lastTimeSelectedColorValue: Int
-        get() = toDoListSharedPreferences.getInt("lastTimeSelectedColorValue", 0)
-        set(value) = toDoListSharedPreferences.edit().putInt("lastTimeSelectedColorValue", value).apply()
+        get() = toDosListSharedPreferences.getBoolean("isUserSignIn", false)
+        set(value) = toDosListSharedPreferences.edit().putBoolean("isUserSignIn", value).apply()
 
     var allTasksStyleValue: Boolean
-        get() = toDoListSharedPreferences.getBoolean("allTasksStyle", false)
-        set(value) = toDoListSharedPreferences.edit().putBoolean("allTasksStyle", value).apply()
+        get() = toDosListSharedPreferences.getBoolean("allTasksStyle", false)
+        set(value) = toDosListSharedPreferences.edit().putBoolean("allTasksStyle", value).apply()
 
     var completedTasksStyleValue: Boolean
-        get() = toDoListSharedPreferences.getBoolean("completedTasksStyle", false)
-        set(value) = toDoListSharedPreferences.edit().putBoolean("completedTasksStyle", value).apply()
+        get() = toDosListSharedPreferences.getBoolean("completedTasksStyle", false)
+        set(value) = toDosListSharedPreferences.edit().putBoolean("completedTasksStyle", value)
+            .apply()
 
     var textSizeValue: Int
-        get() = toDoListSharedPreferences.getInt("textSize", 14)
-        set(value) = toDoListSharedPreferences.edit().putInt("textSize", value).apply()
+        get() = toDosListSharedPreferences.getInt("textSize", 14)
+        set(value) = toDosListSharedPreferences.edit().putInt("textSize", value).apply()
 
     var isDarkModeEnable: Boolean
-        get() = toDoListSharedPreferences.getBoolean("lightORDarkMode", false)
-        set(value) = toDoListSharedPreferences.edit().putBoolean("lightORDarkMode", value).apply()
+        get() = toDosListSharedPreferences.getBoolean("lightORDarkMode", false)
+        set(value) = toDosListSharedPreferences.edit().putBoolean("lightORDarkMode", value).apply()
 
     fun saveUserCredentials(
         emailOrUserName: String, password: String, gender: String, securityQuestion: String,
         securityAnswer: String, check: Boolean
     ) {
-        val userCredentialsEditor = toDoListSharedPreferences.edit()
+        val userCredentialsEditor = toDosListSharedPreferences.edit()
         userCredentialsEditor.putString("emailOrUserName", emailOrUserName)
         userCredentialsEditor.putString("password", password)
         userCredentialsEditor.putString("gender", gender)
@@ -56,17 +56,20 @@ class Prefs(private val toDoListSharedPreferences: SharedPreferences) {
 
     val userCredentials: Array<String>
         get() {
-            val emailOrUserName = toDoListSharedPreferences.getString("emailOrUserName", null).toString()
-            val password = toDoListSharedPreferences.getString("password", null).toString()
-            val gender = toDoListSharedPreferences.getString("gender", null).toString()
-            val securityQuestion = toDoListSharedPreferences.getString("securityQuestion", "").toString()
-            val securityAnswer = toDoListSharedPreferences.getString("securityAnswer", null).toString()
-            val check = toDoListSharedPreferences.getBoolean("check", false).toString()
+            val emailOrUserName =
+                toDosListSharedPreferences.getString("emailOrUserName", null).toString()
+            val password = toDosListSharedPreferences.getString("password", null).toString()
+            val gender = toDosListSharedPreferences.getString("gender", null).toString()
+            val securityQuestion =
+                toDosListSharedPreferences.getString("securityQuestion", "").toString()
+            val securityAnswer =
+                toDosListSharedPreferences.getString("securityAnswer", null).toString()
+            val check = toDosListSharedPreferences.getBoolean("check", false).toString()
             return arrayOf(emailOrUserName, password, gender, securityQuestion, securityAnswer, check)
         }
 
     fun saveAllTasksSortingValues(aboveSortedValue: Int, belowSortedValue: Int) {
-        val toDosSortingEditor = toDoListSharedPreferences.edit()
+        val toDosSortingEditor = toDosListSharedPreferences.edit()
         toDosSortingEditor.putInt("allTasksAboveSorting", aboveSortedValue)
         toDosSortingEditor.putInt("allTasksBelowSorting", belowSortedValue)
         toDosSortingEditor.apply()
@@ -74,13 +77,13 @@ class Prefs(private val toDoListSharedPreferences: SharedPreferences) {
 
     val allTasksSortingValues: IntArray
         get() {
-            val aboveSortedValue = toDoListSharedPreferences.getInt("allTasksAboveSorting", 1)
-            val belowSortedValue = toDoListSharedPreferences.getInt("allTasksBelowSorting", 7)
+            val aboveSortedValue = toDosListSharedPreferences.getInt("allTasksAboveSorting", 1)
+            val belowSortedValue = toDosListSharedPreferences.getInt("allTasksBelowSorting", 7)
             return intArrayOf(aboveSortedValue, belowSortedValue)
         }
 
     fun saveCompletedTasksSortingValues(aboveSortedValue: Int, belowSortedValue: Int) {
-        val toDosSortingEditor = toDoListSharedPreferences.edit()
+        val toDosSortingEditor = toDosListSharedPreferences.edit()
         toDosSortingEditor.putInt("completedTasksAboveSorting", aboveSortedValue)
         toDosSortingEditor.putInt("completedTasksBelowSorting", belowSortedValue)
         toDosSortingEditor.apply()
@@ -88,8 +91,10 @@ class Prefs(private val toDoListSharedPreferences: SharedPreferences) {
 
     val completedTasksSortingValues: IntArray
         get() {
-            val aboveSortedValue = toDoListSharedPreferences.getInt("completedTasksAboveSorting", 1)
-            val belowSortedValue = toDoListSharedPreferences.getInt("completedTasksBelowSorting", 7)
+            val aboveSortedValue =
+                toDosListSharedPreferences.getInt("completedTasksAboveSorting", 1)
+            val belowSortedValue =
+                toDosListSharedPreferences.getInt("completedTasksBelowSorting", 7)
             return intArrayOf(aboveSortedValue, belowSortedValue)
         }
 }

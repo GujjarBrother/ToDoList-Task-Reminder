@@ -16,6 +16,7 @@
         android:textAllCaps="false"
         android:textColor="@color/blackColor"
         android:textSize="@dimen/_12ssp"
+        android:fontFamily="@font/cabin_medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

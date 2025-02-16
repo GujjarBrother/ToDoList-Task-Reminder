@@ -5,7 +5,7 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/snowWhiteColor"
+    android:background="@color/screensBackgroundColor"
     tools:context="com.todo.list.activities.SignUpActivity">
 
     <androidx.appcompat.widget.AppCompatImageButton
@@ -55,6 +55,7 @@
         android:textColor="@color/defaultColor"
         android:textSize="@dimen/_23ssp"
         android:textStyle="bold"
+        android:fontFamily="@font/cabin_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/signUpCV"
@@ -68,16 +69,16 @@
         android:layout_marginVertical="@dimen/_10sdp"
         app:cardBackgroundColor="@color/whiteColor"
         app:cardCornerRadius="@dimen/_10sdp"
-        app:cardElevation="@dimen/_1sdp"
+        app:cardElevation="@dimen/_2sdp"
+        app:strokeColor="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@id/thirdIB"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/firstIB">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/userNameTIL"
@@ -91,6 +92,10 @@
                 app:boxStrokeColor="@null"
                 app:errorEnabled="true"
                 app:startIconDrawable="@drawable/user_name_edit_text_icon"
+                app:layout_constraintBottom_toTopOf="@id/passwordTIL"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:startIconTint="@color/defaultColor">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -101,6 +106,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
                     android:textAllCaps="false"
+                    android:fontFamily="@font/cabin_medium"
                     android:textColor="@color/blackColor"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -124,6 +130,10 @@
                 app:errorEnabled="true"
                 app:errorTextColor="#9E9E9E"
                 app:startIconDrawable="@drawable/password_icon"
+                app:layout_constraintBottom_toTopOf="@id/genderSelectionLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userNameTIL"
                 app:startIconTint="@color/defaultColor">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -134,67 +144,80 @@
                     android:imeOptions="actionGo"
                     android:inputType="textPassword"
                     android:textAllCaps="false"
+                    android:fontFamily="@font/cabin_medium"
                     android:textColor="@color/blackColor"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/genderSelectionLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_5sdp"
                 android:padding="@dimen/_13sdp"
-                android:background="@drawable/stroke_background">
+                android:background="@drawable/stroke_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/passwordTIL">
 
-                <androidx.appcompat.widget.AppCompatTextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/selectGenderTV"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:fontFamily="@font/cabin_medium"
                     android:text="@string/select_gender_text"
                     android:textAllCaps="false"
                     android:textColor="#9E9E9E"
-                    android:textSize="@dimen/_13ssp" />
+                    android:textSize="@dimen/_13ssp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/dropDownIV"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/dropDownIV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/drop_down_arrow"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/selectGenderTV"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/defaultColor" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
-                android:id="@+id/securityQuestionsLayout"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/securityQuestionsTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="?attr/selectableItemBackground"
+                android:fontFamily="@font/cabin_medium"
                 android:padding="@dimen/_3sdp"
-                android:layout_marginVertical="@dimen/_5sdp"
-                android:background="?attr/selectableItemBackground">
+                android:text="@string/security_questions_text"
+                android:textAllCaps="false"
+                android:textColor="#9E9E9E"
+                android:textSize="@dimen/_10ssp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/signUpButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/genderSelectionLayout" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/securityQuestionsTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/security_questions_text"
-                    android:textAllCaps="false"
-                    android:textColor="#9E9E9E"
-                    android:textSize="@dimen/_10ssp"
-                    android:textStyle="bold" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/asterikTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/asterik"
-                    android:textAllCaps="false"
-                    android:textColor="@color/defaultColor"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/asterikTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cabin_medium"
+                android:text="@string/asterik"
+                android:textAllCaps="false"
+                android:textColor="@color/defaultColor"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/securityQuestionsTV"
+                app:layout_constraintStart_toEndOf="@id/securityQuestionsTV"
+                app:layout_constraintTop_toBottomOf="@id/genderSelectionLayout" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/signUpButton"
@@ -209,41 +232,51 @@
                 android:stateListAnimator="@null"
                 android:text="@string/sign_up_text"
                 android:textAllCaps="false"
+                android:fontFamily="@font/cabin_medium"
                 android:textColor="@color/whiteColor"
                 android:textSize="@dimen/_15ssp"
-                android:textStyle="bold" />
+                android:layout_marginTop="@dimen/_5sdp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/signInTV"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/securityQuestionsTV" />
 
-            <LinearLayout
-                android:id="@+id/alreadyHaveAnAccountAndSignInLayout"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/alreadyHaveAnAccountTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/_5sdp">
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:fontFamily="@font/cabin_medium"
+                android:text="@string/already_have_an_account_text"
+                android:textAllCaps="false"
+                android:textColor="#9E9E9E"
+                android:textSize="@dimen/_10ssp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/signInTV"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/signUpButton" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/alreadyHaveAnAccountTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/already_have_an_account_text"
-                    android:textAllCaps="false"
-                    android:textColor="#9E9E9E"
-                    android:textSize="@dimen/_10ssp"
-                    android:textStyle="bold" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/signInTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:background="?attr/selectableItemBackground"
+                android:fontFamily="@font/cabin_medium"
+                android:padding="@dimen/_3sdp"
+                android:text="@string/sign_in_text"
+                android:textAllCaps="false"
+                android:textColor="@color/defaultColor"
+                android:textSize="@dimen/_11ssp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/alreadyHaveAnAccountTV"
+                app:layout_constraintTop_toBottomOf="@id/signUpButton" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/signInTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:text="@string/sign_in_text"
-                    android:textAllCaps="false"
-                    android:textColor="@color/defaultColor"
-                    android:textSize="@dimen/_11ssp"
-                    android:textStyle="bold"
-                    android:padding="@dimen/_3sdp"/>
-
-            </LinearLayout>
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

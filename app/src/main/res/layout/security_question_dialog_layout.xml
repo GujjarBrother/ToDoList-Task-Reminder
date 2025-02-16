@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialog_boxes_light_mode_background"
-    android:paddingBottom="@dimen/_15sdp">
+    android:background="@drawable/dialog_boxes_background"
+    android:paddingBottom="@dimen/_15sdp"
+    android:paddingHorizontal="@dimen/_10sdp">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/dismissDialogIV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_margin="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5sdp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:scaleType="centerCrop"
-        android:src="@drawable/cross_image"
+        app:srcCompat="@drawable/cross_image"
+        app:layout_constraintBottom_toTopOf="@id/securityQuestionTitleTV"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/securityQuestionTitleTV"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/securityQuestionTitleTV"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/cabin_medium"
         android:text="@string/security_questions_text"
         android:textAllCaps="false"
+        android:gravity="center"
         android:textColor="@color/defaultColor"
         android:textSize="@dimen/_16ssp"
         android:textStyle="bold"
@@ -34,53 +33,59 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dismissDialogIV" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/securityQuestionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_5sdp"
-        android:background="@drawable/spinner_layout_light_mode_background"
+        android:background="@drawable/spinner_background"
         android:padding="@dimen/_15sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/securityQuestionTitleTV">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/selectSecurityQuestionTV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:fontFamily="@font/cabin_medium"
             android:text="@string/select_security_question_text"
             android:textAllCaps="false"
             android:textColor="#9E9E9E"
-            android:textSize="@dimen/_13ssp" />
+            android:textSize="@dimen/_13ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/dropDownIV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/dropDownIV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/drop_down_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/selectSecurityQuestionTV"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/drop_down_arrow"
             app:tint="@color/defaultColor" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/securityQuestionAnswerTIL"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:background="@android:color/transparent"
         android:textColorHint="#9E9E9E"
         app:boxBackgroundColor="@android:color/transparent"
         app:boxStrokeColor="@null"
         app:errorEnabled="true"
+        app:layout_constraintBottom_toTopOf="@id/saveButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/saveButton"
         app:layout_constraintTop_toBottomOf="@id/securityQuestionTitleTV"
         app:startIconDrawable="@drawable/security_question_answer_icon"
         app:startIconTint="@color/defaultColor">
@@ -89,6 +94,7 @@
             android:id="@+id/securityQuestionAnswerTIET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/cabin_medium"
             android:imeOptions="actionGo"
             android:inputType="textCapWords"
             android:textAllCaps="false"
@@ -101,6 +107,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/defaultColor"
+        android:fontFamily="@font/cabin_medium"
         android:gravity="center"
         android:minWidth="@dimen/_200sdp"
         android:minHeight="@dimen/_55sdp"
@@ -112,9 +119,9 @@
         android:textSize="@dimen/_15ssp"
         android:textStyle="bold"
         app:cornerRadius="@dimen/_7sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/securityQuestionAnswerTIL" />
 
     <androidx.constraintlayout.widget.Group

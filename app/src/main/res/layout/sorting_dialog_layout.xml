@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialog_boxes_light_mode_background">
+    android:background="@drawable/dialog_boxes_background">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -20,14 +19,17 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/sortByTV"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/cabin_medium"
                 android:text="@string/sort_by_text"
                 android:textAllCaps="false"
                 android:textColor="@color/defaultColor"
                 android:textSize="@dimen/_15ssp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/sortRG"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <RadioGroup
@@ -37,78 +39,85 @@
                 android:padding="@dimen/_10sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/divider"
                 app:layout_constraintTop_toBottomOf="@id/sortByTV">
 
-                <androidx.appcompat.widget.AppCompatRadioButton
+                <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/titleRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/defaultColor"
+                    android:fontFamily="@font/cabin_medium"
+                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/title_text"
                     android:textAllCaps="false"
-                    android:textColor="@color/blackColor"
+                    app:buttonTint="@color/defaultColor"
                     android:textSize="@dimen/_12ssp" />
 
-                <androidx.appcompat.widget.AppCompatRadioButton
+                <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/dayOfWeekRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/defaultColor"
+                    android:fontFamily="@font/cabin_medium"
+                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/day_of_week_text"
                     android:textAllCaps="false"
-                    android:textColor="@color/blackColor"
+                    app:buttonTint="@color/defaultColor"
                     android:textSize="@dimen/_12ssp" />
 
-                <androidx.appcompat.widget.AppCompatRadioButton
+                <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/dateRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/defaultColor"
+                    android:fontFamily="@font/cabin_medium"
+                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/date_text"
                     android:textAllCaps="false"
-                    android:textColor="@color/blackColor"
+                    app:buttonTint="@color/defaultColor"
                     android:textSize="@dimen/_12ssp" />
 
-                <androidx.appcompat.widget.AppCompatRadioButton
+                <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/monthRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/defaultColor"
+                    android:fontFamily="@font/cabin_medium"
+                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/month_text"
                     android:textAllCaps="false"
-                    android:textColor="@color/blackColor"
+                    app:buttonTint="@color/defaultColor"
                     android:textSize="@dimen/_12ssp" />
 
-                <androidx.appcompat.widget.AppCompatRadioButton
+                <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/yearRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/defaultColor"
+                    android:fontFamily="@font/cabin_medium"
+                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/year_text"
                     android:textAllCaps="false"
-                    android:textColor="@color/blackColor"
+                    app:buttonTint="@color/defaultColor"
                     android:textSize="@dimen/_12ssp" />
 
-                <androidx.appcompat.widget.AppCompatRadioButton
+                <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/timeRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/defaultColor"
+                    android:fontFamily="@font/cabin_medium"
+                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/time_hint"
                     android:textAllCaps="false"
-                    android:textColor="@color/blackColor"
+                    app:buttonTint="@color/defaultColor"
                     android:textSize="@dimen/_12ssp" />
 
             </RadioGroup>
@@ -116,10 +125,11 @@
             <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:background="#80E0E0E0"
+                android:layout_height="0.2dp"
+                android:background="@color/dividersColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/ascendingDescendingRG"
                 app:layout_constraintTop_toBottomOf="@id/sortRG" />
 
             <RadioGroup
@@ -131,80 +141,77 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider">
 
-                <androidx.appcompat.widget.AppCompatRadioButton
+                <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/ascendingAToZRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/defaultColor"
+                    android:fontFamily="@font/cabin_medium"
+                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/ascending_a_z_text"
                     android:textAllCaps="false"
-                    android:textColor="@color/blackColor"
+                    app:buttonTint="@color/defaultColor"
                     android:textSize="@dimen/_12ssp" />
 
-                <androidx.appcompat.widget.AppCompatRadioButton
+                <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/descendingZToARB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/defaultColor"
+                    android:fontFamily="@font/cabin_medium"
+                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/descending_z_a_text"
                     android:textAllCaps="false"
-                    android:textColor="@color/blackColor"
+                    app:buttonTint="@color/defaultColor"
                     android:textSize="@dimen/_12ssp" />
 
             </RadioGroup>
 
-            <LinearLayout
-                android:id="@+id/buttonsLayout"
-                android:layout_width="match_parent"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cancelButton"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginTop="@dimen/_15sdp"
+                android:backgroundTint="@android:color/transparent"
+                android:fontFamily="@font/cabin_medium"
+                android:minHeight="@dimen/_50sdp"
+                android:stateListAnimator="@null"
+                android:text="@string/cancel_text"
+                android:textAllCaps="false"
+                android:textColor="@color/defaultColor"
+                android:textSize="@dimen/_11ssp"
+                android:textStyle="bold"
+                app:cornerRadius="@dimen/_5sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/sortButton"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ascendingDescendingRG"
+                app:strokeColor="@color/defaultColor"
+                app:strokeWidth="@dimen/_1sdp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sortButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_30sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:backgroundTint="@color/defaultColor"
+                android:fontFamily="@font/cabin_medium"
+                android:minHeight="@dimen/_50sdp"
+                android:stateListAnimator="@null"
+                android:text="@string/sort_text"
+                android:textAllCaps="false"
+                android:textColor="@color/whiteColor"
+                android:textSize="@dimen/_11ssp"
+                android:textStyle="bold"
+                app:cornerRadius="@dimen/_5sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ascendingDescendingRG">
+                app:layout_constraintStart_toEndOf="@id/cancelButton"
+                app:layout_constraintTop_toBottomOf="@id/ascendingDescendingRG" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/cancelButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="@android:color/transparent"
-                    android:minHeight="@dimen/_50sdp"
-                    android:stateListAnimator="@null"
-                    android:text="@string/cancel_text"
-                    android:textAllCaps="false"
-                    android:textColor="@color/defaultColor"
-                    android:textSize="@dimen/_11ssp"
-                    android:textStyle="bold"
-                    app:cornerRadius="@dimen/_5sdp"
-                    app:strokeColor="@color/defaultColor"
-                    app:strokeWidth="@dimen/_1sdp" />
-
-                <View
-                    android:layout_width="@dimen/_20sdp"
-                    android:layout_height="match_parent" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/sortButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="@color/defaultColor"
-                    android:minHeight="@dimen/_50sdp"
-                    android:stateListAnimator="@null"
-                    android:text="@string/sort_text"
-                    android:textAllCaps="false"
-                    android:textColor="@color/whiteColor"
-                    android:textSize="@dimen/_11ssp"
-                    android:textStyle="bold"
-                    app:cornerRadius="@dimen/_5sdp" />
-
-            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
