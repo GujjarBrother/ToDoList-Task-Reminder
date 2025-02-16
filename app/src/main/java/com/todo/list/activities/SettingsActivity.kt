@@ -14,7 +14,6 @@ import androidx.activity.OnBackPressedCallback
 import com.todo.list.BuildConfig
 import com.todo.list.R
 import com.todo.list.adsPlugin.bannerAd.BannerAdController
-import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivitySettingsBinding
 import com.todo.list.databinding.RateUsDialogLayoutBinding

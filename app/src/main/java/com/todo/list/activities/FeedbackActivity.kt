@@ -19,13 +19,14 @@ import es.dmoral.toasty.Toasty
 
 class FeedbackActivity : BaseActivity(), View.OnClickListener {
 
-    private lateinit var binding: ActivityFeedbackBinding
+    private val binding by lazy {
+        ActivityFeedbackBinding.inflate(layoutInflater)
+    }
     private val feedbackArrayList = ArrayList<String>()
     private var otherIssuesCheck = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityFeedbackBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         keepActivityOn(activityContext)

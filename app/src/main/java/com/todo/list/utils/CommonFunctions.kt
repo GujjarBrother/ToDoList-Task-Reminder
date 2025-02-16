@@ -2,8 +2,12 @@ package com.todo.list.utils
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
+import android.text.SpannableString
+import android.text.Spanned
+import android.view.MenuItem
 import android.view.View
 import android.view.View.GONE
 import android.view.View.INVISIBLE
@@ -12,12 +16,14 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.todo.list.R
 import com.todo.list.activities.PrivacyPolicyActivity
+import com.todo.list.customFonts.PopUpMenuItemsTypefaceAndColor
 import com.todo.list.db.ToDosDatabase
 import com.todo.list.repositories.TasksRepo
 import com.todo.list.viewModels.TasksViewModel
@@ -98,5 +104,21 @@ object CommonFunctions {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
+    }
+
+    fun applyCustomFontAndColorToPopupMenuItemsText(
+        context: Activity,
+        menuItem: MenuItem,
+        @ColorInt customColor: Int
+    ) {
+        val customFont = Typeface.createFromAsset(context.assets, "fonts/Cabin Medium.ttf")
+        val spannableString = SpannableString(menuItem.title)
+        spannableString.setSpan(
+            PopUpMenuItemsTypefaceAndColor("", customFont, customColor),
+            0,
+            spannableString.length,
+            Spanned.SPAN_INCLUSIVE_INCLUSIVE
+        )
+        menuItem.title = spannableString
     }
 }

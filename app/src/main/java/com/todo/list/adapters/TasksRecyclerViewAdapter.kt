@@ -9,17 +9,18 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.databinding.ToDosRecyclerViewSingleItemLayoutBinding
 import com.todo.list.db.ToDoTask
 import com.todo.list.enums.Tabs
 import com.todo.list.enums.Visibility
 import com.todo.list.utils.CommonFunctions.changeVisibility
 import com.todo.list.utils.CommonFunctions.isSomethingChanged
+import com.todo.list.utils.Prefs
 
 class TasksRecyclerViewAdapter(
     private val lifecycleOwner: LifecycleOwner,
     private val fromWhereInvoked: Int,
+    private val prefs: Prefs,
     private val commonCallback: (ToDoTask) -> Unit,
     private var taskUpdateAndDeleteCallback: (ToDoTask, View) -> Unit
 ) : ListAdapter<ToDoTask, TasksRecyclerViewAdapter.ViewHolder>(DIFF_CALLBACK), Filterable {

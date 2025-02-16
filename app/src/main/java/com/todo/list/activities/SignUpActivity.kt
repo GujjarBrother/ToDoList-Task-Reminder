@@ -13,7 +13,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import com.todo.list.R
 import com.todo.list.adapters.CategoryAdapter
-import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivitySignUpBinding
 import com.todo.list.databinding.CustomPopupMenuLayoutBinding
@@ -49,7 +48,7 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
         with(binding) {
             signUpCardViewAnimation()
             genderSelectionLayout.setOnClickListener(this@SignUpActivity)
-            securityQuestionsLayout.setOnClickListener(this@SignUpActivity)
+            securityQuestionsTV.setOnClickListener(this@SignUpActivity)
             signUpButton.setOnClickListener(this@SignUpActivity)
             signInTV.setOnClickListener(this@SignUpActivity)
         }
@@ -105,7 +104,7 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
                 R.id.signInTV -> switchToSignInActivity()
-                R.id.securityQuestionsLayout -> showSecurityQuestionsDialog()
+                R.id.securityQuestionsTV -> showSecurityQuestionsDialog()
             }
         }
     }
@@ -135,7 +134,7 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
                 add(Gender.FEMALE.ordinal)
                 add(Gender.TRANSGENDER.ordinal)
             }
-            val categoryAdapter = CategoryAdapter("Gender") { category, forWhichInvoked ->
+            val categoryAdapter = CategoryAdapter("Gender", prefs) { category, forWhichInvoked ->
                 checkGenderAndSecurityQuestion(forWhichInvoked, category)
             }
             with(customPopupMenuLayoutBinding) {
@@ -151,7 +150,7 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
                 add(SecurityQuestions.QUESTION_3.ordinal)
                 add(SecurityQuestions.QUESTION_4.ordinal)
             }
-            val categoryAdapter = CategoryAdapter("Security Questions") { category, forWhichInvoked ->
+            val categoryAdapter = CategoryAdapter("Security Questions", prefs) { category, forWhichInvoked ->
                 checkGenderAndSecurityQuestion(forWhichInvoked, category)
             }
             with(customPopupMenuLayoutBinding) {

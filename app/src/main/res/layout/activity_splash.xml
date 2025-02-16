@@ -17,97 +17,78 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/taskReminderLayout"/>
+        app:layout_constraintBottom_toTopOf="@id/taskTV" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/taskReminderLayout"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/taskTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/cabin_medium"
+        android:text="@string/task_text"
+        android:textColor="@color/defaultColor"
+        android:textSize="@dimen/_25ssp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/loadingTV"
+        app:layout_constraintEnd_toStartOf="@id/reminderTV"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/splashIV"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/progressbarLayout">
+        app:layout_constraintTop_toBottomOf="@id/splashIV" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/taskTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/task_text"
-            android:textSize="@dimen/_25ssp"
-            android:textStyle="bold"
-            android:textColor="@color/defaultColor"
-            android:fontFamily="@font/cabin_medium"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/reminderTV"/>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/reminderTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/reminder_text"
-            android:textSize="@dimen/_25ssp"
-            android:textStyle="bold"
-            android:textColor="@color/blackColor"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:fontFamily="@font/cabin_medium"
-            app:layout_constraintStart_toEndOf="@id/taskTV"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/progressbarLayout"
-        android:layout_width="match_parent"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/reminderTV"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_5sdp"
-        android:layout_marginHorizontal="@dimen/_10sdp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:fontFamily="@font/cabin_medium"
+        android:text="@string/reminder_text"
+        android:textColor="@color/blackAndWhiteViewsColor"
+        android:textSize="@dimen/_25ssp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/loadingPercentageTV"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toEndOf="@id/taskTV"
+        app:layout_constraintTop_toBottomOf="@id/splashIV"
+        app:layout_constraintVertical_bias="0" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/loadingTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/loading_text"
-            android:textSize="@dimen/_12ssp"
-            android:textStyle="bold"
-            android:textColor="@color/defaultColor"
-            android:fontFamily="@font/cabin_medium"
-            android:layout_marginBottom="@dimen/_4sdp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/splashLoadingProgressBar"/>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/loadingTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_4sdp"
+        android:fontFamily="@font/cabin_medium"
+        android:text="@string/loading_text"
+        android:textColor="@color/defaultColor"
+        android:textSize="@dimen/_12ssp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/splashLoadingProgressBar"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/loadingPercentageTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/_12ssp"
-            android:textStyle="bold"
-            android:textColor="@color/defaultColor"
-            android:fontFamily="@font/cabin_medium"
-            android:layout_marginBottom="@dimen/_4sdp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/splashLoadingProgressBar"/>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/loadingPercentageTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_4sdp"
+        android:fontFamily="@font/cabin_medium"
+        android:textColor="@color/defaultColor"
+        android:textSize="@dimen/_12ssp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/splashLoadingProgressBar"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <ProgressBar
-            android:id="@+id/splashLoadingProgressBar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_6sdp"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:max="100"
-            android:progress="0"
-            android:progressDrawable="@drawable/default_progress_bar_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/loadingPercentageTV"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+    <ProgressBar
+        android:id="@+id/splashLoadingProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_6sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:max="100"
+        android:progress="0"
+        android:progressDrawable="@drawable/default_progress_bar_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

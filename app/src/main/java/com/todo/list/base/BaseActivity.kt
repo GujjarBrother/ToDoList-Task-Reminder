@@ -8,16 +8,24 @@ import android.os.Looper
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.todo.list.R
 import com.todo.list.utils.ColorsUtils.getContextCompatColor
 import com.todo.list.utils.CommonFunctions.changeStatusBarColor
+import com.todo.list.utils.Prefs
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 open class BaseActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var prefs: Prefs
 
     protected lateinit var activityContext: AppCompatActivity
     private lateinit var inputMethodManager: InputMethodManager
     protected lateinit var handler: Handler
-    protected lateinit var textInputLayoutBoxStrokeDarkModeColor: ColorStateList
+    protected lateinit var textInputLayoutDarkModeStrokeColor: ColorStateList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.decorView
@@ -29,15 +37,14 @@ open class BaseActivity : AppCompatActivity() {
         handler = Handler(Looper.getMainLooper())
         inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
-        /*textInputLayoutBoxStrokeDarkModeColor = ColorStateList(
-                arrayOf(intArrayOf(android.R.attr.state_focused), intArrayOf(-android.R.attr.state_focused)),
-                intArrayOf(
-                    // Color when focused
-                    ContextCompat.getColor(activityContext, R.color.purple_500)
-                    // Color when not focused
-                 ,ContextCompat.getColor(activityContext, R.color.purple_500)
-                )
-        )*/
+        textInputLayoutDarkModeStrokeColor = ColorStateList(
+            arrayOf(intArrayOf(android.R.attr.state_focused), intArrayOf()),
+            intArrayOf(
+                // Color when focused
+                ContextCompat.getColor(activityContext, R.color.defaultColor),
+                // Color when not focused
+                ContextCompat.getColor(activityContext, R.color.subColor))
+        )
     }
 
     protected fun showSoftKeyboard() = inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)

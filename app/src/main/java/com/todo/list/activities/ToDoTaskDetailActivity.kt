@@ -1,13 +1,11 @@
 package com.todo.list.activities
 
-import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import com.todo.list.R
 import com.todo.list.adsPlugin.bannerAd.BannerAdController
-import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivityToDoTaskDetailBinding
 import com.todo.list.db.ToDoTask
@@ -16,11 +14,12 @@ import java.util.Locale
 
 class ToDoTaskDetailActivity : BaseActivity(), View.OnClickListener {
 
-    private lateinit var binding: ActivityToDoTaskDetailBinding
+    private val binding by lazy {
+        ActivityToDoTaskDetailBinding.inflate(layoutInflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityToDoTaskDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         keepActivityOn(activityContext)
@@ -59,9 +58,7 @@ class ToDoTaskDetailActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.backArrowIV -> {
-                goBackToDashBoardActivity()
-            }
+            R.id.backArrowIV -> goBackToDashBoardActivity()
         }
     }
 
@@ -69,7 +66,7 @@ class ToDoTaskDetailActivity : BaseActivity(), View.OnClickListener {
 
     //    Override 'onConfigurationChanged' Method, Which Is Used To Prevent An Activity To 'Re-create' When
     //    Changing The Screen Orientation.i.e., Switching Between 'PORTRAIT MODE' TO 'LANDSCAPE MODE' & Vice Versa.
-    override fun onConfigurationChanged(newConfig: Configuration) {
+    /*override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-    }
+    }*/
 }

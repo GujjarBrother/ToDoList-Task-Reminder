@@ -2,16 +2,12 @@ package com.todo.list.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.TextPaint
 import android.text.TextUtils
-import android.text.style.TypefaceSpan
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.Menu
@@ -36,7 +32,6 @@ import com.todo.list.activities.DashBoardActivity
 import com.todo.list.activities.ToDoTaskDetailActivity
 import com.todo.list.adapters.CategoryAdapter
 import com.todo.list.adapters.TasksRecyclerViewAdapter
-import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.base.BaseFragment
 import com.todo.list.databinding.AddAndUpdateTasksDialogLayoutBinding
 import com.todo.list.databinding.CustomPopupMenuLayoutBinding
@@ -53,6 +48,7 @@ import com.todo.list.utils.ColorsUtils.blackColor
 import com.todo.list.utils.ColorsUtils.getContextCompatColor
 import com.todo.list.utils.CommonFunctions
 import com.todo.list.utils.CommonFunctions.applyAnimation
+import com.todo.list.utils.CommonFunctions.applyCustomFontAndColorToPopupMenuItemsText
 import com.todo.list.utils.CommonFunctions.changeVisibility
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.Dispatchers
@@ -66,7 +62,8 @@ import java.util.Locale
 
 class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
-    private lateinit var binding: FragmentAllTasksBinding
+    private var _binding: FragmentAllTasksBinding? = null
+    private val binding get() = _binding!!
     private var category = 0
     private var tasksAboveTempValue = 1
     private var tasksBelowTempValue = 7
@@ -102,14 +99,13 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentAllTasksBinding.inflate(inflater, container, false)
+        _binding = FragmentAllTasksBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        Here, We Stop FAB Animation By Clicking SignOut ImageView From DashBoardActivity...
         (requireActivity() as DashBoardActivity).initializeStopFABAnimationFromToDosFragmentListener(
             object : StartAndStopFABAnimationListener {
                 override fun startAndStopFABAnimation(startAndStopFABAnimation: Int) {
@@ -283,7 +279,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
         if (!::adapter.isInitialized) {
             adapter = TasksRecyclerViewAdapter(viewLifecycleOwner,
-                if (selectedTab == 0) Tabs.TASKS_TAB.ordinal else Tabs.COMPLETED_TAB.ordinal, { toDoTask ->
+                if (selectedTab == 0) Tabs.TASKS_TAB.ordinal else Tabs.COMPLETED_TAB.ordinal, prefs, { toDoTask ->
                     if (selectedTab == 0) {
                         openTaskDetailActivity(toDoTask)
                     } else {
@@ -294,11 +290,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                         popupMenu = PopupMenu(
                             fragmentContext, view, Gravity.CENTER, 0,
-                            if (prefs.isDarkModeEnable) {
-                                R.style.popUpMenuDarkModeCustomization
-                            } else {
-                                R.style.popUpMenuDayModeCustomization
-                            }
+                            R.style.popUpMenuStyle
                         )
                     }
                     popupMenu?.inflate(R.menu.update_and_delete_popup_menu)
@@ -317,7 +309,11 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                     }
                     val menu = popupMenu?.menu as Menu
                     for (i in 0 until menu.size()) {
-                        applyFontToPopupMenuItem(menu.getItem(i))
+                        applyCustomFontAndColorToPopupMenuItemsText(
+                            context = fragmentContext,
+                            menuItem = menu.getItem(i),
+                            customColor = ContextCompat.getColor(fragmentContext, R.color.blackAndWhiteViewsColor)
+                        )
                     }
                     popupMenu.show()
                 }
@@ -421,6 +417,14 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             infoTV.isSelected = true
             stopFABAnimation()
 
+            if (prefs.isDarkModeEnable) {
+                titleTIL.setBoxStrokeColorStateList(textInputLayoutDarkModeStrokeColor)
+                descriptionTIL.setBoxStrokeColorStateList(textInputLayoutDarkModeStrokeColor)
+                dayOfWeekTIL.setBoxStrokeColorStateList(textInputLayoutDarkModeStrokeColor)
+                dateTIL.setBoxStrokeColorStateList(textInputLayoutDarkModeStrokeColor)
+                timeTIL.setBoxStrokeColorStateList(textInputLayoutDarkModeStrokeColor)
+            }
+
             if (fromWhereInvoked == 2) {
                 addAndEditIV.setImageResource(R.drawable.update_image)
                 addAndUpdateToDoTaskTV.text = getString(R.string.update_todo_task_text)
@@ -445,6 +449,9 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             }
 
             selectCategoryLayout.setOnClickListener { view: View ->
+                if (prefs.isDarkModeEnable) {
+                    selectCategoryLayout.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(fragmentContext, R.color.defaultColor))
+                }
                 showCustomPopupForCategorySelection(view, fromWhereInvoked)
             }
 
@@ -584,11 +591,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
     private fun showCustomPopupForCategorySelection(view: View, fromWhereInvoked: Int) {
         val customPopupMenuLayoutBinding = CustomPopupMenuLayoutBinding.inflate(layoutInflater)
-
-        /*if (prefs.isDarkModeEnable) {
-            customPopupMenuLayoutBinding.root.setCardBackgroundColor(getContextCompatColor(fragmentContext, screensNightModeColor))
-        }*/
-
         popupWindow = PopupWindow(
             customPopupMenuLayoutBinding.root,
             RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -596,7 +598,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             true
         )
         popupWindow.isOutsideTouchable = true
-        popupWindow.elevation = 5f
+        popupWindow.elevation = 5F
         val categoryArrayList = ArrayList<Int>()
         with(categoryArrayList) {
             add(TasksCategories.DEFAULT_CATEGORY.ordinal)
@@ -607,7 +609,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             }
         }
 
-        val categoryAdapter = CategoryAdapter("Category") { category, _ ->
+        val categoryAdapter = CategoryAdapter("Category", prefs) { category, _ ->
             if (category == TasksCategories.DEFAULT_CATEGORY.ordinal || category == TasksCategories.PERSONAL_CATEGORY.ordinal) {
                 this.category = TasksCategories.PERSONAL_CATEGORY.ordinal
             } else if (category == TasksCategories.WORK_CATEGORY.ordinal) {
@@ -617,13 +619,16 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             with(addAndUpdateTasksDialogLayoutBinding) {
                 if ((category == TasksCategories.DEFAULT_CATEGORY.ordinal)) {
                     selectCategoryTV.text = fragmentContext.getString(R.string.select_category_text)
-                    selectCategoryTV.setTextColor(Color.parseColor("#9E9E9E"))
+                    selectCategoryTV.setTextColor(ContextCompat.getColor(fragmentContext, R.color.subColor))
+                    if (prefs.isDarkModeEnable) {
+                        selectCategoryLayout.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(fragmentContext, R.color.subColor))
+                    }
                 } else if ((category == TasksCategories.PERSONAL_CATEGORY.ordinal)) {
                     selectCategoryTV.text = fragmentContext.getString(R.string.personal_text)
-                    selectCategoryTV.setTextColor(getContextCompatColor(fragmentContext, blackColor))
+                    selectCategoryTV.setTextColor(ContextCompat.getColor(fragmentContext, R.color.blackAndWhiteViewsColor))
                 } else if ((category == TasksCategories.WORK_CATEGORY.ordinal)) {
                     selectCategoryTV.text = fragmentContext.getString(R.string.work_text)
-                    selectCategoryTV.setTextColor(getContextCompatColor(fragmentContext, blackColor))
+                    selectCategoryTV.setTextColor(ContextCompat.getColor(fragmentContext, R.color.blackAndWhiteViewsColor))
                 }
             }
 
@@ -1007,31 +1012,49 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
     private fun showMaterialDatePicker(addAndUpdateTasksDialogLayoutBinding: AddAndUpdateTasksDialogLayoutBinding) {
         val datePicker = MaterialDatePicker.Builder.datePicker()
-        datePicker.setTitleText(R.string.select_date_text)
-        datePicker.setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-        datePicker.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
-        val picker = datePicker.build()
-        picker.show(requireActivity().supportFragmentManager, "MATERIAL_DATE_PICKER")
-        picker.addOnPositiveButtonClickListener { selection: Long? ->
-            val date: String = simpleDateFormat.format(selection)
-            addAndUpdateTasksDialogLayoutBinding.dateTIL.editText?.setText(date)
+        datePicker.apply {
+            setTitleText(R.string.select_date_text)
+            setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+            setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
+            val picker = build()
+            picker.show(requireActivity().supportFragmentManager, "MATERIAL_DATE_PICKER")
+            picker.addOnPositiveButtonClickListener { selection: Long? ->
+                val date: String = simpleDateFormat.format(selection)
+                addAndUpdateTasksDialogLayoutBinding.apply {
+                    dateTIL.editText?.setText(date)
+                    if (prefs.isDarkModeEnable) {
+                        dateTIL.editText?.isFocusableInTouchMode = true
+                        dateTIL.editText?.requestFocus()
+                        dateTIL.setBoxStrokeColorStateList(textInputLayoutDarkModeStrokeColor)
+                    }
+                }
+            }
         }
     }
 
     private fun showMaterialTimePicker(addAndUpdateTasksDialogLayoutBinding: AddAndUpdateTasksDialogLayoutBinding) {
         val builder = MaterialTimePicker.Builder()
-        builder.setTitleText(R.string.select_time_text)
-        builder.setTimeFormat(TimeFormat.CLOCK_12H)
-        builder.setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
-        builder.setHour(calendar[Calendar.HOUR])
-        builder.setMinute(calendar[Calendar.MINUTE])
-        val materialTimePicker = builder.build()
-        materialTimePicker.show(requireActivity().supportFragmentManager, "MATERIAL_TIME_PICKER")
-        materialTimePicker.addOnPositiveButtonClickListener { _: View? ->
-            calendar.set(Calendar.HOUR_OF_DAY, materialTimePicker.hour)
-            calendar.set(Calendar.MINUTE, materialTimePicker.minute)
-            val time: String = simpleTimeFormat.format(calendar.time)
-            addAndUpdateTasksDialogLayoutBinding.timeTIL.editText?.setText(time)
+        builder.apply {
+            setTitleText(R.string.select_time_text)
+            setTimeFormat(TimeFormat.CLOCK_12H)
+            setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
+            setHour(calendar[Calendar.HOUR])
+            setMinute(calendar[Calendar.MINUTE])
+            val materialTimePicker = build()
+            materialTimePicker.show(requireActivity().supportFragmentManager, "MATERIAL_TIME_PICKER")
+            materialTimePicker.addOnPositiveButtonClickListener { _: View? ->
+                calendar.set(Calendar.HOUR_OF_DAY, materialTimePicker.hour)
+                calendar.set(Calendar.MINUTE, materialTimePicker.minute)
+                val time: String = simpleTimeFormat.format(calendar.time)
+                addAndUpdateTasksDialogLayoutBinding.apply {
+                    timeTIL.editText?.setText(time)
+                    if (prefs.isDarkModeEnable) {
+                        timeTIL.editText?.isFocusableInTouchMode = true
+                        timeTIL.editText?.requestFocus()
+                        timeTIL.setBoxStrokeColorStateList(textInputLayoutDarkModeStrokeColor)
+                    }
+                }
+            }
         }
     }
 
@@ -1097,43 +1120,8 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun applyFontToPopupMenuItem(menuItem: MenuItem) {
-        val spannableString = SpannableString(menuItem.title)
-        /*spannableString.setSpan(
-            CustomTypeFaceSpan("", typeface, Color.BLACK), 0, spannableString.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )*/
-        menuItem.setTitle(spannableString)
-    }
-
-    private class CustomTypeFaceSpan(
-        family: String?,
-        private val typeface: Typeface,
-        private val black: Int
-    ) : TypefaceSpan(family) {
-        override fun updateDrawState(ds: TextPaint) {
-            super.updateDrawState(ds)
-            ds.color = black
-            applyCustomTypeFace(ds, typeface)
-        }
-
-        override fun updateMeasureState(paint: TextPaint) {
-            super.updateMeasureState(paint)
-            applyCustomTypeFace(paint, typeface)
-        }
-
-        private fun applyCustomTypeFace(paint: Paint, tf: Typeface) {
-            val oldStyle: Int
-            val old = paint.typeface
-            oldStyle = old?.style ?: 0
-            val fake = oldStyle and tf.style.inv()
-            if ((fake and Typeface.BOLD) != 0) {
-                paint.isFakeBoldText = true
-            }
-            if ((fake and Typeface.ITALIC) != 0) {
-                paint.textSkewX = -0.25f
-            }
-            paint.setTypeface(tf)
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

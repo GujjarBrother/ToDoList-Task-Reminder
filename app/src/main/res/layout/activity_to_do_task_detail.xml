@@ -11,7 +11,8 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
         android:background="@color/defaultColor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,6 +37,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/back_arrow_icon"
+                    app:layout_constraintEnd_toStartOf="@id/toolbarTV"
                     app:tint="@color/whiteColor" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -60,15 +62,6 @@
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="0.1dp"
-        android:background="#BDBDBD"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
-
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -80,7 +73,7 @@
         app:layout_constraintBottom_toTopOf="@id/adLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view">
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -106,7 +99,7 @@
                 android:layout_marginTop="@dimen/_20sdp"
                 android:gravity="center"
                 android:textAllCaps="false"
-                android:textColor="@color/blackColor"
+                android:textColor="@color/blackAndWhiteViewsColor"
                 android:textSize="@dimen/_20ssp"
                 android:textStyle="bold"
                 android:fontFamily="@font/cabin_medium"
@@ -123,7 +116,7 @@
                 android:layout_marginTop="@dimen/_20sdp"
                 android:gravity="center"
                 android:textAllCaps="false"
-                android:textColor="@color/blackColor"
+                android:textColor="@color/blackAndWhiteViewsColor"
                 android:textSize="@dimen/_20ssp"
                 android:textStyle="bold"
                 android:fontFamily="@font/cabin_medium"
@@ -140,7 +133,7 @@
                 android:layout_marginTop="@dimen/_20sdp"
                 android:gravity="center"
                 android:textAllCaps="false"
-                android:textColor="@color/blackColor"
+                android:textColor="@color/blackAndWhiteViewsColor"
                 android:textSize="@dimen/_20ssp"
                 android:textStyle="bold"
                 android:fontFamily="@font/cabin_medium"
@@ -157,7 +150,7 @@
                 android:layout_marginTop="@dimen/_20sdp"
                 android:gravity="center"
                 android:textAllCaps="false"
-                android:textColor="@color/blackColor"
+                android:textColor="@color/blackAndWhiteViewsColor"
                 android:textSize="@dimen/_20ssp"
                 android:textStyle="bold"
                 android:fontFamily="@font/cabin_medium"

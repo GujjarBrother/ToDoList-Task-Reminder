@@ -3,7 +3,6 @@ package com.todo.list.activities
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,7 +12,6 @@ import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.todo.list.R
-import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivitySplashBinding
 import com.todo.list.utils.CommonFunctions
@@ -26,8 +24,9 @@ import java.util.Locale
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity() {
 
-    private lateinit var binding: ActivitySplashBinding
-    private var selectedProgressBarBackground: Drawable? = null
+    private val binding by lazy {
+        ActivitySplashBinding.inflate(layoutInflater)
+    }
     private lateinit var valueAnimator: ValueAnimator
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { _ ->
         /*if (result.resultCode != RESULT_OK) {
@@ -39,7 +38,6 @@ class SplashActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         checkForAnAppUpdate()

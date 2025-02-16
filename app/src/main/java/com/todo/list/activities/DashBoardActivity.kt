@@ -24,7 +24,6 @@ import com.todo.list.BuildConfig
 import com.todo.list.R
 import com.todo.list.adapters.ViewPagerAdapter
 import com.todo.list.adsPlugin.bannerAd.BannerAdController
-import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivityDashBoardBinding
 import com.todo.list.databinding.ExitFromAnAppDialogLayoutBinding
@@ -64,12 +63,14 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
 
             navigationDrawerInclude.lightAndDarkModeSwitch.isChecked = when (AppCompatDelegate.getDefaultNightMode()) {
                 AppCompatDelegate.MODE_NIGHT_YES -> {
-                    navigationDrawerInclude.lightAndDarkModeIV.setImageResource(R.drawable.sun_image)
+                    navigationDrawerInclude.lightAndDarkModeIV.setImageResource(R.drawable.moon_image)
+                    navigationDrawerInclude.lightAndDarkModeTV.text = getString(R.string.dark_mode_text)
                     true
                 }
 
                 else -> {
-                    navigationDrawerInclude.lightAndDarkModeIV.setImageResource(R.drawable.moon_image)
+                    navigationDrawerInclude.lightAndDarkModeIV.setImageResource(R.drawable.sun_image)
+                    navigationDrawerInclude.lightAndDarkModeTV.text = getString(R.string.light_mode_text)
                     false
                 }
             }
@@ -111,6 +112,7 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
             navigationDrawerInclude.visitOurAppStoreOuterLayout.setOnClickListener(this@DashBoardActivity)
             navigationDrawerInclude.privacyPolicyOuterLayout.setOnClickListener(this@DashBoardActivity)
             navigationDrawerInclude.checkUpdateOuterLayout.setOnClickListener(this@DashBoardActivity)
+            navigationDrawerInclude.appNameTV.isSelected = true
 
             searchET.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
@@ -281,7 +283,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
         finish()
     }
 
-    //    Here, We Initialize Stop FAB Animation From ToDosFragment Listener...
     fun initializeStopFABAnimationFromToDosFragmentListener(
         startAndStopFABAnimationListener: StartAndStopFABAnimationListener
     ) {

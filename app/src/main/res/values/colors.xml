@@ -43,11 +43,12 @@
     <color name="tabLayoutUnSelectedTabTextColor">#80FFFFFF</color>
     <color name="fragmentsCardViewsColor">#F5F5F5</color>
     <color name="lightColor">#40000000</color>
-    <color name="toDosTasksRVDividerColor">#20000000</color>
+    <color name="dividersColor">#20000000</color>
     <color name="navigationDrawerScrimColor">#757575</color>
     <color name="searchLayoutColor">#4DFFFFFF</color>
     <color name="blackAndWhiteViewsColor">#000000</color>
     <color name="switchThumbColor">#BDBDBD</color>
     <color name="switchTrackColor">#EEEEEE</color>
+    <color name="subColor">#8E8E8E</color>
 
 </resources>

@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.devtools.ksp'
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -81,7 +83,7 @@ dependencies {
     api 'com.github.GrenderG:Toasty:1.5.2'
 
 //    'Lottie Animation' dependency...
-    api 'com.airbnb.android:lottie:6.4.0'
+    api 'com.airbnb.android:lottie:6.6.2'
 
 //    'ViewModel & LiveData' dependency...
     api 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
@@ -97,7 +99,7 @@ dependencies {
     api 'com.google.android.material:material:1.12.0'
 
 //    'Ads' dependency...
-    api "com.google.android.gms:play-services-ads:23.5.0"
+    api "com.google.android.gms:play-services-ads:23.6.0"
 
 //    'Coroutines' dependencies...
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC"
@@ -112,4 +114,8 @@ dependencies {
 
 //    'In-App update' dependency...
     api 'com.google.android.play:app-update-ktx:2.1.0'
+
+//    "Hilt" dependency...
+    api "com.google.dagger:hilt-android:2.51.1"
+    ksp "com.google.dagger:hilt-android-compiler:2.51.1"
 }

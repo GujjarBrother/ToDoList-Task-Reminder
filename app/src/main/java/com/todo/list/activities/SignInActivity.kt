@@ -10,7 +10,6 @@ import android.view.animation.AnimationUtils
 import android.widget.CompoundButton
 import androidx.appcompat.app.AlertDialog
 import com.todo.list.R
-import com.todo.list.application.Application.Companion.prefs
 import com.todo.list.base.BaseActivity
 import com.todo.list.databinding.ActivitySignInBinding
 import com.todo.list.databinding.RecoverPasswordDialogLayoutBinding
@@ -22,7 +21,9 @@ import es.dmoral.toasty.Toasty
 
 class SignInActivity : BaseActivity(), View.OnClickListener {
 
-    private lateinit var binding: ActivitySignInBinding
+    private val binding by lazy {
+        ActivitySignInBinding.inflate(layoutInflater)
+    }
     private lateinit var emailOrUserName: String
     private lateinit var password: String
     private var securityQuestion = ""
@@ -30,7 +31,6 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         fetchUser()
@@ -39,6 +39,10 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
 
         with(binding) {
             signInCardViewAnimation()
+            if (prefs.isDarkModeEnable) {
+                userNameTIL.setBoxStrokeColorStateList(textInputLayoutDarkModeStrokeColor)
+                passwordTIL.setBoxStrokeColorStateList(textInputLayoutDarkModeStrokeColor)
+            }
             signInButton.setOnClickListener(this@SignInActivity)
             forgotPasswordTV.setOnClickListener(this@SignInActivity)
             signUpTV.setOnClickListener(this@SignInActivity)
@@ -88,9 +92,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
 
-                R.id.signUpTV -> {
-                    openSignUpActivity()
-                }
+                R.id.signUpTV -> openSignUpActivity()
             }
         }
     }
@@ -121,31 +123,35 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
         }
 
         with(recoverPasswordDialogLayoutBinding) {
-            securityQuestionAnswerTextInputLayout.hint = securityQuestion
+            securityQuestionAnswerTIL.hint = securityQuestion
             showSoftKeyboard()
-            securityQuestionAnswerTextInputEditText.requestFocus()
+            securityQuestionAnswerTIET.requestFocus()
+
+            if (prefs.isDarkModeEnable) {
+                securityQuestionAnswerTIL.setBoxStrokeColorStateList(textInputLayoutDarkModeStrokeColor)
+            }
 
             dismissDialogIV.setOnClickListener { _: View? ->
-                hideSoftKeyboard(recoverPasswordDialogLayoutBinding.securityQuestionAnswerTextInputEditText)
+                hideSoftKeyboard(recoverPasswordDialogLayoutBinding.securityQuestionAnswerTIET)
                 if (!activityContext.isFinishing && !activityContext.isDestroyed) {
                     recoverPasswordAlertDialog.dismiss()
                 }
             }
 
             resetPasswordButton.setOnClickListener { _: View? ->
-                val answer = securityQuestionAnswerTextInputLayout.editText?.text.toString().trim()
+                val answer = securityQuestionAnswerTIL.editText?.text.toString().trim()
                 if (TextUtils.isEmpty(answer)) {
-                    securityQuestionAnswerTextInputLayout.error = getString(R.string.please_enter_answer_here_error_text)
+                    securityQuestionAnswerTIL.error = getString(R.string.please_enter_answer_here_error_text)
                 } else if (answer == securityAnswer) {
-                    hideSoftKeyboard(securityQuestionAnswerTextInputEditText)
-                    securityQuestionAnswerTextInputLayout.setErrorTextColor(null)
-                    securityQuestionAnswerTextInputLayout.error = null
+                    hideSoftKeyboard(securityQuestionAnswerTIET)
+                    securityQuestionAnswerTIL.setErrorTextColor(null)
+                    securityQuestionAnswerTIL.error = null
                     if (!activityContext.isFinishing && !activityContext.isDestroyed) {
                         recoverPasswordAlertDialog.dismiss()
                     }
                     openSignUpActivity()
                 } else {
-                    securityQuestionAnswerTextInputLayout.error = getString(R.string.enter_right_answer_error_text)
+                    securityQuestionAnswerTIL.error = getString(R.string.enter_right_answer_error_text)
                 }
             }
         }

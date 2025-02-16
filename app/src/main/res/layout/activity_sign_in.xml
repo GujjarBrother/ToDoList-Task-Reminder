@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:layout_marginVertical="@dimen/_10sdp"
-        app:cardBackgroundColor="@color/whiteColor"
+        app:cardBackgroundColor="@color/cardsBackgroundColor"
         app:cardCornerRadius="@dimen/_10sdp"
         app:cardElevation="@dimen/_2sdp"
         app:strokeColor="@android:color/transparent"
@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_5sdp"
                 android:background="@android:color/transparent"
-                android:textColorHint="#9E9E9E"
+                android:textColorHint="@color/subColor"
                 app:boxBackgroundColor="@android:color/transparent"
                 app:boxStrokeColor="@null"
                 app:errorEnabled="true"
@@ -95,6 +95,7 @@
                 app:startIconTint="@color/defaultColor"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/passwordTIL"
                 app:layout_constraintEnd_toEndOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -103,10 +104,11 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/username_e_mail_text"
                     android:imeOptions="actionNext"
+                    android:singleLine="true"
                     android:inputType="textEmailAddress"
                     android:textAllCaps="false"
                     android:fontFamily="@font/cabin_medium"
-                    android:textColor="@color/blackColor" />
+                    android:textColor="@color/blackAndWhiteViewsColor" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -117,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_5sdp"
                 android:background="@android:color/transparent"
-                android:textColorHint="#9E9E9E"
+                android:textColorHint="@color/subColor"
                 app:boxBackgroundColor="@android:color/transparent"
                 app:boxStrokeColor="@null"
                 app:boxStrokeErrorColor="@color/defaultColor"
@@ -127,11 +129,12 @@
                 app:endIconMode="password_toggle"
                 app:endIconTint="@color/defaultColor"
                 app:errorEnabled="true"
-                app:errorTextColor="#9E9E9E"
+                app:errorTextColor="@color/subColor"
                 app:startIconDrawable="@drawable/password_icon"
                 app:startIconTint="@color/defaultColor"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/userNameTIL"
+                app:layout_constraintBottom_toTopOf="@id/rememberMeCB"
                 app:layout_constraintEnd_toEndOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -139,11 +142,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/password_text"
-                    android:imeOptions="actionDone"
+                    android:imeOptions="actionGo"
+                    android:singleLine="true"
                     android:inputType="textPassword"
                     android:textAllCaps="false"
                     android:fontFamily="@font/cabin_medium"
-                    android:textColor="@color/blackColor" />
+                    android:textColor="@color/blackAndWhiteViewsColor" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -155,8 +159,9 @@
                 android:text="@string/remember_me_text"
                 android:textAllCaps="false"
                 app:buttonTint="@color/defaultColor"
-                android:textColor="@color/blackColor"
+                android:textColor="@color/blackAndWhiteViewsColor"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/signInButton"
                 app:layout_constraintTop_toBottomOf="@id/passwordTIL" />
 
             <com.google.android.material.button.MaterialButton
@@ -178,7 +183,8 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rememberMeCB"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintBottom_toTopOf="@id/forgotPasswordTV"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/forgotPasswordTV"
@@ -191,12 +197,13 @@
                 android:text="@string/forgot_password_text"
                 android:textAllCaps="false"
                 android:fontFamily="@font/cabin_medium"
-                android:textColor="@color/purple_500"
+                android:textColor="@color/subColor"
                 android:textSize="@dimen/_10ssp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/signInButton"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintBottom_toTopOf="@id/signUpTV"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/dontHaveAnAccountTV"
@@ -204,7 +211,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/don_t_have_an_account_text"
                 android:textAllCaps="false"
-                android:textColor="#9E9E9E"
+                android:textColor="@color/subColor"
                 android:fontFamily="@font/cabin_medium"
                 android:textSize="@dimen/_10ssp"
                 android:textStyle="bold"
@@ -226,6 +233,7 @@
                 android:textSize="@dimen/_11ssp"
                 android:fontFamily="@font/cabin_medium"
                 android:textStyle="bold"
+                android:layout_marginBottom="@dimen/_5sdp"
                 app:layout_constraintStart_toEndOf="@id/dontHaveAnAccountTV"
                 app:layout_constraintTop_toBottomOf="@id/forgotPasswordTV"
                 app:layout_constraintEnd_toEndOf="parent"

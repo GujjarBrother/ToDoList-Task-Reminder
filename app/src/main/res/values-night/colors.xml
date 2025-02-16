@@ -18,7 +18,7 @@
     <color name="tabLayoutUnSelectedTabTextColor">#80FFFFFF</color>
     <color name="fragmentsCardViewsColor">#28293D</color>
     <color name="lightColor">#FFFFFF</color>
-    <color name="toDosTasksRVDividerColor">#FFFFFF</color>
+    <color name="dividersColor">#FFFFFF</color>
     <color name="defaultTransparentColor">#8072C0EE</color>
     <color name="searchLayoutColor">#4DFFFFFF</color>
     <color name="blackAndWhiteViewsColor">#FFFFFF</color>
