@@ -262,102 +262,6 @@
                         app:layout_constraintTop_toBottomOf="@id/moreAppsTV">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/photoEditorAppLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:padding="@dimen/_8sdp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toTopOf="@id/dailyExpenseManagerAppLayout">
-
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:id="@+id/photoEditorIV"
-                                android:layout_width="@dimen/_30sdp"
-                                android:layout_height="@dimen/_30sdp"
-                                app:srcCompat="@drawable/sa10_photo_editor_app_icon"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintEnd_toStartOf="@id/photoEditorTV" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/photoEditorTV"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="@dimen/_10sdp"
-                                android:text="@string/sa_10_photo_editor"
-                                android:textAllCaps="false"
-                                android:fontFamily="@font/cabin_medium"
-                                android:textColor="@color/blackAndWhiteViewsColor"
-                                android:textSize="@dimen/_12ssp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/photoEditorIV"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintEnd_toStartOf="@id/photoEditorAppArrowIV"/>
-
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:id="@+id/photoEditorAppArrowIV"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:srcCompat="@drawable/forward_arrow_image"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/defaultColor" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/dailyExpenseManagerAppLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:padding="@dimen/_8sdp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintBottom_toTopOf="@id/visitOurAppStoreLayout"
-                            app:layout_constraintTop_toBottomOf="@id/photoEditorAppLayout">
-
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:id="@+id/dailyExpenseManagerAppIV"
-                                android:layout_width="@dimen/_30sdp"
-                                android:layout_height="@dimen/_30sdp"
-                                app:srcCompat="@drawable/daily_expense_manager_app_icon"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintEnd_toStartOf="@id/dailyExpenseManagerAppTV" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/dailyExpenseManagerAppTV"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="@dimen/_10sdp"
-                                android:text="@string/daily_expense_manager"
-                                android:textAllCaps="false"
-                                android:textColor="@color/blackAndWhiteViewsColor"
-                                android:textSize="@dimen/_12ssp"
-                                android:fontFamily="@font/cabin_medium"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/dailyExpenseManagerAppIV"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintEnd_toStartOf="@id/dailyExpenseManagerAppArrowIV"/>
-
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:id="@+id/dailyExpenseManagerAppArrowIV"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:srcCompat="@drawable/forward_arrow_image"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/defaultColor" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/visitOurAppStoreLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -366,7 +270,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/dailyExpenseManagerAppLayout">
+                            app:layout_constraintTop_toTopOf="parent">
 
                             <androidx.appcompat.widget.AppCompatImageView
                                 android:id="@+id/visitOurAppStoreIV"

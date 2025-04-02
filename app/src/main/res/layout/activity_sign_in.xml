@@ -50,12 +50,12 @@
         android:id="@+id/signInTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/cabin_medium"
         android:text="@string/sign_in_text"
         android:textAllCaps="false"
         android:textColor="@color/defaultColor"
         android:textSize="@dimen/_23ssp"
         android:textStyle="bold"
-        android:fontFamily="@font/cabin_medium"
         app:layout_constraintBottom_toTopOf="@id/signInCV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,11 +70,11 @@
         app:cardBackgroundColor="@color/cardsBackgroundColor"
         app:cardCornerRadius="@dimen/_10sdp"
         app:cardElevation="@dimen/_2sdp"
-        app:strokeColor="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@id/thirdIB"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/firstIB">
+        app:layout_constraintTop_toBottomOf="@id/firstIB"
+        app:strokeColor="@android:color/transparent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -91,23 +91,23 @@
                 app:boxBackgroundColor="@android:color/transparent"
                 app:boxStrokeColor="@null"
                 app:errorEnabled="true"
-                app:startIconDrawable="@drawable/user_name_edit_text_icon"
-                app:startIconTint="@color/defaultColor"
+                app:layout_constraintBottom_toTopOf="@id/passwordTIL"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/passwordTIL"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:startIconDrawable="@drawable/user_name_edit_text_icon"
+                app:startIconTint="@color/defaultColor">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/userNameTIET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/cabin_medium"
                     android:hint="@string/username_e_mail_text"
                     android:imeOptions="actionNext"
-                    android:singleLine="true"
                     android:inputType="textEmailAddress"
+                    android:singleLine="true"
                     android:textAllCaps="false"
-                    android:fontFamily="@font/cabin_medium"
                     android:textColor="@color/blackAndWhiteViewsColor" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -130,23 +130,23 @@
                 app:endIconTint="@color/defaultColor"
                 app:errorEnabled="true"
                 app:errorTextColor="@color/subColor"
-                app:startIconDrawable="@drawable/password_icon"
-                app:startIconTint="@color/defaultColor"
+                app:layout_constraintBottom_toTopOf="@id/rememberMeCB"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/userNameTIL"
-                app:layout_constraintBottom_toTopOf="@id/rememberMeCB"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:startIconDrawable="@drawable/password_icon"
+                app:startIconTint="@color/defaultColor">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/passwordTIET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/cabin_medium"
                     android:hint="@string/password_text"
                     android:imeOptions="actionGo"
-                    android:singleLine="true"
                     android:inputType="textPassword"
+                    android:singleLine="true"
                     android:textAllCaps="false"
-                    android:fontFamily="@font/cabin_medium"
                     android:textColor="@color/blackAndWhiteViewsColor" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -158,33 +158,33 @@
                 android:fontFamily="@font/cabin_medium"
                 android:text="@string/remember_me_text"
                 android:textAllCaps="false"
-                app:buttonTint="@color/defaultColor"
                 android:textColor="@color/blackAndWhiteViewsColor"
-                app:layout_constraintStart_toStartOf="parent"
+                app:buttonTint="@color/defaultColor"
                 app:layout_constraintBottom_toTopOf="@id/signInButton"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/passwordTIL" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/signInButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minWidth="@dimen/_200sdp"
-                android:minHeight="@dimen/_55sdp"
-                app:cornerRadius="@dimen/_7sdp"
                 android:layout_gravity="center_horizontal"
                 android:backgroundTint="@color/defaultColor"
+                android:fontFamily="@font/cabin_medium"
+                android:minWidth="@dimen/_200sdp"
+                android:minHeight="@dimen/_55sdp"
                 android:padding="@dimen/_10ssp"
                 android:stateListAnimator="@null"
                 android:text="@string/sign_in_text"
                 android:textAllCaps="false"
-                android:fontFamily="@font/cabin_medium"
                 android:textColor="@color/whiteColor"
                 android:textSize="@dimen/_15ssp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rememberMeCB"
+                app:cornerRadius="@dimen/_7sdp"
                 app:layout_constraintBottom_toTopOf="@id/forgotPasswordTV"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rememberMeCB" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/forgotPasswordTV"
@@ -193,57 +193,57 @@
                 android:layout_gravity="center"
                 android:layout_marginVertical="@dimen/_5sdp"
                 android:background="?attr/selectableItemBackground"
+                android:fontFamily="@font/cabin_medium"
                 android:padding="@dimen/_3sdp"
                 android:text="@string/forgot_password_text"
                 android:textAllCaps="false"
-                android:fontFamily="@font/cabin_medium"
                 android:textColor="@color/subColor"
                 android:textSize="@dimen/_10ssp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/signInButton"
                 app:layout_constraintBottom_toTopOf="@id/signUpTV"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/signInButton" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/dontHaveAnAccountTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/cabin_medium"
                 android:text="@string/don_t_have_an_account_text"
                 android:textAllCaps="false"
                 android:textColor="@color/subColor"
-                android:fontFamily="@font/cabin_medium"
                 android:textSize="@dimen/_10ssp"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/signUpTV"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/forgotPasswordTV"
-                app:layout_constraintEnd_toStartOf="@id/signUpTV"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/forgotPasswordTV" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/signUpTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_5sdp"
                 android:background="?attr/selectableItemBackground"
+                android:fontFamily="@font/cabin_medium"
                 android:padding="@dimen/_3sdp"
                 android:text="@string/sign_up_text"
                 android:textAllCaps="false"
                 android:textColor="@color/defaultColor"
                 android:textSize="@dimen/_11ssp"
-                android:fontFamily="@font/cabin_medium"
                 android:textStyle="bold"
-                android:layout_marginBottom="@dimen/_5sdp"
-                app:layout_constraintStart_toEndOf="@id/dontHaveAnAccountTV"
-                app:layout_constraintTop_toBottomOf="@id/forgotPasswordTV"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintStart_toEndOf="@id/dontHaveAnAccountTV"
+                app:layout_constraintTop_toBottomOf="@id/forgotPasswordTV" />
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/dontHaveAnAccountSignUpAccountGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="dontHaveAnAccountTV, signUpTV"/>
+                app:constraint_referenced_ids="dontHaveAnAccountTV, signUpTV" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
