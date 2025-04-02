@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "51045315453",
+    "project_id": "to-do-list---task-reminder-app",
+    "storage_bucket": "to-do-list---task-reminder-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51045315453:android:8487ed885c25728babd214",
+        "android_client_info": {
+          "package_name": "com.example.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChaZsN9cj-EQVnEi4cMBZuQNmK4h9BYuY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51045315453:android:ea6573c48264f69fabd214",
+        "android_client_info": {
+          "package_name": "com.sag.todo.list.task.reminder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChaZsN9cj-EQVnEi4cMBZuQNmK4h9BYuY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

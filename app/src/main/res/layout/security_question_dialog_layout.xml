@@ -52,7 +52,7 @@
             android:fontFamily="@font/cabin_medium"
             android:text="@string/select_security_question_text"
             android:textAllCaps="false"
-            android:textColor="#9E9E9E"
+            android:textColor="@color/subColor"
             android:textSize="@dimen/_13ssp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/dropDownIV"
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_5sdp"
         android:background="@android:color/transparent"
-        android:textColorHint="#9E9E9E"
+        android:textColorHint="@color/subColor"
         app:boxBackgroundColor="@android:color/transparent"
         app:boxStrokeColor="@null"
         app:errorEnabled="true"
@@ -98,7 +98,7 @@
             android:imeOptions="actionGo"
             android:inputType="textCapWords"
             android:textAllCaps="false"
-            android:textColor="@color/blackColor" />
+            android:textColor="@color/blackAndWhiteViewsColor" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

@@ -16,8 +16,8 @@
     <string name="password_is_wrong_text">Password is wrong…</string>
     <string name="username_email_is_wrong_text">Username/Email is wrong…</string>
     <string name="password_is_too_long_text">Password is too long…</string>
-    <string name="sign_up_successfully_toast_message_text">You are sign-up successfully.</string>
-    <string name="sign_in_successfully_toast_message_text">You are sign-in successfully.</string>
+    <string name="sign_up_successfully_toast_message_text">You are Sign-Up successfully.</string>
+    <string name="sign_in_successfully_toast_message_text">You are Sign-In successfully.</string>
     <string name="tasks_text">Tasks</string>
     <string name="personal_text">Personal</string>
     <string name="work_text">Work</string>
@@ -119,10 +119,6 @@
     <string name="completed_text">Completed</string>
     <string name="for_using_an_app_text">For using an app.</string>
     <string name="come_back_we_shall_meet_again_text">Come back\nwe shall meet again.</string>
-
-
-    <string name="sa_10_photo_editor" translatable="false">SA10 Photo Editor</string>
-    <string name="daily_expense_manager" translatable="false">Daily Expense Manager</string>
     <string name="dark_mode_text">Dark Mode</string>
     <string name="light_mode_text">Light Mode</string>
     <string name="asterik" translatable="false">*</string>
@@ -143,6 +139,6 @@
     <string name="task_text">Task</string>
     <string name="reminder_text">Reminder</string>
     <string name="loading_text">Loading…</string>
-    <string name="search_here_hint">Search here...</string>
+    <string name="search_here_hint">Search here…</string>
 
 </resources>
