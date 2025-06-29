@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_boxes_background"
-    android:orientation="vertical"
     android:paddingBottom="@dimen/_8sdp">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -39,7 +38,7 @@
                 android:id="@+id/addAndEditIV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/add_new_task_icon"
+                app:srcCompat="@drawable/add_new_task_image"
                 app:layout_constraintBottom_toTopOf="@id/addAndUpdateToDoTaskTV"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -99,7 +98,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/infoTV"
-                app:startIconDrawable="@drawable/title_icon"
+                app:startIconDrawable="@drawable/title_image"
                 app:startIconTint="@color/defaultColor">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -193,7 +192,7 @@
                 app:layout_constraintEnd_toStartOf="@id/timeTIL"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dayOfWeekTIL"
-                app:startIconDrawable="@drawable/date_icon"
+                app:startIconDrawable="@drawable/date_image"
                 app:startIconTint="@color/defaultColor">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -223,7 +222,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/dateTIL"
                 app:layout_constraintTop_toBottomOf="@id/dayOfWeekTIL"
-                app:startIconDrawable="@drawable/time_icon"
+                app:startIconDrawable="@drawable/time_image"
                 app:startIconTint="@color/defaultColor">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -272,7 +271,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/selectCategoryTV"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/drop_down_arrow"
+                    app:srcCompat="@drawable/drop_down_image"
                     app:tint="@color/defaultColor" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -282,7 +281,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_14sdp"
-                android:backgroundTint="@color/defaultColor"
+                app:backgroundTint="@color/positive_buttons_pressed_and_unpressed_states_background"
                 android:gravity="center"
                 android:minWidth="@dimen/_200sdp"
                 android:minHeight="@dimen/_55sdp"

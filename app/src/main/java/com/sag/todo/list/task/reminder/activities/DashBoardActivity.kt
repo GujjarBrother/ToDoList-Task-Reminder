@@ -1,5 +1,6 @@
 package com.sag.todo.list.task.reminder.activities
 
+import android.app.AlarmManager
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
@@ -7,15 +8,23 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.animation.Animation
 import android.widget.CompoundButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -25,15 +34,16 @@ import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.adapters.ViewPagerAdapter
 import com.sag.todo.list.task.reminder.adsPlugin.bannerAd.BannerAdController
 import com.sag.todo.list.task.reminder.base.BaseActivity
+import com.sag.todo.list.task.reminder.controllers.PermissionsController
 import com.sag.todo.list.task.reminder.databinding.ActivityDashBoardBinding
 import com.sag.todo.list.task.reminder.databinding.CustomTabBinding
 import com.sag.todo.list.task.reminder.databinding.ExitFromAnAppDialogLayoutBinding
 import com.sag.todo.list.task.reminder.databinding.SignOutDialogLayoutBinding
 import com.sag.todo.list.task.reminder.enums.Tabs
 import com.sag.todo.list.task.reminder.enums.Visibility
+import com.sag.todo.list.task.reminder.fragments.AllTasksFragment
 import com.sag.todo.list.task.reminder.listeners.SearchViewVisibilityListener
 import com.sag.todo.list.task.reminder.listeners.StartAndStopFABAnimationListener
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.applyAnimation
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeAppMode
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeVisibility
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.isSomethingChanged
@@ -41,17 +51,52 @@ import com.sag.todo.list.task.reminder.utils.CommonFunctions.keepActivityOn
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.openAppInPlayStore
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.openGoogleAppStore
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.openPrivacyPolicyActivity
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import javax.inject.Named
 
+@AndroidEntryPoint
 class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibilityListener {
 
     private val binding by lazy {
         ActivityDashBoardBinding.inflate(layoutInflater)
     }
+
+    @Inject
+    lateinit var alarmManager: AlarmManager
+
+    @Inject
+    @Named(value = "FabRateUsAndApplyAnimation")
+    lateinit var animation: Animation
+
     private lateinit var startAndStopFABAnimationListener: StartAndStopFABAnimationListener
+    private val postNotificationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+        if (isGranted) {
+            Toast.makeText(activityContext, "Granted...!", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(activityContext, "Not-Granted...!", Toast.LENGTH_LONG).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val defaultColor = ContextCompat.getColor(activityContext, R.color.defaultColor)
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(defaultColor),
+            navigationBarStyle = SystemBarStyle.dark(defaultColor)
+        )
         setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.rootLayout)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        lifecycle.addObserver(PermissionsController(
+            context = activityContext,
+            postNotificationPermissionLauncher = postNotificationPermissionLauncher,
+            alarmManager = alarmManager
+        ))
 
         with(binding) {
             BannerAdController.loadAndShowBannerAd(
@@ -228,6 +273,7 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
 
                 R.id.searchIV -> {
                     toolbarGroup.changeVisibility(Visibility.GONE.ordinal)
+                    searchIV.changeVisibility(Visibility.GONE.ordinal)
                     searchLayout.changeVisibility(Visibility.VISIBLE.ordinal)
                     softKeyboardVisibilityController.showSoftKeyboard()
                     searchET.requestFocus()
@@ -237,6 +283,12 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
                     searchET.text = null
                     toolbarGroup.changeVisibility(Visibility.VISIBLE.ordinal)
                     searchLayout.changeVisibility(Visibility.GONE.ordinal)
+                    val currentlyLoadedFragmentInVP = supportFragmentManager.findFragmentByTag("f${binding.dashBoardViewPager.currentItem}") as AllTasksFragment
+                    if (currentlyLoadedFragmentInVP.getTasksListSize() == 0) {
+                        searchIV.changeVisibility(Visibility.GONE.ordinal)
+                    } else {
+                        searchIV.changeVisibility(Visibility.VISIBLE.ordinal)
+                    }
                     softKeyboardVisibilityController.hideSoftKeyboard(view)
                 }
 
@@ -270,7 +322,7 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
         }
 
         with(signOutDialogLayoutBinding) {
-            signOutIV.startAnimation(applyAnimation(activityContext))
+            signOutIV.startAnimation(animation)
 
             noButton.setOnClickListener { _: View ->
                 if (!activityContext.isFinishing && !activityContext.isDestroyed) {
@@ -286,14 +338,10 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
                 if (!activityContext.isFinishing && !activityContext.isDestroyed) {
                     signOutAlertDialog.dismiss()
                 }
-                openSignInActivity()
+                startActivity(Intent(activityContext, SignInActivity::class.java))
+                finish()
             }
         }
-    }
-
-    private fun openSignInActivity() {
-        startActivity(Intent(activityContext, SignInActivity::class.java))
-        finish()
     }
 
     fun initializeStopFABAnimationFromToDosFragmentListener(
@@ -329,7 +377,7 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
         }
 
         with(exitFromAnAppDialogLayoutBinding) {
-            exitFromAnAppIV.startAnimation(applyAnimation(activityContext))
+            exitFromAnAppIV.startAnimation(animation)
 
             noButton.setOnClickListener { _: View ->
                 if (binding.dashBoardViewPager.currentItem == 0) {
@@ -341,7 +389,8 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
             }
 
             yesButton.setOnClickListener { _: View ->
-                openThankYouActivity()
+                startActivity(Intent(activityContext, ThankYouActivity::class.java))
+                finish()
                 if (!activityContext.isFinishing && !activityContext.isDestroyed) {
                     exitFromAnAppAlertDialog.dismiss()
                 }
@@ -349,18 +398,17 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
         }
     }
 
-    private fun openThankYouActivity() {
-        startActivity(Intent(activityContext, ThankYouActivity::class.java))
-        finish()
-    }
-
     override fun isShowSearchViewORNot(isShow: Boolean) {
         with(binding) {
-            if (isShow) {
-                searchIV.changeVisibility(Visibility.VISIBLE.ordinal)
+            searchIV.changeVisibility(if (isShow) {
+                if (searchLayout.isVisible) {
+                    Visibility.GONE.ordinal
+                } else {
+                    Visibility.VISIBLE.ordinal
+                }
             } else {
-                searchIV.changeVisibility(Visibility.GONE.ordinal)
-            }
+                Visibility.GONE.ordinal
+            })
         }
     }
 }

@@ -61,15 +61,6 @@
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="0.1dp"
-        android:background="#BDBDBD"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
-
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -80,7 +71,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view">
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -223,7 +214,7 @@
                 android:layout_marginHorizontal="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:visibility="gone"
-                app:cardBackgroundColor="@color/feedbackEditTextCardViewColor"
+                app:cardBackgroundColor="@color/feedbackAndSearchETCVColor"
                 app:cardCornerRadius="@dimen/_10sdp"
                 app:cardElevation="@dimen/_2sdp"
                 app:strokeColor="@android:color/transparent"
@@ -241,7 +232,7 @@
                     android:importantForAutofill="no"
                     android:inputType="textMultiLine"
                     android:padding="@dimen/_10sdp"
-                    android:textColorHint="#BEBEBE"
+                    android:textColorHint="@color/editTextsHintTextColor"
                     android:fontFamily="@font/cabin_medium"
                     android:textColor="@color/blackAndWhiteViewsColor"
                     android:textCursorDrawable="@null"
@@ -253,8 +244,7 @@
                 android:id="@+id/cancelButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@android:color/transparent"
+                app:backgroundTint="@color/negative_buttons_pressed_and_unpressed_states_background"
                 android:minHeight="@dimen/_50sdp"
                 android:stateListAnimator="@null"
                 android:text="@string/cancel_text"
@@ -277,8 +267,7 @@
                 android:id="@+id/submitButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/defaultColor"
+                app:backgroundTint="@color/positive_buttons_pressed_and_unpressed_states_background"
                 android:minHeight="@dimen/_50sdp"
                 android:stateListAnimator="@null"
                 android:text="@string/submit_text"

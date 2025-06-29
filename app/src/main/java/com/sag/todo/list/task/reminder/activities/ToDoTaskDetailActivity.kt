@@ -3,6 +3,11 @@ package com.sag.todo.list.task.reminder.activities
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.adsPlugin.bannerAd.BannerAdController
 import com.sag.todo.list.task.reminder.base.BaseActivity
@@ -19,7 +24,17 @@ class ToDoTaskDetailActivity : BaseActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val defaultColor = ContextCompat.getColor(activityContext, R.color.defaultColor)
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(defaultColor),
+            navigationBarStyle = SystemBarStyle.dark(defaultColor)
+        )
         setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         keepActivityOn(activityContext)
         val toDoTask = intent.getSerializableExtra("taskDetail") as ToDoTask?

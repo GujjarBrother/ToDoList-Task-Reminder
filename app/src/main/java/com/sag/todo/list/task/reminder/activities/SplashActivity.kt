@@ -2,35 +2,51 @@ package com.sag.todo.list.task.reminder.activities
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.view.animation.AnimationUtils
+import android.view.WindowInsets
+import android.view.WindowManager
+import android.view.animation.Animation
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.firebase.Firebase
-import com.google.firebase.remoteconfig.remoteConfig
-import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.databinding.ActivitySplashBinding
-import com.sag.todo.list.task.reminder.utils.CommonFunctions
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.makeFullScreenActivity
+import com.sag.todo.list.task.reminder.utils.FetchRemoteConfig
+import com.sag.todo.list.task.reminder.viewModels.TasksViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
+import javax.inject.Named
 
 @SuppressLint("CustomSplashScreen")
+@AndroidEntryPoint
 class SplashActivity : BaseActivity() {
 
     private val binding by lazy {
         ActivitySplashBinding.inflate(layoutInflater)
     }
+
+    @Inject
+    @Named(value = "SplashImageAnimation")
+    lateinit var animation: Animation
     private lateinit var valueAnimator: ValueAnimator
+    private val tasksViewModel: TasksViewModel by viewModels()
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { _ ->
         /*if (result.resultCode != RESULT_OK) {
             toastController.showToast(activityContext, "Update not available...!", false)
@@ -41,32 +57,42 @@ class SplashActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val defaultColor = ContextCompat.getColor(activityContext, R.color.defaultColor)
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(defaultColor),
+            navigationBarStyle = SystemBarStyle.dark(defaultColor)
+        )
         setContentView(binding.root)
-
-        val remoteConfig = Firebase.remoteConfig
-        val remoteConfigSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 20
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.rootLayout)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
-        remoteConfig.setConfigSettingsAsync(remoteConfigSettings)
-        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
-        remoteConfig.fetchAndActivate()
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val str = remoteConfig.getString("TITLE")
-                    binding.taskTV.text = str
-                }
-            }
+
+        FetchRemoteConfig.fetchRemoteConfigValues {
+        }
 
         checkForAnAppUpdate()
         makeFullScreenActivity(activityContext)
 
         lifecycleScope.launch(Dispatchers.IO) {
-            CommonFunctions.getViewModel(activityContext).updateCompletedAndTimeUpTasks(true, Date(System.currentTimeMillis()))
+            tasksViewModel.updateCompletedAndTimeUpTasks(true, Date(System.currentTimeMillis()))
         }
 
         with(binding) {
-            applySplashAnimation()
+            splashIV.startAnimation(animation)
             applyAnimationOnProgressBar()
+        }
+    }
+
+    private fun makeFullScreenActivity(activity: Activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            activity.window.insetsController?.hide(WindowInsets.Type.statusBars())
+        } else {
+            activity.window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
         }
     }
 
@@ -87,30 +113,19 @@ class SplashActivity : BaseActivity() {
     private fun ActivitySplashBinding.applyAnimationOnProgressBar() {
         valueAnimator = ValueAnimator.ofInt(0, splashLoadingProgressBar.max)
         with(valueAnimator) {
-            setDuration(5000)
-            addUpdateListener { animation ->
-                val animatedValue = animation.animatedValue
+            duration = 5000
+            addUpdateListener {
+                val animatedValue = it.animatedValue
                 if (animatedValue is Int) {
                     splashLoadingProgressBar.progress = animatedValue
                     loadingPercentageTV.text = String.format(Locale.getDefault(), "%d%s", animatedValue, "%")
                     if (animatedValue == 100) {
-                        checkUserSignInOrSignOutStatus()
+                        startActivity(Intent(activityContext, if (prefs.isUserSignIn) DashBoardActivity::class.java else SignInActivity::class.java))
+                        finish()
                     }
                 }
             }
         }
         valueAnimator.start()
     }
-
-    private fun checkUserSignInOrSignOutStatus() {
-        if (prefs.isUserSignIn) {
-            startActivity(Intent(activityContext, DashBoardActivity::class.java))
-        } else {
-            startActivity(Intent(activityContext, SignInActivity::class.java))
-        }
-        finish()
-    }
-
-    private fun ActivitySplashBinding.applySplashAnimation() =
-        splashIV.startAnimation(AnimationUtils.loadAnimation(activityContext, R.anim.splash_image_animation))
 }

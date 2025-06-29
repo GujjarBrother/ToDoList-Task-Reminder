@@ -69,28 +69,24 @@ class CategoryAdapter(
                 when (item) {
                     SecurityQuestions.SELECT_SECURITY_QUESTION.ordinal -> {
                         categoryNameTV.text = root.context.getString(R.string.select_security_question_text)
-                        categoryNameTV.textSize = 16f
+                        categoryNameTV.textSize = 16F
                         categoryNameTV.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.subColor))
                     }
 
                     SecurityQuestions.QUESTION_1.ordinal -> {
-                        categoryNameTV.text = root.context
-                            .getString(R.string.what_is_your_favourite_book_question)
+                        categoryNameTV.text = root.context.getString(R.string.what_is_your_favourite_book_question)
                     }
 
                     SecurityQuestions.QUESTION_2.ordinal -> {
-                        categoryNameTV.text = root.context
-                            .getString(R.string.what_is_your_favourite_teacher_name_question)
+                        categoryNameTV.text = root.context.getString(R.string.what_is_your_favourite_teacher_name_question)
                     }
 
                     SecurityQuestions.QUESTION_3.ordinal -> {
-                        categoryNameTV.text = root.context
-                            .getString(R.string.what_is_your_school_name_question)
+                        categoryNameTV.text = root.context.getString(R.string.what_is_your_school_name_question)
                     }
 
                     SecurityQuestions.QUESTION_4.ordinal -> {
-                        categoryNameTV.text = root.context
-                            .getString(R.string.what_is_your_favourite_game_question)
+                        categoryNameTV.text = root.context.getString(R.string.what_is_your_favourite_game_question)
                     }
                 }
             }
@@ -107,13 +103,14 @@ class CategoryAdapter(
         init {
             with(binding) {
                 root.setOnClickListener { _: View? ->
-                    if (adapterPosition != -1) {
+                    val pos = adapterPosition
+                    if (pos != -1) {
                         if (forWhichInvoked.equals(other = "Category", ignoreCase = true)) {
-                            callback.invoke(getItem(adapterPosition), null)
+                            callback.invoke(getItem(pos), null)
                         } else if (forWhichInvoked.equals(other = "Gender", ignoreCase = true)) {
-                            callback.invoke(getItem(adapterPosition), "Gender")
+                            callback.invoke(getItem(pos), "Gender")
                         } else if (forWhichInvoked.equals(other = "Security Questions", ignoreCase = true)) {
-                            callback.invoke(getItem(adapterPosition), "Security Questions")
+                            callback.invoke(getItem(pos), "Security Questions")
                         }
                     }
                 }

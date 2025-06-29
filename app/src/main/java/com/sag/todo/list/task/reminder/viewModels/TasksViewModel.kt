@@ -4,39 +4,51 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sag.todo.list.task.reminder.db.ToDoTask
 import com.sag.todo.list.task.reminder.repositories.TasksRepo
-import kotlinx.coroutines.Deferred
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.Date
+import javax.inject.Inject
 
-class TasksViewModel(private val tasksRepo: TasksRepo) : ViewModel() {
+@HiltViewModel
+class TasksViewModel @Inject constructor(private val tasksRepo: TasksRepo) : ViewModel() {
 
-    fun saveTask(toDoTask: ToDoTask): Deferred<Long> = viewModelScope.async(Dispatchers.IO) {
-        tasksRepo.saveTask(toDoTask)
+    fun saveTask(
+        toDoTask: ToDoTask,
+        isPastTimeCallback: () -> Unit,
+        isAlreadySavedCallback: () -> Unit,
+        isSavedSuccessfully: (Boolean, Long) -> Unit
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        when {
+            toDoTask.dateAndTimeInMillis.time < System.currentTimeMillis() -> isPastTimeCallback.invoke()
+            tasksRepo.isTaskAlreadySaved(toDoTask) >= 1 -> isAlreadySavedCallback.invoke()
+            else -> {
+                val savedTaskID = tasksRepo.saveTask(toDoTask)
+                isSavedSuccessfully.invoke(savedTaskID >= 1, savedTaskID)
+            }
+        }
     }
 
     fun getAllTasks(isTaskComplete: Boolean) = tasksRepo.getAllTasks(isTaskComplete)
 
-    fun isTaskAlreadySaved(
-        dayOfWeek: String,
-        date: String,
-        month: String,
-        year: String,
-        title: String,
-        description: String,
-        time: String,
-        category: Int
-    ): Deferred<Int> = viewModelScope.async(Dispatchers.IO) {
-        tasksRepo.isTaskAlreadySaved(dayOfWeek, date, month, year, title, description, time, category)
+    fun updateTask(
+        toDoTask: ToDoTask,
+        isPastTimeCallback: () -> Unit,
+        isAlreadySavedCallback: () -> Unit,
+        isUpdatedSuccessfullyCallback: (Boolean) -> Unit
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        when {
+            toDoTask.dateAndTimeInMillis.time < System.currentTimeMillis() -> isPastTimeCallback.invoke()
+            tasksRepo.isTaskAlreadySaved(toDoTask) >= 1 -> isAlreadySavedCallback.invoke()
+            tasksRepo.updateTask(toDoTask) == 1 -> isUpdatedSuccessfullyCallback.invoke(true)
+        }
     }
 
-    fun updateTask(toDoTask: ToDoTask): Deferred<Int> = viewModelScope.async(Dispatchers.IO) {
-        tasksRepo.updateTask(toDoTask)
-    }
-
-    fun deleteTask(toDoTask: ToDoTask): Deferred<Int> = viewModelScope.async(Dispatchers.IO) {
-        tasksRepo.deleteTask(toDoTask)
+    fun deleteTask(
+        toDoTask: ToDoTask,
+        isDeleteCallback: (Boolean) -> Unit
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        isDeleteCallback.invoke(tasksRepo.deleteTask(toDoTask) == 1)
     }
 
     fun updateCompletedAndTimeUpTasks(completed: Boolean, taskCompletedTime: Date) = viewModelScope.launch(Dispatchers.IO) {

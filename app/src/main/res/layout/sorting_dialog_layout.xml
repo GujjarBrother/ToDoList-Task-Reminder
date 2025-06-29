@@ -27,9 +27,9 @@
                 android:textColor="@color/defaultColor"
                 android:textSize="@dimen/_15ssp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/sortRG"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <RadioGroup
@@ -37,9 +37,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/_10sdp"
+                app:layout_constraintBottom_toTopOf="@id/divider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/divider"
                 app:layout_constraintTop_toBottomOf="@id/sortByTV">
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
@@ -47,89 +47,89 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cabin_medium"
-                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/title_text"
                     android:textAllCaps="false"
-                    app:buttonTint="@color/defaultColor"
-                    android:textSize="@dimen/_12ssp" />
+                    android:textColor="@color/blackAndWhiteViewsColor"
+                    android:textSize="@dimen/_12ssp"
+                    app:buttonTint="@color/defaultColor" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/dayOfWeekRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cabin_medium"
-                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/day_of_week_text"
                     android:textAllCaps="false"
-                    app:buttonTint="@color/defaultColor"
-                    android:textSize="@dimen/_12ssp" />
+                    android:textColor="@color/blackAndWhiteViewsColor"
+                    android:textSize="@dimen/_12ssp"
+                    app:buttonTint="@color/defaultColor" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/dateRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cabin_medium"
-                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/date_text"
                     android:textAllCaps="false"
-                    app:buttonTint="@color/defaultColor"
-                    android:textSize="@dimen/_12ssp" />
+                    android:textColor="@color/blackAndWhiteViewsColor"
+                    android:textSize="@dimen/_12ssp"
+                    app:buttonTint="@color/defaultColor" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/monthRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cabin_medium"
-                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/month_text"
                     android:textAllCaps="false"
-                    app:buttonTint="@color/defaultColor"
-                    android:textSize="@dimen/_12ssp" />
+                    android:textColor="@color/blackAndWhiteViewsColor"
+                    android:textSize="@dimen/_12ssp"
+                    app:buttonTint="@color/defaultColor" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/yearRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cabin_medium"
-                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/year_text"
                     android:textAllCaps="false"
-                    app:buttonTint="@color/defaultColor"
-                    android:textSize="@dimen/_12ssp" />
+                    android:textColor="@color/blackAndWhiteViewsColor"
+                    android:textSize="@dimen/_12ssp"
+                    app:buttonTint="@color/defaultColor" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/timeRB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cabin_medium"
-                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/time_hint"
                     android:textAllCaps="false"
-                    app:buttonTint="@color/defaultColor"
-                    android:textSize="@dimen/_12ssp" />
+                    android:textColor="@color/blackAndWhiteViewsColor"
+                    android:textSize="@dimen/_12ssp"
+                    app:buttonTint="@color/defaultColor" />
 
             </RadioGroup>
 
-            <View
+            <com.google.android.material.divider.MaterialDivider
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="0.2dp"
                 android:background="@color/dividersColor"
+                app:layout_constraintBottom_toTopOf="@id/ascendingDescendingRG"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/ascendingDescendingRG"
                 app:layout_constraintTop_toBottomOf="@id/sortRG" />
 
             <RadioGroup
@@ -146,26 +146,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cabin_medium"
-                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/ascending_a_z_text"
                     android:textAllCaps="false"
-                    app:buttonTint="@color/defaultColor"
-                    android:textSize="@dimen/_12ssp" />
+                    android:textColor="@color/blackAndWhiteViewsColor"
+                    android:textSize="@dimen/_12ssp"
+                    app:buttonTint="@color/defaultColor" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/descendingZToARB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cabin_medium"
-                    android:textColor="@color/blackAndWhiteViewsColor"
                     android:paddingStart="@dimen/_6sdp"
                     android:paddingEnd="@dimen/_6sdp"
                     android:text="@string/descending_z_a_text"
                     android:textAllCaps="false"
-                    app:buttonTint="@color/defaultColor"
-                    android:textSize="@dimen/_12ssp" />
+                    android:textColor="@color/blackAndWhiteViewsColor"
+                    android:textSize="@dimen/_12ssp"
+                    app:buttonTint="@color/defaultColor" />
 
             </RadioGroup>
 
@@ -174,7 +174,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_15sdp"
-                android:backgroundTint="@android:color/transparent"
+                app:backgroundTint="@color/negative_buttons_pressed_and_unpressed_states_background"
                 android:fontFamily="@font/cabin_medium"
                 android:minHeight="@dimen/_50sdp"
                 android:stateListAnimator="@null"
@@ -184,6 +184,7 @@
                 android:textSize="@dimen/_11ssp"
                 android:textStyle="bold"
                 app:cornerRadius="@dimen/_5sdp"
+                android:layoutDirection="ltr"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/sortButton"
                 app:layout_constraintStart_toStartOf="parent"
@@ -197,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_30sdp"
                 android:layout_marginTop="@dimen/_15sdp"
-                android:backgroundTint="@color/defaultColor"
+                app:backgroundTint="@color/positive_buttons_pressed_and_unpressed_states_background"
                 android:fontFamily="@font/cabin_medium"
                 android:minHeight="@dimen/_50sdp"
                 android:stateListAnimator="@null"
@@ -207,6 +208,7 @@
                 android:textSize="@dimen/_11ssp"
                 android:textStyle="bold"
                 app:cornerRadius="@dimen/_5sdp"
+                android:layoutDirection="ltr"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/cancelButton"
