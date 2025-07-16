@@ -62,16 +62,17 @@ android {
     }
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.activity:activity-ktx:1.10.1'
-    implementation 'androidx.fragment:fragment-ktx:1.8.6'
-    implementation 'androidx.activity:activity:1.10.1'
+    implementation 'androidx.fragment:fragment-ktx:1.8.8'
+    implementation 'androidx.activity:activity-ktx:1.10.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
@@ -81,11 +82,11 @@ dependencies {
     api 'com.intuit.ssp:ssp-android:1.1.1'
 
 //    'Lottie Animation' dependency...
-    api 'com.airbnb.android:lottie:6.6.2'
+    api 'com.airbnb.android:lottie:6.6.7'
 
 //    'ViewModel & LiveData' dependency...
-    api 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.0'
-    api 'androidx.lifecycle:lifecycle-livedata-ktx:2.9.0'
+    api 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1'
+    api 'androidx.lifecycle:lifecycle-livedata-ktx:2.9.1'
 
 //    'CircularImageView' dependency...
     api 'com.github.AtifSayings:CircularImageView:1.0.2'
@@ -97,27 +98,27 @@ dependencies {
     api 'com.google.android.material:material:1.12.0'
 
 //    'Ads' dependency...
-    api "com.google.android.gms:play-services-ads:24.2.0"
+    api "com.google.android.gms:play-services-ads:24.4.0"
 
 //    'Coroutines' dependencies...
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0-RC"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2"
 
 //    'ROOM database' dependency...
-    api "androidx.room:room-runtime:2.7.1"
-    ksp "androidx.room:room-compiler:2.7.1"
+    api "androidx.room:room-runtime:2.7.2"
+    ksp "androidx.room:room-compiler:2.7.2"
 
 //    To use Kotlin Coroutines...
-    api "androidx.room:room-ktx:2.7.1"
+    api "androidx.room:room-ktx:2.7.2"
 
 //    'In-App update' dependency...
     api 'com.google.android.play:app-update-ktx:2.1.0'
 
 //    "Hilt" dependency...
-    api "com.google.dagger:hilt-android:2.51.1"
-    ksp "com.google.dagger:hilt-android-compiler:2.51.1"
+    api "com.google.dagger:hilt-android:2.56.2"
+    ksp "com.google.dagger:hilt-android-compiler:2.56.2"
 
 //    "Firebase" dependencies...
-    api platform('com.google.firebase:firebase-bom:33.13.0')
+    api platform('com.google.firebase:firebase-bom:33.16.0')
     api 'com.google.firebase:firebase-config'
 }

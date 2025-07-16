@@ -4,6 +4,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.sag.todo.list.task.reminder.R
+import com.sag.todo.list.task.reminder.utils.RemoteConfigValues.IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN
 
 class FetchRemoteConfig {
     companion object {
@@ -17,6 +18,7 @@ class FetchRemoteConfig {
             remoteConfig.fetchAndActivate()
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
+                        IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN = remoteConfig.getBoolean("IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN")
                     }
                     isFetchedCallback.invoke()
                 }

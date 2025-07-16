@@ -70,7 +70,20 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
                 userNameTIL.setBoxStrokeColorStateList(textInputLayoutDarkModeStrokeColor)
                 passwordTIL.setBoxStrokeColorStateList(textInputLayoutDarkModeStrokeColor)
             }
-            genderSelectionLayout.setOnClickListener(this@SignUpActivity)
+
+            userNameTIET.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    genderSelectionBtn.strokeColor = ColorStateList.valueOf(ContextCompat.getColor(activityContext, R.color.subColor))
+                }
+            }
+
+            passwordTIET.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    genderSelectionBtn.strokeColor = ColorStateList.valueOf(ContextCompat.getColor(activityContext, R.color.subColor))
+                }
+            }
+
+            genderSelectionBtn.setOnClickListener(this@SignUpActivity)
             securityQuestionsTV.setOnClickListener(this@SignUpActivity)
             signUpButton.setOnClickListener(this@SignUpActivity)
             signInTV.setOnClickListener(this@SignUpActivity)
@@ -89,11 +102,10 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         with(binding) {
             when (view?.id) {
-                R.id.genderSelectionLayout -> {
-                    if (prefs.isDarkModeEnable) {
-                        genderSelectionLayout.backgroundTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(activityContext, R.color.defaultColor))
-                    }
+                R.id.genderSelectionBtn -> {
+                    userNameTIET.clearFocus()
+                    passwordTIET.clearFocus()
+                    genderSelectionBtn.strokeColor = ColorStateList.valueOf(ContextCompat.getColor(activityContext, R.color.defaultColor))
                     showCustomPopup(view, 1)
                 }
 
@@ -140,14 +152,12 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
 
     private fun showCustomPopup(view: View, fromWhereInvoked: Int) {
         val customPopupMenuLayoutBinding = CustomPopupMenuLayoutBinding.inflate(layoutInflater)
-
         popupWindow = PopupWindow(
             customPopupMenuLayoutBinding.root,
             RelativeLayout.LayoutParams.WRAP_CONTENT,
             RelativeLayout.LayoutParams.WRAP_CONTENT,
             true
         )
-
         popupWindow.isOutsideTouchable = true
         popupWindow.elevation = 5F
         if (fromWhereInvoked == 1) {
@@ -210,14 +220,8 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
                 )
             }
 
-            securityQuestionLayout.setOnClickListener { view: View ->
-                if (prefs.isDarkModeEnable) {
-                    securityQuestionLayout.backgroundTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(
-                            activityContext, R.color.defaultColor
-                        )
-                    )
-                }
+            securityQuestionBtn.setOnClickListener { view: View ->
+                securityQuestionBtn.strokeColor = ColorStateList.valueOf(ContextCompat.getColor(activityContext, R.color.defaultColor))
                 showCustomPopup(view, 2)
             }
 
@@ -246,55 +250,45 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
     private fun checkGenderAndSecurityQuestion(forWhichInvoked: String?, category: Int) {
         if (forWhichInvoked.equals(other = "Gender", ignoreCase = true)) {
             selectedGender = category
-            /*when (category) {
-                Gender.MALE.ordinal -> gender = getString(R.string.male_text)
-                Gender.FEMALE.ordinal -> gender = getString(R.string.fe_male_text)
-                Gender.TRANSGENDER.ordinal -> gender = getString(R.string.transgender_text)
-            }*/
-
             with(binding) {
                 when (category) {
                     Gender.NONE.ordinal -> {
-                        selectGenderTV.text = getString(R.string.select_gender_text)
-                        selectGenderTV.setTextColor(ContextCompat.getColor(activityContext, R.color.subColor))
-                        if (prefs.isDarkModeEnable) {
-                            genderSelectionLayout.backgroundTintList = ColorStateList.valueOf(
-                                ContextCompat.getColor(activityContext, R.color.subColor))
-                        }
+                        genderSelectionBtn.text = getString(R.string.select_gender_text)
+                        genderSelectionBtn.setTextColor(ContextCompat.getColor(activityContext, R.color.subColor))
                     }
 
                     Gender.MALE.ordinal -> {
-                        selectGenderTV.setTextColor(
+                        genderSelectionBtn.setTextColor(
                             ContextCompat.getColor(
                                 activityContext, R.color.blackAndWhiteViewsColor
                             )
                         )
-                        selectGenderTV.text = getString(R.string.male_text)
+                        genderSelectionBtn.text = getString(R.string.male_text)
                     }
 
                     Gender.FEMALE.ordinal -> {
-                        selectGenderTV.setTextColor(
+                        genderSelectionBtn.setTextColor(
                             ContextCompat.getColor(
                                 activityContext, R.color.blackAndWhiteViewsColor
                             )
                         )
-                        selectGenderTV.text = getString(R.string.fe_male_text)
+                        genderSelectionBtn.text = getString(R.string.fe_male_text)
                     }
 
                     Gender.TRANSGENDER.ordinal -> {
-                        selectGenderTV.setTextColor(
+                        genderSelectionBtn.setTextColor(
                             ContextCompat.getColor(
                                 activityContext, R.color.blackAndWhiteViewsColor
                             )
                         )
-                        selectGenderTV.text = getString(R.string.transgender_text)
+                        genderSelectionBtn.text = getString(R.string.transgender_text)
                     }
                 }
             }
         } else if (forWhichInvoked.equals(other = "Security Questions", ignoreCase = true)) {
             with(securityQuestionDialogLayoutBinding) {
                 if (category != 0) {
-                    securityQuestionLayout.changeVisibility(Visibility.GONE.ordinal)
+                    securityQuestionBtn.changeVisibility(Visibility.GONE.ordinal)
                     group1.changeVisibility(Visibility.VISIBLE.ordinal)
                     selectedSecurityQuestion = category
                     when (category) {
@@ -306,14 +300,6 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
                     softKeyboardVisibilityController.showSoftKeyboard()
                     securityQuestionAnswerTIET.requestFocus()
                 } else {
-                    if (prefs.isDarkModeEnable) {
-                        securityQuestionLayout.backgroundTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                activityContext, R.color.subColor
-                            )
-                        )
-                    } else {
-                    }
                 }
             }
         }

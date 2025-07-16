@@ -1,6 +1,8 @@
 package com.sag.todo.list.task.reminder.activities
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.animation.Animation
 import androidx.activity.OnBackPressedCallback
@@ -9,6 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import com.sag.todo.list.task.reminder.R
@@ -34,15 +37,16 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
     private val appLanguageRVAdapter: AppLanguageRVAdapter by lazy {
         AppLanguageRVAdapter(appLanguageClickCallback = { appLanguage, currentPosition, oldPosition ->
             selectedAppLanguage = appLanguage
-            languagesList[oldPosition].isSelected = false
-            appLanguageRVAdapter.notifyItemChanged(oldPosition)
-
-            languagesList[currentPosition].isSelected = true
-            appLanguageRVAdapter.notifyItemChanged(currentPosition)
+            with(appLanguageRVAdapter) {
+                languagesList[oldPosition].isSelected = false
+                notifyItemChanged(oldPosition)
+                currentList[currentPosition].isSelected = true
+                notifyItemChanged(currentPosition)
+            }
         })
     }
     private val languagesList by lazy {
-        mutableListOf<AppLanguage>(
+        mutableListOf(
             AppLanguage(R.drawable.urdu_flag, "Urdu", "اردو", "ur"),
             AppLanguage(R.drawable.arabic_flag, "Arabic", "عربي", "ar"),
             AppLanguage(R.drawable.english_flag, "English", "English", "en"),
@@ -104,7 +108,9 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val bottomInset = maxOf(systemBars.bottom, ime.bottom)
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, bottomInset)
             insets
         }
 
@@ -112,6 +118,40 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
             applyBtn.startAnimation(animation)
             backArrowIV.setOnClickListener(this@AppLanguageActivity)
             applyBtn.setOnClickListener(this@AppLanguageActivity)
+            crossIV.setOnClickListener(this@AppLanguageActivity)
+
+            languageSearchET.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    p0: CharSequence?,
+                    p1: Int,
+                    p2: Int,
+                    p3: Int
+                ) {
+                }
+
+                override fun onTextChanged(
+                    p0: CharSequence?,
+                    p1: Int,
+                    p2: Int,
+                    p3: Int
+                ) {
+                    p0?.let {
+                        crossIV.isVisible = it.isNotEmpty()
+                        val filteredLanguagesList = languagesList.filter { appLanguage ->
+                            appLanguage.languageName.contains(
+                                other = it.toString().trim(),
+                                ignoreCase = true
+                            )
+                        }
+                        appLanguageRVAdapter.submitList(filteredLanguagesList) {
+                            languageRV.smoothScrollToPosition(0)
+                        }
+                    }
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                }
+            })
 
             languageRV.layoutManager = LinearLayoutManager(activityContext, VERTICAL, false)
             languagesList.forEach {
@@ -135,6 +175,7 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
         p0?.let {
             when (it.id) {
                 R.id.backArrowIV -> finish()
+                R.id.crossIV -> binding.languageSearchET.text = null
                 R.id.applyBtn -> {
                     prefs.selectedLanguageCode = selectedAppLanguage?.languageCode ?: ""
                     setResult(RESULT_OK)

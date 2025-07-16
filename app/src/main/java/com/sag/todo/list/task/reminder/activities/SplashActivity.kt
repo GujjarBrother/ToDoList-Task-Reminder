@@ -25,6 +25,7 @@ import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.databinding.ActivitySplashBinding
 import com.sag.todo.list.task.reminder.utils.FetchRemoteConfig
+import com.sag.todo.list.task.reminder.utils.RemoteConfigValues.IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN
 import com.sag.todo.list.task.reminder.viewModels.TasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -120,7 +121,11 @@ class SplashActivity : BaseActivity() {
                     splashLoadingProgressBar.progress = animatedValue
                     loadingPercentageTV.text = String.format(Locale.getDefault(), "%d%s", animatedValue, "%")
                     if (animatedValue == 100) {
-                        startActivity(Intent(activityContext, if (prefs.isUserSignIn) DashBoardActivity::class.java else SignInActivity::class.java))
+                        if (IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN) {
+                            startActivity(Intent(activityContext, if (prefs.isUserSignIn) DashBoardActivity::class.java else SignInActivity::class.java))
+                        } else {
+                            startActivity(Intent(activityContext, DashBoardActivity::class.java))
+                        }
                         finish()
                     }
                 }

@@ -107,6 +107,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
                     android:textAllCaps="false"
+                    android:textCursorDrawable="@null"
                     android:textColor="@color/blackAndWhiteViewsColor" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -129,7 +130,7 @@
                 app:endIconTint="@color/defaultColor"
                 app:errorEnabled="true"
                 app:errorTextColor="@color/subColor"
-                app:layout_constraintBottom_toTopOf="@id/genderSelectionLayout"
+                app:layout_constraintBottom_toTopOf="@id/genderSelectionBtn"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/userNameTIL"
@@ -145,49 +146,32 @@
                     android:imeOptions="actionGo"
                     android:inputType="textPassword"
                     android:textAllCaps="false"
+                    android:textCursorDrawable="@null"
                     android:textColor="@color/blackAndWhiteViewsColor" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/genderSelectionLayout"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/genderSelectionBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_5sdp"
-                android:background="@drawable/stroke_background"
-                android:padding="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_5sdp"
+                app:drawableTint="@color/defaultColor"
+                android:gravity="start"
+                android:padding="@dimen/_13sdp"
+                android:text="@string/select_gender_text"
+                android:textColor="@color/subColor"
+                android:textSize="@dimen/_13ssp"
+                app:backgroundTint="@android:color/transparent"
+                app:cornerRadius="@dimen/_5sdp"
+                app:drawableEndCompat="@drawable/drop_down_image"
+                app:fontFamily="@font/cabin_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/passwordTIL">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/selectGenderTV"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/cabin_medium"
-                    android:text="@string/select_gender_text"
-                    android:textAllCaps="false"
-                    android:textColor="@color/subColor"
-                    android:textSize="@dimen/_13ssp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/dropDownIV"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/dropDownIV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/drop_down_image"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/selectGenderTV"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/defaultColor" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toBottomOf="@id/passwordTIL"
+                app:strokeColor="@color/subColor"
+                app:strokeWidth="@dimen/_1sdp" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/securityQuestionsTV"
@@ -205,7 +189,7 @@
                 app:layout_constraintBottom_toTopOf="@id/signUpButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/genderSelectionLayout" />
+                app:layout_constraintTop_toBottomOf="@id/genderSelectionBtn" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/asterikTV"
@@ -218,7 +202,7 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/securityQuestionsTV"
                 app:layout_constraintStart_toEndOf="@id/securityQuestionsTV"
-                app:layout_constraintTop_toBottomOf="@id/genderSelectionLayout" />
+                app:layout_constraintTop_toBottomOf="@id/genderSelectionBtn" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/signUpButton"
@@ -226,7 +210,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/_5sdp"
-                app:backgroundTint="@color/positive_buttons_pressed_and_unpressed_states_background"
                 android:fontFamily="@font/cabin_medium"
                 android:minWidth="@dimen/_200sdp"
                 android:minHeight="@dimen/_55sdp"
@@ -237,6 +220,7 @@
                 android:textColor="@color/whiteColor"
                 android:textSize="@dimen/_15ssp"
                 android:textStyle="bold"
+                app:backgroundTint="@color/positive_buttons_pressed_and_unpressed_states_background"
                 app:cornerRadius="@dimen/_7sdp"
                 app:layout_constraintBottom_toTopOf="@id/signInTV"
                 app:layout_constraintEnd_toEndOf="parent"

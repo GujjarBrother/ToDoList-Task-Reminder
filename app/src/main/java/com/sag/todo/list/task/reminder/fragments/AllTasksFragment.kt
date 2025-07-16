@@ -428,18 +428,39 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                 )
                 timeTIL.editText?.setText(toDoTask.time)
                 if (toDoTask.category == TasksCategories.DEFAULT_CATEGORY.ordinal || toDoTask.category == TasksCategories.PERSONAL_CATEGORY.ordinal) {
-                    selectCategoryTV.text = getString(R.string.personal_text)
+                    selectCategoryBtn.text = getString(R.string.personal_text)
                 } else if (toDoTask.category == TasksCategories.WORK_CATEGORY.ordinal) {
-                    selectCategoryTV.text = getString(R.string.work_text)
+                    selectCategoryBtn.text = getString(R.string.work_text)
                 }
-                selectCategoryTV.setTextColor(ContextCompat.getColor(fragmentContext, R.color.blackColor))
-                saveAndUpdateButton.text = getString(R.string.update_text)
+                selectCategoryBtn.setTextColor(ContextCompat.getColor(fragmentContext, R.color.blackColor))
+                saveAndUpdateBtn.text = getString(R.string.update_text)
             }
 
-            selectCategoryLayout.setOnClickListener { view: View ->
-                if (prefs.isDarkModeEnable) {
-                    selectCategoryLayout.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(fragmentContext, R.color.defaultColor))
+            titleTIET.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    selectCategoryBtn.strokeColor = ColorStateList.valueOf(ContextCompat.getColor(fragmentContext, R.color.subColor))
                 }
+            }
+
+            descriptionTIET.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    selectCategoryBtn.strokeColor = ColorStateList.valueOf(ContextCompat.getColor(fragmentContext, R.color.subColor))
+                }
+            }
+
+            dayOfWeekTIET.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    selectCategoryBtn.strokeColor = ColorStateList.valueOf(ContextCompat.getColor(fragmentContext, R.color.subColor))
+                }
+            }
+
+            selectCategoryBtn.setOnClickListener { view: View ->
+                titleTIET.clearFocus()
+                descriptionTIET.clearFocus()
+                dayOfWeekTIET.clearFocus()
+                dateTIET.clearFocus()
+                timeTIET.clearFocus()
+                selectCategoryBtn.strokeColor = ColorStateList.valueOf(ContextCompat.getColor(fragmentContext, R.color.defaultColor))
                 showCustomPopupForCategorySelection(view, fromWhereInvoked)
             }
 
@@ -458,7 +479,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                 showMaterialTimePicker(addAndUpdateTasksDialogLayoutBinding)
             }
 
-            saveAndUpdateButton.setOnClickListener { _: View? ->
+            saveAndUpdateBtn.setOnClickListener { _: View? ->
                 val title = titleTIL.editText?.text.toString().trim()
                 val description = descriptionTIL.editText?.text.toString().trim()
                 val dayOfWeek: String = dayOfWeekTIL.editText?.text.toString().trim()
@@ -652,17 +673,14 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
             with(addAndUpdateTasksDialogLayoutBinding) {
                 if ((category == TasksCategories.DEFAULT_CATEGORY.ordinal)) {
-                    selectCategoryTV.text = fragmentContext.getString(R.string.select_category_text)
-                    selectCategoryTV.setTextColor(ContextCompat.getColor(fragmentContext, R.color.subColor))
-                    if (prefs.isDarkModeEnable) {
-                        selectCategoryLayout.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(fragmentContext, R.color.subColor))
-                    }
+                    selectCategoryBtn.text = fragmentContext.getString(R.string.select_category_text)
+                    selectCategoryBtn.setTextColor(ContextCompat.getColor(fragmentContext, R.color.subColor))
                 } else if ((category == TasksCategories.PERSONAL_CATEGORY.ordinal)) {
-                    selectCategoryTV.text = fragmentContext.getString(R.string.personal_text)
-                    selectCategoryTV.setTextColor(ContextCompat.getColor(fragmentContext, R.color.blackAndWhiteViewsColor))
+                    selectCategoryBtn.text = fragmentContext.getString(R.string.personal_text)
+                    selectCategoryBtn.setTextColor(ContextCompat.getColor(fragmentContext, R.color.blackAndWhiteViewsColor))
                 } else if ((category == TasksCategories.WORK_CATEGORY.ordinal)) {
-                    selectCategoryTV.text = fragmentContext.getString(R.string.work_text)
-                    selectCategoryTV.setTextColor(ContextCompat.getColor(fragmentContext, R.color.blackAndWhiteViewsColor))
+                    selectCategoryBtn.text = fragmentContext.getString(R.string.work_text)
+                    selectCategoryBtn.setTextColor(ContextCompat.getColor(fragmentContext, R.color.blackAndWhiteViewsColor))
                 }
             }
 
