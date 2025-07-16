@@ -8,8 +8,8 @@
     app:cardBackgroundColor="@color/screensBackgroundColor"
     app:cardCornerRadius="@dimen/_10sdp"
     app:cardElevation="@dimen/_2sdp"
-    app:strokeColor="@android:color/transparent"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true"
+    app:strokeColor="@android:color/transparent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/customPopUpMenuRV"

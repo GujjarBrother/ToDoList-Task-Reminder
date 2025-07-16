@@ -1,11 +1,14 @@
 package com.sag.todo.list.task.reminder.fragments
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -13,6 +16,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.widget.PopupMenu
 import android.widget.PopupWindow
 import android.widget.RadioGroup
@@ -20,8 +24,10 @@ import android.widget.RelativeLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.net.toUri
 import androidx.core.view.get
 import androidx.core.view.size
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,23 +52,34 @@ import com.sag.todo.list.task.reminder.enums.TasksCategories
 import com.sag.todo.list.task.reminder.enums.Visibility
 import com.sag.todo.list.task.reminder.listeners.SearchViewVisibilityListener
 import com.sag.todo.list.task.reminder.listeners.StartAndStopFABAnimationListener
-import com.sag.todo.list.task.reminder.utils.CommonFunctions
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.applyAnimation
+import com.sag.todo.list.task.reminder.receivers.ReminderReceiver
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.applyCustomFontAndColorToPopupMenuItemsText
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeVisibility
+import com.sag.todo.list.task.reminder.viewModels.TasksViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Collections
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
+import javax.inject.Named
 
+@AndroidEntryPoint
 class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
     private var _binding: FragmentAllTasksBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var alarmManager: AlarmManager
+
+    @Inject
+    @Named(value = "FabRateUsAndApplyAnimation")
+    lateinit var animation: Animation
+
     private var category = 0
     private var tasksAboveTempValue = 1
     private var tasksBelowTempValue = 7
@@ -85,6 +102,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     private val whichTabOpened = "whichTab"
     private var selectedTab: Int? = null
     private var searchViewVisibilityListener: SearchViewVisibilityListener? = null
+    private val tasksViewModel: TasksViewModel by viewModels()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -131,12 +149,14 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             addNewTasksFAB.setOnClickListener(this@AllTasksFragment)
             sortingCV.setOnClickListener(this@AllTasksFragment)
             stylesCV.setOnClickListener(this@AllTasksFragment)
-            CommonFunctions.getViewModel(fragmentContext).getAllTasks(selectedTab != 0).observe(viewLifecycleOwner) {
+            tasksViewModel.getAllTasks(selectedTab != 0).observe(viewLifecycleOwner) {
                 allToDosTasksArrayList = it as ArrayList<ToDoTask>
                 readAllTasks()
             }
         }
     }
+
+    fun getTasksListSize() = allToDosTasksArrayList.size
 
     companion object {
         fun newInstance(whichTab: Int) = AllTasksFragment().apply {
@@ -147,7 +167,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun startFABAnimation() =
-        binding.addNewTasksFAB.startAnimation(applyAnimation(fragmentContext))
+        binding.addNewTasksFAB.startAnimation(animation)
 
     private fun stopFABAnimation() =
         binding.addNewTasksFAB.clearAnimation()
@@ -159,13 +179,8 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                 0 -> {
                     startFABAnimation()
                     addNewTasksFAB.changeVisibility(Visibility.VISIBLE.ordinal)
-                    if (prefs.allTasksStyleValue) {
-                        listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.list_view_style_image))
-                        listAndGridViewStylesTV.text = getString(R.string.listview_text)
-                    } else {
-                        listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.grid_view_style_image))
-                        listAndGridViewStylesTV.text = getString(R.string.gridview_text)
-                    }
+                    listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, if (prefs.allTasksStyleValue) R.drawable.list_view_style_image else R.drawable.grid_view_style_image))
+                    listAndGridViewStylesTV.text = getString(if (prefs.allTasksStyleValue) R.string.listview_text else R.string.gridview_text)
                     if (::allToDosTasksArrayList.isInitialized) {
                         searchViewVisibilityListener?.isShowSearchViewORNot(allToDosTasksArrayList.isNotEmpty())
                     }
@@ -173,13 +188,8 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
                 1 -> {
                     addNewTasksFAB.changeVisibility(Visibility.GONE.ordinal)
-                    if (prefs.completedTasksStyleValue) {
-                        listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.list_view_style_image))
-                        listAndGridViewStylesTV.text = getString(R.string.listview_text)
-                    } else {
-                        listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.grid_view_style_image))
-                        listAndGridViewStylesTV.text = getString(R.string.gridview_text)
-                    }
+                    listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, if (prefs.completedTasksStyleValue) R.drawable.list_view_style_image else R.drawable.grid_view_style_image))
+                    listAndGridViewStylesTV.text = getString(if (prefs.completedTasksStyleValue) R.string.listview_text else R.string.gridview_text)
                     if (::allToDosTasksArrayList.isInitialized) {
                         searchViewVisibilityListener?.isShowSearchViewORNot(allToDosTasksArrayList.isNotEmpty())
                     }
@@ -355,31 +365,17 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                     isForSorting = false
                     when(selectedTab) {
                         Tabs.TASKS_TAB.ordinal -> {
-                            if (prefs.allTasksStyleValue) {
-                                listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.grid_view_style_image))
-                                listAndGridViewStylesTV.setText(R.string.gridview_text)
-                                prefs.allTasksStyleValue = false
-                                changeStyle()
-                            } else {
-                                listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.list_view_style_image))
-                                listAndGridViewStylesTV.setText(R.string.listview_text)
-                                prefs.allTasksStyleValue = true
-                                changeStyle()
-                            }
+                            listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, if (prefs.allTasksStyleValue) R.drawable.grid_view_style_image else R.drawable.list_view_style_image))
+                            listAndGridViewStylesTV.setText(if (prefs.allTasksStyleValue) R.string.gridview_text else R.string.listview_text)
+                            prefs.allTasksStyleValue = !prefs.allTasksStyleValue
+                            changeStyle()
                         }
 
                         Tabs.COMPLETED_TAB.ordinal -> {
-                            if (prefs.completedTasksStyleValue) {
-                                listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.list_view_style_image))
-                                listAndGridViewStylesTV.setText(R.string.gridview_text)
-                                prefs.completedTasksStyleValue = false
-                                changeStyle()
-                            } else {
-                                listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, R.drawable.list_view_style_image))
-                                listAndGridViewStylesTV.setText(R.string.listview_text)
-                                prefs.completedTasksStyleValue = true
-                                changeStyle()
-                            }
+                            listAndGridViewStylesIV.setImageDrawable(ContextCompat.getDrawable(fragmentContext, if (prefs.completedTasksStyleValue) R.drawable.grid_view_style_image else R.drawable.list_view_style_image))
+                            listAndGridViewStylesTV.setText(if (prefs.completedTasksStyleValue) R.string.gridview_text else R.string.listview_text)
+                            prefs.completedTasksStyleValue = !prefs.completedTasksStyleValue
+                            changeStyle()
                         }
                     }
                 }
@@ -399,7 +395,6 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
             }
         }
         val addTasksAlertDialog = addTasksDialogBuilder.create()
-
         if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed && !addTasksAlertDialog.isShowing) {
             addTasksAlertDialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
             addTasksAlertDialog.window?.setWindowAnimations(R.style.dialogBoxesAnimation)
@@ -433,18 +428,39 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                 )
                 timeTIL.editText?.setText(toDoTask.time)
                 if (toDoTask.category == TasksCategories.DEFAULT_CATEGORY.ordinal || toDoTask.category == TasksCategories.PERSONAL_CATEGORY.ordinal) {
-                    selectCategoryTV.text = getString(R.string.personal_text)
+                    selectCategoryBtn.text = getString(R.string.personal_text)
                 } else if (toDoTask.category == TasksCategories.WORK_CATEGORY.ordinal) {
-                    selectCategoryTV.text = getString(R.string.work_text)
+                    selectCategoryBtn.text = getString(R.string.work_text)
                 }
-                selectCategoryTV.setTextColor(ContextCompat.getColor(fragmentContext, R.color.blackColor))
-                saveAndUpdateButton.text = getString(R.string.update_text)
+                selectCategoryBtn.setTextColor(ContextCompat.getColor(fragmentContext, R.color.blackColor))
+                saveAndUpdateBtn.text = getString(R.string.update_text)
             }
 
-            selectCategoryLayout.setOnClickListener { view: View ->
-                if (prefs.isDarkModeEnable) {
-                    selectCategoryLayout.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(fragmentContext, R.color.defaultColor))
+            titleTIET.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    selectCategoryBtn.strokeColor = ColorStateList.valueOf(ContextCompat.getColor(fragmentContext, R.color.subColor))
                 }
+            }
+
+            descriptionTIET.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    selectCategoryBtn.strokeColor = ColorStateList.valueOf(ContextCompat.getColor(fragmentContext, R.color.subColor))
+                }
+            }
+
+            dayOfWeekTIET.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    selectCategoryBtn.strokeColor = ColorStateList.valueOf(ContextCompat.getColor(fragmentContext, R.color.subColor))
+                }
+            }
+
+            selectCategoryBtn.setOnClickListener { view: View ->
+                titleTIET.clearFocus()
+                descriptionTIET.clearFocus()
+                dayOfWeekTIET.clearFocus()
+                dateTIET.clearFocus()
+                timeTIET.clearFocus()
+                selectCategoryBtn.strokeColor = ColorStateList.valueOf(ContextCompat.getColor(fragmentContext, R.color.defaultColor))
                 showCustomPopupForCategorySelection(view, fromWhereInvoked)
             }
 
@@ -463,7 +479,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                 showMaterialTimePicker(addAndUpdateTasksDialogLayoutBinding)
             }
 
-            saveAndUpdateButton.setOnClickListener { _: View? ->
+            saveAndUpdateBtn.setOnClickListener { _: View? ->
                 val title = titleTIL.editText?.text.toString().trim()
                 val description = descriptionTIL.editText?.text.toString().trim()
                 val dayOfWeek: String = dayOfWeekTIL.editText?.text.toString().trim()
@@ -501,45 +517,52 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                         val toDoTask: ToDoTask
                         if (dateSDF.format(parseDate).isNotEmpty() && monthSDF.format(parseDate).isNotEmpty()
                             && yearSDF.format(parseDate).isNotEmpty()) {
-                            toDoTask = ToDoTask(0, dayOfWeek, dateSDF.format(parseDate), monthSDF.format(parseDate),
-                                yearSDF.format(parseDate), title, description, time, category, completeDateAndTimeDate, false
+                            toDoTask = ToDoTask(
+                                0,
+                                dayOfWeek,
+                                dateSDF.format(parseDate),
+                                monthSDF.format(parseDate),
+                                yearSDF.format(parseDate),
+                                title,
+                                description,
+                                time,
+                                category,
+                                completeDateAndTimeDate,
+                                false
                             )
                             lifecycleScope.launch(Dispatchers.IO) {
-                                val isTaskAlreadySaved = CommonFunctions.getViewModel(fragmentContext).isTaskAlreadySaved(toDoTask.day, toDoTask.date,
-                                    toDoTask.month, toDoTask.year, toDoTask.title, toDoTask.description, toDoTask.time,
-                                    toDoTask.category).await()
-                                if (isTaskAlreadySaved >= 1) {
-                                    withContext(Dispatchers.Main) {
-                                        toastController.showToast(fragmentContext, getString(R.string.this_task_is_already_saved_toast_text), false)
-                                    }
-                                } else if (completeDateAndTimeDate.time < System.currentTimeMillis()) {
-                                    withContext(Dispatchers.Main) {
+                                tasksViewModel.saveTask(
+                                    toDoTask = toDoTask,
+                                    isPastTimeCallback = {
                                         toastController.showToast(fragmentContext, getString(R.string.past_date_and_time_is_not_acceptable_toast), false)
-                                    }
-                                } else {
-                                    val newlyAddedTaskID = CommonFunctions.getViewModel(fragmentContext).saveTask(toDoTask).await()
-                                    if (newlyAddedTaskID >= 1) {
-                                        prefs.category = category
-                                        withContext(Dispatchers.Main) {
+                                    },
+                                    isAlreadySavedCallback = {
+                                        toastController.showToast(fragmentContext, getString(R.string.this_task_is_already_saved_toast_text), false)
+                                    },
+                                    isSavedSuccessfully = { isSavedSuccessfully, savedTaskID ->
+                                        if (isSavedSuccessfully) {
+                                            prefs.category = category
                                             toastController.showToast(fragmentContext, getString(R.string.task_is_saved_successfully_toast_text), true)
-                                            titleTIL.editText?.text = null
-                                            descriptionTIL.editText?.text = null
-                                            dayOfWeekTIL.editText?.text = null
-                                            dateTIL.editText?.text = null
-                                            timeTIL.editText?.text = null
-                                            titleTIL.editText?.requestFocus()
+                                            toDoTask.id = savedTaskID.toInt()
+                                            checkScheduleExactAlarmPermission(completeDateAndTimeDate, toDoTask)
+                                            lifecycleScope.launch(Dispatchers.Main) {
+                                                titleTIL.editText?.text = null
+                                                descriptionTIL.editText?.text = null
+                                                dayOfWeekTIL.editText?.text = null
+                                                dateTIL.editText?.text = null
+                                                timeTIL.editText?.text = null
+                                                titleTIL.editText?.requestFocus()
+                                            }
                                             category = 0
                                             if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
                                                 addTasksAlertDialog.dismiss()
                                             }
                                             startFABAnimation()
-                                        }
-                                    } else {
-                                        withContext(Dispatchers.Main) {
+                                        } else {
                                             toastController.showToast(fragmentContext, getString(R.string.task_is_not_saved_successfully_toast_text), false)
                                         }
                                     }
-                                }
+                                )
                             }
                         }
                     } else if (fromWhereInvoked == 2) {
@@ -549,37 +572,76 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                             completeDateAndTimeDate, false
                         )
                         lifecycleScope.launch(Dispatchers.IO) {
-                            if (updatedToDoTask != toDoTask) {
-                                if (completeDateAndTimeDate.time < System.currentTimeMillis()) {
-                                    withContext(Dispatchers.Main) {
-                                        toastController.showToast(fragmentContext, getString(R.string.past_date_and_time_is_not_acceptable_toast), false)
-                                    }
-                                } else {
-                                    val isUpdated = CommonFunctions.getViewModel(fragmentContext).updateTask(updatedToDoTask).await()
-                                    if (isUpdated == 1) {
-                                        withContext(Dispatchers.Main) {
-                                            toastController.showToast(fragmentContext, getString(R.string.updated_successfully_toast_text), true)
-                                            prefs.category = category
-                                            if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
-                                                addTasksAlertDialog.dismiss()
-                                            }
-                                            startFABAnimation()
-                                            category = 0
+                            tasksViewModel.updateTask(
+                                toDoTask = updatedToDoTask,
+                                isPastTimeCallback = {
+                                    toastController.showToast(fragmentContext, getString(R.string.past_date_and_time_is_not_acceptable_toast), false)
+                                },
+                                isAlreadySavedCallback = {
+                                    toastController.showToast(fragmentContext, getString(R.string.this_task_is_already_saved_toast_text), false)
+                                },
+                                isUpdatedSuccessfullyCallback = {
+                                    if (it) {
+                                        checkScheduleExactAlarmPermission(
+                                            completeDateAndTimeDate, updatedToDoTask, true
+                                        )
+                                        toastController.showToast(fragmentContext, getString(R.string.updated_successfully_toast_text), true)
+                                        prefs.category = category
+                                        if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
+                                            addTasksAlertDialog.dismiss()
                                         }
+                                        startFABAnimation()
+                                        category = 0
                                     } else {
-                                        withContext(Dispatchers.Main) {
-                                            toastController.showToast(fragmentContext, getString(R.string.not_updated_successfully_toast_text), false)
-                                        }
+                                        toastController.showToast(fragmentContext, getString(R.string.not_updated_successfully_toast_text), false)
                                     }
                                 }
-                            } else if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
-                                addTasksAlertDialog.dismiss()
-                            }
+                            )
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun checkScheduleExactAlarmPermission(
+        completeDateAndTimeDate: Date,
+        toDoTask: ToDoTask,
+        isForUpdate: Boolean = false
+    ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (alarmManager.canScheduleExactAlarms()) {
+                scheduleReminder(completeDateAndTimeDate, toDoTask, isForUpdate)
+            } else {
+                val scheduleExactAlarmIntent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                scheduleExactAlarmIntent.data = "package:${fragmentContext.packageName}".toUri()
+                startActivity(scheduleExactAlarmIntent)
+            }
+        } else {
+            scheduleReminder(completeDateAndTimeDate, toDoTask, isForUpdate)
+        }
+    }
+
+    private fun scheduleReminder(
+        dateAndTimeInMillis: Date,
+        toDoTask: ToDoTask,
+        isForUpdate: Boolean
+    ) {
+        val broadcastPI = PendingIntent.getBroadcast(
+            fragmentContext, toDoTask.id,
+            Intent(fragmentContext, ReminderReceiver::class.java).apply {
+                putExtra("TASK", toDoTask)
+            }, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        if (isForUpdate)
+            alarmManager.cancel(broadcastPI)
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            dateAndTimeInMillis.time,
+            broadcastPI
+        )
     }
 
     private fun showCustomPopupForCategorySelection(view: View, fromWhereInvoked: Int) {
@@ -611,17 +673,14 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
             with(addAndUpdateTasksDialogLayoutBinding) {
                 if ((category == TasksCategories.DEFAULT_CATEGORY.ordinal)) {
-                    selectCategoryTV.text = fragmentContext.getString(R.string.select_category_text)
-                    selectCategoryTV.setTextColor(ContextCompat.getColor(fragmentContext, R.color.subColor))
-                    if (prefs.isDarkModeEnable) {
-                        selectCategoryLayout.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(fragmentContext, R.color.subColor))
-                    }
+                    selectCategoryBtn.text = fragmentContext.getString(R.string.select_category_text)
+                    selectCategoryBtn.setTextColor(ContextCompat.getColor(fragmentContext, R.color.subColor))
                 } else if ((category == TasksCategories.PERSONAL_CATEGORY.ordinal)) {
-                    selectCategoryTV.text = fragmentContext.getString(R.string.personal_text)
-                    selectCategoryTV.setTextColor(ContextCompat.getColor(fragmentContext, R.color.blackAndWhiteViewsColor))
+                    selectCategoryBtn.text = fragmentContext.getString(R.string.personal_text)
+                    selectCategoryBtn.setTextColor(ContextCompat.getColor(fragmentContext, R.color.blackAndWhiteViewsColor))
                 } else if ((category == TasksCategories.WORK_CATEGORY.ordinal)) {
-                    selectCategoryTV.text = fragmentContext.getString(R.string.work_text)
-                    selectCategoryTV.setTextColor(ContextCompat.getColor(fragmentContext, R.color.blackAndWhiteViewsColor))
+                    selectCategoryBtn.text = fragmentContext.getString(R.string.work_text)
+                    selectCategoryBtn.setTextColor(ContextCompat.getColor(fragmentContext, R.color.blackAndWhiteViewsColor))
                 }
             }
 
@@ -1074,13 +1133,16 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         }
         val deleteTaskAlertDialog = deleteTaskDialogBuilder.create()
         if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed && !deleteTaskAlertDialog.isShowing) {
-            deleteTaskAlertDialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
-            deleteTaskAlertDialog.window?.setWindowAnimations(R.style.dialogBoxesAnimation)
-            deleteTaskAlertDialog.show()
+            with(deleteTaskAlertDialog) {
+                window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+                window?.setWindowAnimations(R.style.dialogBoxesAnimation)
+                show()
+            }
         }
 
         with(deleteTaskDialogLayoutBinding) {
-            deleteIV.startAnimation(applyAnimation(fragmentContext))
+            deleteIV.startAnimation(animation)
+
             stopFABAnimation()
 
             noButton.setOnClickListener { _: View? ->
@@ -1094,9 +1156,8 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
 
             yesButton.setOnClickListener { _: View? ->
                 lifecycleScope.launch(Dispatchers.IO) {
-                    val isDeleted = CommonFunctions.getViewModel(fragmentContext).deleteTask(toDoTask).await()
-                    withContext(Dispatchers.Main) {
-                        if (isDeleted == 1) {
+                    tasksViewModel.deleteTask(toDoTask = toDoTask, isDeleteCallback = {
+                        if (it) {
                             toastController.showToast(fragmentContext, getString(R.string.deleted_successfully_toast_text), true)
                             if (!fragmentContext.isFinishing && !fragmentContext.isDestroyed) {
                                 deleteTaskAlertDialog.dismiss()
@@ -1107,7 +1168,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                         } else {
                             toastController.showToast(fragmentContext, getString(R.string.deleted_unsuccessfully_toast_text), false)
                         }
-                    }
+                    })
                 }
             }
         }

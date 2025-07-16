@@ -3,24 +3,27 @@ package com.sag.todo.list.task.reminder.repositories
 import com.sag.todo.list.task.reminder.db.DAO
 import com.sag.todo.list.task.reminder.db.ToDoTask
 import java.util.Date
+import javax.inject.Inject
 
-class TasksRepo(private val dao: DAO) {
+class TasksRepo @Inject constructor(private val dao: DAO) {
 
     suspend fun saveTask(toDoTask: ToDoTask) = dao.saveTask(toDoTask)
 
     fun getAllTasks(isTaskComplete: Boolean) = dao.getAllTasks(isTaskComplete)
 
     suspend fun isTaskAlreadySaved(
-        dayOfWeek: String,
-        date: String,
-        month: String,
-        year: String,
-        title: String,
-        description: String,
-        time: String,
-        category: Int
+        toDoTask: ToDoTask
     ): Int {
-        return dao.isTaskAlreadySaved(dayOfWeek, date, month, year, title, description, time, category)
+        return dao.isTaskAlreadySaved(
+            toDoTask.day,
+            toDoTask.date,
+            toDoTask.month,
+            toDoTask.year,
+            toDoTask.title,
+            toDoTask.description,
+            toDoTask.time,
+            toDoTask.category
+        )
     }
 
     suspend fun updateTask(toDoTask: ToDoTask) = dao.updateTask(toDoTask)

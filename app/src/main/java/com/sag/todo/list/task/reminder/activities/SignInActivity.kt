@@ -3,41 +3,63 @@ package com.sag.todo.list.task.reminder.activities
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
-import android.view.animation.AnimationUtils
+import android.view.animation.Animation
 import android.widget.CompoundButton
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.databinding.ActivitySignInBinding
 import com.sag.todo.list.task.reminder.databinding.RecoverPasswordDialogLayoutBinding
+import com.sag.todo.list.task.reminder.enums.SecurityQuestions
 import com.sag.todo.list.task.reminder.enums.Visibility
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeVisibility
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.keepActivityOn
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.makeFullScreenActivity
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import javax.inject.Named
 
+@AndroidEntryPoint
 class SignInActivity : BaseActivity(), View.OnClickListener {
 
     private val binding by lazy {
         ActivitySignInBinding.inflate(layoutInflater)
     }
+
+    @Inject
+    @Named(value = "SignInAndSignUpCardViewsAnimation")
+    lateinit var animation: Animation
     private lateinit var emailOrUserName: String
     private lateinit var password: String
-    private var securityQuestion = ""
+    private var selectedSecurityQuestion = 0
     private lateinit var securityAnswer: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val defaultColor = ContextCompat.getColor(activityContext, R.color.defaultColor)
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(defaultColor),
+            navigationBarStyle = SystemBarStyle.dark(defaultColor)
+        )
         setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.rootLayout)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         fetchUser()
-        makeFullScreenActivity(activityContext)
         keepActivityOn(activityContext)
 
         with(binding) {
-            signInCardViewAnimation()
+            signInCV.startAnimation(animation)
+
             if (prefs.isDarkModeEnable) {
                 userNameTIL.setBoxStrokeColorStateList(textInputLayoutDarkModeStrokeColor)
                 passwordTIL.setBoxStrokeColorStateList(textInputLayoutDarkModeStrokeColor)
@@ -51,28 +73,26 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    private fun ActivitySignInBinding.signInCardViewAnimation() =
-            signInCV.startAnimation(AnimationUtils.loadAnimation(activityContext, R.anim.sign_in_and_sign_up_card_views_animation))
-
     override fun onClick(view: View?) {
         with(binding) {
             when (view?.id) {
                 R.id.signInButton -> {
                     val signInEmailOrUserName = userNameTIL.editText?.text.toString().trim()
                     val signInPassword = passwordTIL.editText?.text.toString().trim()
-                    if (TextUtils.isEmpty(signInEmailOrUserName)) {
+                    if (signInEmailOrUserName.isEmpty()) {
                         passwordTIL.error = null
                         userNameTIL.error = getString(R.string.fill_this_field_text)
-                    } else if (TextUtils.isEmpty(signInPassword)) {
+                    } else if (signInPassword.isEmpty()) {
                         userNameTIL.error = null
                         passwordTIL.error = getString(R.string.fill_this_field_text)
-                    } else if (signInEmailOrUserName.equals(emailOrUserName, ignoreCase = true)) {
+                    } else if (signInEmailOrUserName.equals(other = emailOrUserName, ignoreCase = true)) {
                         if (signInPassword.equals(password, ignoreCase = true)) {
                             userNameTIL.error = null
                             passwordTIL.error = null
                             prefs.isUserSignIn = true
                             toastController.showToast(activityContext, getString(R.string.sign_in_successfully_toast_message_text), true)
-                            openDashBoardActivity()
+                            startActivity(Intent(activityContext, DashBoardActivity::class.java))
+                            finish()
                         } else {
                             userNameTIL.error = null
                             passwordTIL.error = null
@@ -86,7 +106,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                 }
 
                 R.id.forgotPasswordTV -> {
-                    if (securityQuestion != "") {
+                    if (selectedSecurityQuestion != 0) {
                         showRecoverPasswordDialog()
                     }
                 }
@@ -101,11 +121,6 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
         finish()
     }
 
-    private fun openDashBoardActivity() {
-        startActivity(Intent(activityContext, DashBoardActivity::class.java))
-        finish()
-    }
-
     private fun showRecoverPasswordDialog() {
         val recoverPasswordDialogLayoutBinding = RecoverPasswordDialogLayoutBinding.inflate(layoutInflater)
 
@@ -116,13 +131,21 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
         }
         val recoverPasswordAlertDialog = recoverPasswordDialogBuilder.create()
         if (!activityContext.isFinishing && !activityContext.isDestroyed && !recoverPasswordAlertDialog.isShowing) {
-            recoverPasswordAlertDialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
-            recoverPasswordAlertDialog.window?.setWindowAnimations(R.style.dialogBoxesAnimation)
-            recoverPasswordAlertDialog.show()
+            with(recoverPasswordAlertDialog) {
+                window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+                window?.setWindowAnimations(R.style.dialogBoxesAnimation)
+                show()
+            }
         }
 
         with(recoverPasswordDialogLayoutBinding) {
-            securityQuestionAnswerTIL.hint = securityQuestion
+            securityQuestionAnswerTIL.hint = when (selectedSecurityQuestion) {
+                SecurityQuestions.QUESTION_1.ordinal -> getString(R.string.what_is_your_favourite_book_question)
+                SecurityQuestions.QUESTION_2.ordinal -> getString(R.string.what_is_your_favourite_teacher_name_question)
+                SecurityQuestions.QUESTION_3.ordinal -> getString(R.string.what_is_your_school_name_question)
+                SecurityQuestions.QUESTION_4.ordinal -> getString(R.string.what_is_your_favourite_game_question)
+                else -> ""
+            }
             softKeyboardVisibilityController.showSoftKeyboard()
             securityQuestionAnswerTIET.requestFocus()
 
@@ -139,7 +162,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
 
             resetPasswordButton.setOnClickListener { _: View? ->
                 val answer = securityQuestionAnswerTIL.editText?.text.toString().trim()
-                if (TextUtils.isEmpty(answer)) {
+                if (answer.isEmpty()) {
                     securityQuestionAnswerTIL.error = getString(R.string.please_enter_answer_here_error_text)
                 } else if (answer == securityAnswer) {
                     softKeyboardVisibilityController.hideSoftKeyboard(securityQuestionAnswerTIET)
@@ -160,7 +183,7 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
         val userCredentialArray = prefs.userCredentials
         emailOrUserName = userCredentialArray[0]
         password = userCredentialArray[1]
-        securityQuestion = userCredentialArray[3]
+        selectedSecurityQuestion = userCredentialArray[3].toInt()
         securityAnswer = userCredentialArray[4]
         val check = java.lang.Boolean.parseBoolean(userCredentialArray[5])
         with(binding) {
@@ -174,11 +197,9 @@ class SignInActivity : BaseActivity(), View.OnClickListener {
                 rememberMeCB.isChecked = false
             }
 
-            if (check) {
-                dontHaveAnAccountSignUpAccountGroup.changeVisibility(Visibility.GONE.ordinal)
-            } else {
-                dontHaveAnAccountSignUpAccountGroup.changeVisibility(Visibility.VISIBLE.ordinal)
-            }
+            dontHaveAnAccountSignUpAccountGroup.changeVisibility(
+                if (check) Visibility.GONE.ordinal else Visibility.VISIBLE.ordinal
+            )
         }
     }
 }

@@ -8,7 +8,12 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.CompoundButton
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.sag.todo.list.task.reminder.BuildConfig
 import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.base.BaseActivity
@@ -27,7 +32,19 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val defaultColor = ContextCompat.getColor(activityContext, R.color.defaultColor)
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(defaultColor),
+            navigationBarStyle = SystemBarStyle.dark(defaultColor)
+        )
         setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val bottomInset = maxOf(systemBars.bottom, ime.bottom)
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, bottomInset)
+            insets
+        }
 
         keepActivityOn(activityContext)
 
@@ -94,7 +111,7 @@ class FeedbackActivity : BaseActivity(), View.OnClickListener {
                     feedbackET.text = null
                     feedbackArrayList.remove(otherIssuesCB.text.toString().trim())
                     feedbackEditTextCV.changeVisibility(Visibility.GONE.ordinal)
-                    softKeyboardVisibilityController.hideSoftKeyboard(view)
+                    softKeyboardVisibilityController.hideSoftKeyboard(feedbackET)
                     otherIssuesCheck = false
                 }
             }

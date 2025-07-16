@@ -3,7 +3,6 @@ package com.sag.todo.list.task.reminder.utils
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Typeface
-import android.os.Build
 import android.text.SpannableString
 import android.text.Spanned
 import android.view.MenuItem
@@ -11,31 +10,19 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
-import android.view.WindowInsets
 import android.view.WindowManager
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.net.toUri
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
 import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.activities.PrivacyPolicyActivity
 import com.sag.todo.list.task.reminder.customFonts.PopUpMenuItemsTypefaceAndColor
-import com.sag.todo.list.task.reminder.db.ToDosDatabase
-import com.sag.todo.list.task.reminder.repositories.TasksRepo
-import com.sag.todo.list.task.reminder.viewModels.TasksViewModel
-import com.sag.todo.list.task.reminder.viewModels.TasksViewModelFactory
 
 object CommonFunctions {
 
     var isSomethingChanged = MutableLiveData(false)
-
-    fun getViewModel(context: FragmentActivity) =
-        ViewModelProvider(context, TasksViewModelFactory(TasksRepo(ToDosDatabase.getDatabase(context).dao())))[TasksViewModel::class.java]
 
     fun openGoogleAppStore(activity: Activity) {
         val openGoogleAppStoreIntent = Intent()
@@ -69,25 +56,11 @@ object CommonFunctions {
         window.statusBarColor = color
     }
 
-    fun applyAnimation(activity: Activity): Animation =
-        AnimationUtils.loadAnimation(activity, R.anim.fab_and_rate_us_image_view_animation)
-
     fun keepActivityOn(activity: Activity) =
         activity.window.setFlags(
             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
         )
-
-    fun makeFullScreenActivity(activity: Activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            activity.window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            activity.window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
-    }
 
     fun View.changeVisibility(visibilityStatus: Int) {
         when(visibilityStatus) {
@@ -97,13 +70,8 @@ object CommonFunctions {
         }
     }
 
-    fun changeAppMode(isDark: Boolean = false) {
-        if (isDark) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
-    }
+    fun changeAppMode(isDark: Boolean = false) =
+        AppCompatDelegate.setDefaultNightMode(if (isDark) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
 
     fun applyCustomFontAndColorToPopupMenuItemsText(
         context: Activity,

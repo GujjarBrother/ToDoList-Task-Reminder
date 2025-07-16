@@ -2,7 +2,7 @@
 <resources>
 
     <color name="purple_200">#9E9E9E</color>
-    <color name="purple_500">#9E9E9E</color>
+    <color name="purple_500">#611671</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">@android:color/transparent</color>
     <color name="teal_700">#FF018786</color>
@@ -39,7 +39,7 @@
     <color name="screensBackgroundColor">#FFFAFA</color>
     <color name="cardsBackgroundColor">#FFFFFF</color>
     <color name="ratingBarStarsCheckedStateColor">#611671</color>
-    <color name="feedbackEditTextCardViewColor">#EEEEEE</color>
+    <color name="feedbackAndSearchETCVColor">#EEEEEE</color>
     <color name="tabLayoutUnSelectedTabTextColor">#80FFFFFF</color>
     <color name="fragmentsCardViewsColor">#F5F5F5</color>
     <color name="lightColor">#40000000</color>
@@ -50,5 +50,10 @@
     <color name="switchThumbColor">#BDBDBD</color>
     <color name="switchTrackColor">#EEEEEE</color>
     <color name="subColor">#8E8E8E</color>
+    <color name="sliderTrackInActiveColor">#E0E0E0</color>
+    <color name="positiveButtonsPressedStateBGColor">#9E8AA2</color>
+    <color name="negativeButtonsPressedStateBGColor">#9E8AA2</color>
+    <color name="editTextsHintTextColor">#BEBEBE</color>
+    <color name="languagesRVItemSelectedBGColor">#10611671</color>
 
 </resources>

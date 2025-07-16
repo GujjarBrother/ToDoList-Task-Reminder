@@ -26,13 +26,13 @@
                 android:layout_height="@dimen/_50sdp"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                app:srcCompat="@drawable/app_icon"
                 app:layout_constraintBottom_toTopOf="@id/featuresTV"
                 app:layout_constraintEnd_toStartOf="@id/appNameTV"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0"
-                app:layout_constraintVertical_chainStyle="packed" />
+                app:layout_constraintVertical_chainStyle="packed"
+                app:srcCompat="@drawable/app_icon" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/appNameTV"
@@ -40,8 +40,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
                 android:fontFamily="@font/cabin_medium"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
                 android:text="@string/to_do_list_task_reminder_app_text"
                 android:textColor="@color/blackAndWhiteViewsColor"
@@ -85,11 +85,11 @@
                     android:id="@+id/lightAndDarkModeIV"
                     android:layout_width="@dimen/_16sdp"
                     android:layout_height="@dimen/_16sdp"
-                    app:layout_constraintEnd_toStartOf="@id/lightAndDarkModeTV"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:srcCompat="@drawable/sun_image"
+                    app:layout_constraintEnd_toStartOf="@id/lightAndDarkModeTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/sun_image"
                     app:tint="@color/defaultColor" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -116,7 +116,7 @@
                     android:fontFamily="@font/cabin_medium"
                     android:singleLine="true"
                     android:text="@string/switch_between_light_dark_mode_text"
-                    android:textColor="#8E8E8E"
+                    android:textColor="@color/subColor"
                     android:textSize="@dimen/_8ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/lightAndDarkModeSwitch"
@@ -129,8 +129,8 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toEndOf="@id/lightAndDarkModeTV"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:thumbTint="@color/switchThumbColor"
                     app:trackTint="@color/switchTrackColor" />
 
@@ -170,11 +170,11 @@
                     android:id="@+id/settingsIV"
                     android:layout_width="@dimen/_16sdp"
                     android:layout_height="@dimen/_16sdp"
-                    app:layout_constraintEnd_toStartOf="@id/settingsTV"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:srcCompat="@drawable/settings_icon"
+                    app:layout_constraintEnd_toStartOf="@id/settingsTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/settings_icon"
                     app:tint="@color/defaultColor" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -201,7 +201,7 @@
                     android:fontFamily="@font/cabin_medium"
                     android:singleLine="true"
                     android:text="@string/see_the_required_settings_text"
-                    android:textColor="#8E8E8E"
+                    android:textColor="@color/subColor"
                     android:textSize="@dimen/_8ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/settingsArrowIV"
@@ -213,11 +213,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_10sdp"
-                    app:layout_constraintStart_toEndOf="@id/seeTheRequiredSettingsTV"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:srcCompat="@drawable/forward_arrow_image"
+                    app:layout_constraintStart_toEndOf="@id/seeTheRequiredSettingsTV"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/forward_arrow_image"
                     app:tint="@color/defaultColor" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -239,11 +239,11 @@
                     android:id="@+id/visitOurAppStoreIV"
                     android:layout_width="@dimen/_16sdp"
                     android:layout_height="@dimen/_16sdp"
-                    app:layout_constraintEnd_toStartOf="@id/visitOurAppStoreTV"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:srcCompat="@drawable/visit_our_app_store_image"
+                    app:layout_constraintEnd_toStartOf="@id/visitOurAppStoreTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/visit_our_app_store_image"
                     app:tint="@color/defaultColor" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -270,7 +270,7 @@
                     android:fontFamily="@font/cabin_medium"
                     android:singleLine="true"
                     android:text="@string/check_our_more_app_s_on_play_store_text"
-                    android:textColor="#8E8E8E"
+                    android:textColor="@color/subColor"
                     android:textSize="@dimen/_8ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/visitOurAppStoreArrowIV"
@@ -282,11 +282,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_10sdp"
-                    app:layout_constraintStart_toEndOf="@id/checkOurMoreAppsOnPlayStoreTV"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:srcCompat="@drawable/forward_arrow_image"
+                    app:layout_constraintStart_toEndOf="@id/checkOurMoreAppsOnPlayStoreTV"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/forward_arrow_image"
                     app:tint="@color/defaultColor" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -308,11 +308,11 @@
                     android:id="@+id/privacyPolicyIV"
                     android:layout_width="@dimen/_16sdp"
                     android:layout_height="@dimen/_16sdp"
-                    app:layout_constraintEnd_toStartOf="@id/privacyPolicyTV"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:srcCompat="@drawable/privacy_policy_image"
+                    app:layout_constraintEnd_toStartOf="@id/privacyPolicyTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/privacy_policy_image"
                     app:tint="@color/defaultColor" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -339,7 +339,7 @@
                     android:fontFamily="@font/cabin_medium"
                     android:singleLine="true"
                     android:text="@string/read_our_privacy_policy_text"
-                    android:textColor="#8E8E8E"
+                    android:textColor="@color/subColor"
                     android:textSize="@dimen/_8ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/privacyPolicyArrowIV"
@@ -351,11 +351,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_10sdp"
-                    app:layout_constraintStart_toEndOf="@id/readOurPrivacyPolicyTV"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:srcCompat="@drawable/forward_arrow_image"
+                    app:layout_constraintStart_toEndOf="@id/readOurPrivacyPolicyTV"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/forward_arrow_image"
                     app:tint="@color/defaultColor" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -377,11 +377,11 @@
                     android:id="@+id/checkUpdateIV"
                     android:layout_width="@dimen/_16sdp"
                     android:layout_height="@dimen/_16sdp"
-                    app:layout_constraintEnd_toStartOf="@id/checkUpdateTV"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:srcCompat="@drawable/app_version_image"
+                    app:layout_constraintEnd_toStartOf="@id/checkUpdateTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/app_version_image"
                     app:tint="@color/defaultColor" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -404,11 +404,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:ellipsize="end"
                     android:fontFamily="@font/cabin_medium"
-                    android:singleLine="true"
-                    android:textColor="#8E8E8E"
+                    android:textColor="@color/subColor"
                     android:textSize="@dimen/_8ssp"
+                    android:textAlignment="viewStart"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/checkUpdateArrowIV"
                     app:layout_constraintStart_toEndOf="@id/checkUpdateIV"
@@ -419,11 +418,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_10sdp"
-                    app:layout_constraintStart_toEndOf="@id/versionNumberTV"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:srcCompat="@drawable/forward_arrow_image"
+                    app:layout_constraintStart_toEndOf="@id/versionNumberTV"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/forward_arrow_image"
                     app:tint="@color/defaultColor" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

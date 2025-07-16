@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_boxes_background"
-    android:paddingBottom="@dimen/_15sdp"
-    android:paddingHorizontal="@dimen/_10sdp">
+    android:paddingHorizontal="@dimen/_10sdp"
+    android:paddingBottom="@dimen/_15sdp">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/dismissDialogIV"
@@ -13,19 +13,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_5sdp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        app:srcCompat="@drawable/cross_image"
         app:layout_constraintBottom_toTopOf="@id/securityQuestionTitleTV"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/cross_image" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/securityQuestionTitleTV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/cabin_medium"
+        android:gravity="center"
         android:text="@string/security_questions_text"
         android:textAllCaps="false"
-        android:gravity="center"
         android:textColor="@color/defaultColor"
         android:textSize="@dimen/_16ssp"
         android:textStyle="bold"
@@ -33,44 +33,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dismissDialogIV" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/securityQuestionLayout"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/securityQuestionBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:background="@drawable/spinner_background"
+        android:gravity="start"
         android:padding="@dimen/_15sdp"
+        android:text="@string/security_questions_text"
+        android:textColor="@color/subColor"
+        android:textSize="@dimen/_13ssp"
+        app:backgroundTint="@android:color/transparent"
+        app:cornerRadius="@dimen/_5sdp"
+        app:drawableEndCompat="@drawable/drop_down_image"
+        app:drawableTint="@color/defaultColor"
+        app:fontFamily="@font/cabin_medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/securityQuestionTitleTV">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/selectSecurityQuestionTV"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/cabin_medium"
-            android:text="@string/select_security_question_text"
-            android:textAllCaps="false"
-            android:textColor="@color/subColor"
-            android:textSize="@dimen/_13ssp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/dropDownIV"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/dropDownIV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/selectSecurityQuestionTV"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/drop_down_arrow"
-            app:tint="@color/defaultColor" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@id/securityQuestionTitleTV"
+        app:strokeColor="@color/subColor"
+        app:strokeWidth="@dimen/_1sdp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/securityQuestionAnswerTIL"
@@ -98,6 +80,7 @@
             android:imeOptions="actionGo"
             android:inputType="textCapWords"
             android:textAllCaps="false"
+            android:textCursorDrawable="@null"
             android:textColor="@color/blackAndWhiteViewsColor" />
 
     </com.google.android.material.textfield.TextInputLayout>

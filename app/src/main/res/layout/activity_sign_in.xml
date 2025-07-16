@@ -108,6 +108,7 @@
                     android:inputType="textEmailAddress"
                     android:singleLine="true"
                     android:textAllCaps="false"
+                    android:textCursorDrawable="@null"
                     android:textColor="@color/blackAndWhiteViewsColor" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -147,6 +148,7 @@
                     android:inputType="textPassword"
                     android:singleLine="true"
                     android:textAllCaps="false"
+                    android:textCursorDrawable="@null"
                     android:textColor="@color/blackAndWhiteViewsColor" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -169,7 +171,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:backgroundTint="@color/defaultColor"
                 android:fontFamily="@font/cabin_medium"
                 android:minWidth="@dimen/_200sdp"
                 android:minHeight="@dimen/_55sdp"
@@ -180,6 +181,7 @@
                 android:textColor="@color/whiteColor"
                 android:textSize="@dimen/_15ssp"
                 android:textStyle="bold"
+                app:backgroundTint="@color/positive_buttons_pressed_and_unpressed_states_background"
                 app:cornerRadius="@dimen/_7sdp"
                 app:layout_constraintBottom_toTopOf="@id/forgotPasswordTV"
                 app:layout_constraintEnd_toEndOf="parent"
