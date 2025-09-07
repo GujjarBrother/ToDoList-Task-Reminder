@@ -138,7 +138,7 @@
     <string name="reminder_text">Hatırlatma</string>
     <string name="loading_text">Yükleme…</string>
     <string name="search_here_hint">Burada ara…</string>
-    <string name="allow_notification_text">Bildirime İzin Ver</string>
+    <string name="allow_permission_text">Bildirime İzin Ver</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Bildirimin size görevlerinizi hatırlatmasına izin verin</string>
     <string name="deny_text">Reddetmek</string>
     <string name="allow_text">İzin vermek</string>

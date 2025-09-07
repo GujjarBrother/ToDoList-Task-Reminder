@@ -138,7 +138,7 @@
     <string name="reminder_text">תִזכּוֹרֶת</string>
     <string name="loading_text">טְעִינָה…</string>
     <string name="search_here_hint">חפש כאן…</string>
-    <string name="allow_notification_text">אפשר הודעה</string>
+    <string name="allow_permission_text">אפשר הודעה</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">אפשר להודעות להזכיר לך את המשימות שלך</string>
     <string name="deny_text">לְהַכּחִישׁ</string>
     <string name="allow_text">לְהַתִיר</string>

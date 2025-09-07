@@ -11,12 +11,14 @@ import androidx.room.Room
 import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.db.ToDosDatabase
 import com.sag.todo.list.task.reminder.db.ToDosDatabase.Companion.migration1to2
+import com.sag.todo.list.task.reminder.utils.FabRateUsAndApplyAnimation
+import com.sag.todo.list.task.reminder.utils.SignInAndSignUpCardViewsAnimation
+import com.sag.todo.list.task.reminder.utils.SplashImageAnimation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -55,19 +57,19 @@ object AppModule {
 
     @Provides
     @Singleton
-    @Named(value = "SplashImageAnimation")
+    @SplashImageAnimation
     fun provideSplashImageAnimation(@ApplicationContext context: Context): Animation =
         AnimationUtils.loadAnimation(context, R.anim.splash_image_animation)
 
     @Provides
     @Singleton
-    @Named(value = "SignInAndSignUpCardViewsAnimation")
+    @SignInAndSignUpCardViewsAnimation
     fun provideSignInAndSignUpCardViewsAnimation(@ApplicationContext context: Context): Animation =
         AnimationUtils.loadAnimation(context, R.anim.sign_in_and_sign_up_card_views_animation)
 
     @Provides
     @Singleton
-    @Named(value = "FabRateUsAndApplyAnimation")
+    @FabRateUsAndApplyAnimation
     fun provideFabRateUsAndApplyAnimation(@ApplicationContext context: Context): Animation =
         AnimationUtils.loadAnimation(context, R.anim.fab_rate_us_and_apply_animation)
 }

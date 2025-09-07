@@ -138,7 +138,7 @@
     <string name="reminder_text">Promemoria</string>
     <string name="loading_text">Caricamento…</string>
     <string name="search_here_hint">Cerca qui…</string>
-    <string name="allow_notification_text">Consenti la notifica</string>
+    <string name="allow_permission_text">Consenti la notifica</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Consenti le notifiche per ricordarti le tue attività</string>
     <string name="deny_text">Negare</string>
     <string name="allow_text">Permettere</string>

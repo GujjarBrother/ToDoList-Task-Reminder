@@ -2,6 +2,7 @@ package com.sag.todo.list.task.reminder.utils
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Typeface
 import android.text.SpannableString
 import android.text.Spanned
@@ -13,14 +14,20 @@ import android.view.View.VISIBLE
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.ColorInt
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.activities.PrivacyPolicyActivity
 import com.sag.todo.list.task.reminder.customFonts.PopUpMenuItemsTypefaceAndColor
+import com.sag.todo.list.task.reminder.databinding.ExplainingWhyPermissionIsRequiredLayoutBinding
 
 object CommonFunctions {
+
+    const val TASK_REMINDER_NOTIFICATION_CHANNEL_ID = "TASK_REMINDER_NOTIFICATION_CHANNEL_ID"
+    const val TASK_REMINDER_NOTIFICATION_CHANNEL_NAME = "Task Reminder"
 
     var isSomethingChanged = MutableLiveData(false)
 
@@ -87,5 +94,45 @@ object CommonFunctions {
             Spanned.SPAN_INCLUSIVE_INCLUSIVE
         )
         menuItem.title = spannableString
+    }
+
+    fun showExplainingWhyNotificationPermissionIsRequiredDialog(context: Activity, isForOpenSettingsScreen: Boolean = false, allowOrOpenAppSettingsCallback: () -> Unit) {
+        val whyPermissionIsRequiredLayoutBinding = ExplainingWhyPermissionIsRequiredLayoutBinding.inflate(context.layoutInflater)
+
+        val alertDialogBuilder = AlertDialog.Builder(context)
+        with(alertDialogBuilder) {
+            setView(whyPermissionIsRequiredLayoutBinding.root)
+            setCancelable(true)
+        }
+        val alertDialog = alertDialogBuilder.create()
+        if (!context.isFinishing && !context.isDestroyed && !alertDialog.isShowing) {
+            with(alertDialog) {
+                window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+                window?.setWindowAnimations(R.style.dialogBoxesAnimation)
+                show()
+            }
+        }
+
+        with(whyPermissionIsRequiredLayoutBinding) {
+            if (isForOpenSettingsScreen) {
+                titleTV.text = context.getString(R.string.open_settings_text)
+                descriptionTV.text = context.getString(R.string.allow_notifications_permission_from_settings_text)
+                denyAndCancelBtn.text = context.getString(R.string.cancel_text)
+                allowAndOpenSettingsBtn.text = context.getString(R.string.open_settings_text)
+            }
+
+            denyAndCancelBtn.setOnClickListener {
+                if (!context.isFinishing && !context.isDestroyed) {
+                    alertDialog.dismiss()
+                }
+            }
+
+            allowAndOpenSettingsBtn.setOnClickListener {
+                if (!context.isFinishing && !context.isDestroyed) {
+                    alertDialog.dismiss()
+                }
+                allowOrOpenAppSettingsCallback.invoke()
+            }
+        }
     }
 }

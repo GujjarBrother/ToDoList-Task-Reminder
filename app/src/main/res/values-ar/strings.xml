@@ -138,7 +138,7 @@
     <string name="reminder_text">تذكير</string>
     <string name="loading_text">تحميل…</string>
     <string name="search_here_hint">ابحث هنا…</string>
-    <string name="allow_notification_text">السماح للإشعار</string>
+    <string name="allow_permission_text">السماح للإشعار</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">السماح للإشعار أن يذكرك بمهامك</string>
     <string name="deny_text">ينكر</string>
     <string name="allow_text">يسمح</string>

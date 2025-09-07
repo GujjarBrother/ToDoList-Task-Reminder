@@ -138,7 +138,7 @@
     <string name="reminder_text">Emlékeztető</string>
     <string name="loading_text">Terhelés…</string>
     <string name="search_here_hint">Keressen itt…</string>
-    <string name="allow_notification_text">Engedélyezés engedélyezése</string>
+    <string name="allow_permission_text">Engedélyezés engedélyezése</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Engedje meg, hogy az értesítés emlékeztesse a feladatait</string>
     <string name="deny_text">Tagad</string>
     <string name="allow_text">Megenged</string>

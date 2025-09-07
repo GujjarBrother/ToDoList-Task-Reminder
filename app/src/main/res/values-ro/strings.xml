@@ -138,7 +138,7 @@
     <string name="reminder_text">Memento</string>
     <string name="loading_text">Încărcare…</string>
     <string name="search_here_hint">Căutați aici…</string>
-    <string name="allow_notification_text">Permite notificarea</string>
+    <string name="allow_permission_text">Permite notificarea</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Permiteți notificării să vă reamintească despre sarcinile dvs.</string>
     <string name="deny_text">Negă</string>
     <string name="allow_text">Permite</string>

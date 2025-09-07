@@ -138,7 +138,7 @@
     <string name="reminder_text">অনুস্মারক</string>
     <string name="loading_text">লোড হচ্ছে…</string>
     <string name="search_here_hint">এখানে অনুসন্ধান করুন…</string>
-    <string name="allow_notification_text">বিজ্ঞপ্তি অনুমতি দিন</string>
+    <string name="allow_permission_text">বিজ্ঞপ্তি অনুমতি দিন</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">আপনার কাজগুলি সম্পর্কে আপনাকে স্মরণ করিয়ে দেওয়ার জন্য বিজ্ঞপ্তিগুলির অনুমতি দিন</string>
     <string name="deny_text">অস্বীকার</string>
     <string name="allow_text">অনুমতি দিন</string>

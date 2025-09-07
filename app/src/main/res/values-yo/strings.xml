@@ -138,7 +138,7 @@
     <string name="reminder_text">Oluran</string>
     <string name="loading_text">Loading…</string>
     <string name="search_here_hint">Wa nibi…</string>
-    <string name="allow_notification_text">Gba iwifunni gba</string>
+    <string name="allow_permission_text">Gba iwifunni gba</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Gba iwifunni laaye lati leti rẹ nipa awọn iṣẹ rẹ</string>
     <string name="deny_text">Kọ</string>
     <string name="allow_text">Gba laaye</string>

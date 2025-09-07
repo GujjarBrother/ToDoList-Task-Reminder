@@ -138,7 +138,7 @@
     <string name="reminder_text">रिमांइडर</string>
     <string name="loading_text">लोड हो रहल बा…</string>
     <string name="search_here_hint">इहाँ खोजीं…</string>
-    <string name="allow_notification_text">सूचना देवे के अनुमति दीं .</string>
+    <string name="allow_permission_text">सूचना देवे के अनुमति दीं .</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">सूचना के अनुमति दीं कि रउरा के रउरा काम के बारे में याद दिआवल जा सके</string>
     <string name="deny_text">मना</string>
     <string name="allow_text">आग्या दिहीं</string>

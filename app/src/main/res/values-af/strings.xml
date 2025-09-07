@@ -138,7 +138,7 @@
     <string name="reminder_text">Herinnering</string>
     <string name="loading_text">Laai…</string>
     <string name="search_here_hint">Soek hier…</string>
-    <string name="allow_notification_text">Laat kennisgewing toe</string>
+    <string name="allow_permission_text">Laat kennisgewing toe</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Laat kennisgewing toe om u aan u take te herinner</string>
     <string name="deny_text">Ontken</string>
     <string name="allow_text">Toelaat</string>

@@ -138,7 +138,7 @@
     <string name="reminder_text">Påminnelse</string>
     <string name="loading_text">Belastning…</string>
     <string name="search_here_hint">Sök här…</string>
-    <string name="allow_notification_text">Tillåt av anmälan</string>
+    <string name="allow_permission_text">Tillåt av anmälan</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Låt anmälan påminna dig om dina uppgifter</string>
     <string name="deny_text">Förneka</string>
     <string name="allow_text">Tillåta</string>

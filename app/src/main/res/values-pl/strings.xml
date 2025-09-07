@@ -138,7 +138,7 @@
     <string name="reminder_text">Przypomnienie</string>
     <string name="loading_text">Załadunek…</string>
     <string name="search_here_hint">Wyszukaj tutaj…</string>
-    <string name="allow_notification_text">Zezwalaj na powiadomienie</string>
+    <string name="allow_permission_text">Zezwalaj na powiadomienie</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Pozwól, aby powiadomienia przypominają o twoich zadaniach</string>
     <string name="deny_text">Zaprzeczyć</string>
     <string name="allow_text">Umożliwić</string>

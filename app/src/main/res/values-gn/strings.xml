@@ -138,7 +138,7 @@
     <string name="reminder_text">Momandu&amp;#39;ahára</string>
     <string name="loading_text">Loading…</string>
     <string name="search_here_hint">Eheka ko&amp;#39;ápe…</string>
-    <string name="allow_notification_text">Oheja marandu .</string>
+    <string name="allow_permission_text">Oheja marandu .</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Eheja momarandurã nemomandu&amp;#39;a ne rembiapokuéra rehe .</string>
     <string name="deny_text">Mbotove</string>
     <string name="allow_text">Heja</string>

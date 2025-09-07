@@ -138,7 +138,7 @@
     <string name="reminder_text">Rappel</string>
     <string name="loading_text">Chargement…</string>
     <string name="search_here_hint">Recherche ici…</string>
-    <string name="allow_notification_text">Autoriser la notification</string>
+    <string name="allow_permission_text">Autoriser la notification</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Autoriser la notification pour vous rappeler vos tâches</string>
     <string name="deny_text">Refuser</string>
     <string name="allow_text">Permettre</string>

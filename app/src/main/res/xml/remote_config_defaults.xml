@@ -2,8 +2,8 @@
 <defaultsMap>
 
     <entry>
-        <key>TITLE</key>
-        <value>Shafqat Ali</value>
+        <key>IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN</key>
+        <value>true</value>
     </entry>
 
 </defaultsMap>

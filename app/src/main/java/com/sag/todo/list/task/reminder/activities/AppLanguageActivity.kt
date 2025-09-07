@@ -19,9 +19,10 @@ import com.sag.todo.list.task.reminder.adapters.AppLanguageRVAdapter
 import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.controllers.localization.AppLanguage
 import com.sag.todo.list.task.reminder.databinding.ActivityAppLanguageBinding
+import com.sag.todo.list.task.reminder.listeners.AdaptersListener
+import com.sag.todo.list.task.reminder.utils.FabRateUsAndApplyAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import javax.inject.Named
 
 @AndroidEntryPoint
 class AppLanguageActivity : BaseActivity(), View.OnClickListener {
@@ -31,17 +32,31 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
     }
 
     @Inject
-    @Named(value = "FabRateUsAndApplyAnimation")
+    @FabRateUsAndApplyAnimation
     lateinit var animation: Animation
     private var selectedAppLanguage: AppLanguage? = null
+    private var isFirstTimeClickedAfterSearchLanguage = true
     private val appLanguageRVAdapter: AppLanguageRVAdapter by lazy {
-        AppLanguageRVAdapter(appLanguageClickCallback = { appLanguage, currentPosition, oldPosition ->
-            selectedAppLanguage = appLanguage
-            with(appLanguageRVAdapter) {
-                languagesList[oldPosition].isSelected = false
-                notifyItemChanged(oldPosition)
-                currentList[currentPosition].isSelected = true
-                notifyItemChanged(currentPosition)
+        AppLanguageRVAdapter(object : AdaptersListener<AppLanguage, Int, Int> {
+            override fun itemClicked(
+                item: AppLanguage?,
+                currentPosition: Int?,
+                previousPosition: Int?,
+                isSwitchChecked: Boolean?
+            ) {
+                selectedAppLanguage = item
+                with(appLanguageRVAdapter) {
+                    previouslySelectedPosition = currentPosition ?: 0
+                    if (isFirstTimeClickedAfterSearchLanguage) {
+                        isFirstTimeClickedAfterSearchLanguage = false
+                        languagesList[previousPosition ?: 0].isSelected = false
+                    } else {
+                        currentList[previousPosition ?: 0].isSelected = false
+                    }
+                    notifyItemChanged(previousPosition ?: 0)
+                    currentList[currentPosition ?: 0].isSelected = true
+                    notifyItemChanged(currentPosition ?: 0)
+                }
             }
         })
     }
@@ -136,6 +151,9 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
                     p3: Int
                 ) {
                     p0?.let {
+                        if (!it.isNotEmpty()) {
+                            isFirstTimeClickedAfterSearchLanguage = true
+                        }
                         crossIV.isVisible = it.isNotEmpty()
                         val filteredLanguagesList = languagesList.filter { appLanguage ->
                             appLanguage.languageName.contains(
@@ -166,22 +184,33 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
 
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                finish()
+                goBack()
             }
         })
     }
 
     override fun onClick(p0: View?) {
         p0?.let {
-            when (it.id) {
-                R.id.backArrowIV -> finish()
-                R.id.crossIV -> binding.languageSearchET.text = null
-                R.id.applyBtn -> {
-                    prefs.selectedLanguageCode = selectedAppLanguage?.languageCode ?: ""
-                    setResult(RESULT_OK)
-                    finish()
+            binding.apply {
+                when (it.id) {
+                    R.id.backArrowIV -> goBack()
+                    R.id.crossIV -> {
+                        isFirstTimeClickedAfterSearchLanguage = true
+                        languageSearchET.text = null
+                    }
+                    R.id.applyBtn -> {
+                        isFirstTimeClickedAfterSearchLanguage = true
+                        prefs.selectedLanguageCode = selectedAppLanguage?.languageCode ?: ""
+                        setResult(RESULT_OK)
+                        finish()
+                    }
                 }
             }
         }
+    }
+
+    private fun goBack() {
+        isFirstTimeClickedAfterSearchLanguage = true
+        finish()
     }
 }

@@ -138,7 +138,7 @@
     <string name="reminder_text">Yuyachiy</string>
     <string name="loading_text">Cargando…</string>
     <string name="search_here_hint">Kaypi maskay…</string>
-    <string name="allow_notification_text">Willayta saqiy .</string>
+    <string name="allow_permission_text">Willayta saqiy .</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Willayta saqiy ruwanakunaykimanta yuyarichiyta .</string>
     <string name="deny_text">Mana uyakuy</string>
     <string name="allow_text">Uyakuy</string>

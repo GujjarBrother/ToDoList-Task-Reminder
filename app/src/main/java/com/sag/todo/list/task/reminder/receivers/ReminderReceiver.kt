@@ -1,18 +1,16 @@
 package com.sag.todo.list.task.reminder.receivers
 
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.media.AudioAttributes
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
 import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.activities.ToDoTaskDetailActivity
 import com.sag.todo.list.task.reminder.db.ToDoTask
+import com.sag.todo.list.task.reminder.utils.CommonFunctions.TASK_REMINDER_NOTIFICATION_CHANNEL_ID
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -31,36 +29,22 @@ class ReminderReceiver : BroadcastReceiver() {
     }
 
     private fun showReminderNotification(context: Context, toDoTask: ToDoTask?) {
-        val channelID = "Reminder_Channel"
-        val channelName = "Channel For Reminder Notification."
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val soundUri = "android.resource://${context.packageName}/${R.raw.reminder_notification_default_sound}".toUri()
-            val audioAttributes = AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                .build()
-
-            val notificationChannel = NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_HIGH).apply {
-                description = "Reminder Tasks Channel"
-                setSound(soundUri, audioAttributes)
-            }
-            notificationManager.createNotificationChannel(notificationChannel)
-        }
-        val notificationCompatBuilder = NotificationCompat.Builder(context, channelID)
+        val notificationTapIntent = Intent(context, ToDoTaskDetailActivity::class.java)
+            .putExtra("taskDetail", toDoTask)
+        val notificationTapPI = PendingIntent.getActivity(
+            context, 0, notificationTapIntent, PendingIntent.FLAG_IMMUTABLE
+        )
+        val notificationCompatBuilder = NotificationCompat.Builder(context, TASK_REMINDER_NOTIFICATION_CHANNEL_ID)
             .setContentTitle(toDoTask?.title)
             .setContentText(toDoTask?.description)
             .setSmallIcon(R.drawable.app_icon)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
-            .setContentIntent(PendingIntent.getActivity(
-                context, 0,
-                Intent(context, ToDoTaskDetailActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    putExtra("taskDetail", toDoTask)
-                },
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            ))
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setContentIntent(notificationTapPI)
+            .setOnlyAlertOnce(true)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setSound("android.resource://${context.packageName}/${R.raw.reminder_notification_default_sound}".toUri())
             .build()
-        notificationManager.notify(1, notificationCompatBuilder)
+        notificationManager.notify(toDoTask?.id ?: 0, notificationCompatBuilder)
     }
 }

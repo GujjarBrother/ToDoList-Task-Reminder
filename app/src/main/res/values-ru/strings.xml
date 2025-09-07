@@ -138,7 +138,7 @@
     <string name="reminder_text">Напоминание</string>
     <string name="loading_text">Загрузка…</string>
     <string name="search_here_hint">Поиск здесь…</string>
-    <string name="allow_notification_text">Разрешить уведомление</string>
+    <string name="allow_permission_text">Разрешить уведомление</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Разрешить уведомления напоминать вам о ваших задачах</string>
     <string name="deny_text">Отрицать</string>
     <string name="allow_text">Позволять</string>

@@ -11,7 +11,7 @@ class FetchRemoteConfig {
         fun fetchRemoteConfigValues(isFetchedCallback: () -> Unit) {
             val remoteConfig = Firebase.remoteConfig
             val remoteConfigSettings = remoteConfigSettings {
-                minimumFetchIntervalInSeconds = 30
+                minimumFetchIntervalInSeconds = 20
             }
             remoteConfig.setConfigSettingsAsync(remoteConfigSettings)
             remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)

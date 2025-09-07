@@ -26,6 +26,7 @@ import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.databinding.ActivitySplashBinding
 import com.sag.todo.list.task.reminder.utils.FetchRemoteConfig
 import com.sag.todo.list.task.reminder.utils.RemoteConfigValues.IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN
+import com.sag.todo.list.task.reminder.utils.SplashImageAnimation
 import com.sag.todo.list.task.reminder.viewModels.TasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +34,6 @@ import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
-import javax.inject.Named
 
 @SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
@@ -44,12 +44,12 @@ class SplashActivity : BaseActivity() {
     }
 
     @Inject
-    @Named(value = "SplashImageAnimation")
+    @SplashImageAnimation
     lateinit var animation: Animation
     private lateinit var valueAnimator: ValueAnimator
     private val tasksViewModel: TasksViewModel by viewModels()
-    private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { _ ->
-        /*if (result.resultCode != RESULT_OK) {
+    private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+        /*if (it.resultCode != RESULT_OK) {
             toastController.showToast(activityContext, "Update not available...!", false)
         } else {
             toastController.showToast(activityContext, "Update available...!", true)

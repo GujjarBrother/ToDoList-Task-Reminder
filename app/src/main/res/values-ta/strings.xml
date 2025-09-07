@@ -138,7 +138,7 @@
     <string name="reminder_text">நினைவூட்டல்</string>
     <string name="loading_text">ஏற்றுகிறது…</string>
     <string name="search_here_hint">இங்கே தேடுங்கள்…</string>
-    <string name="allow_notification_text">அறிவிப்பை அனுமதிக்கவும்</string>
+    <string name="allow_permission_text">அறிவிப்பை அனுமதிக்கவும்</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">உங்கள் பணிகளைப் பற்றி உங்களுக்கு நினைவூட்ட அறிவிப்பை அனுமதிக்கவும்</string>
     <string name="deny_text">மறுக்கவும்</string>
     <string name="allow_text">அனுமதி</string>
