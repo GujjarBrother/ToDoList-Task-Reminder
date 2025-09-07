@@ -138,7 +138,7 @@
     <string name="reminder_text">Muistutus</string>
     <string name="loading_text">Lataaminen…</string>
     <string name="search_here_hint">Etsi täältä…</string>
-    <string name="allow_notification_text">Salli ilmoitus</string>
+    <string name="allow_permission_text">Salli ilmoitus</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Anna ilmoituksen muistuttaa sinua tehtävistäsi</string>
     <string name="deny_text">Kieltää</string>
     <string name="allow_text">Sallia</string>

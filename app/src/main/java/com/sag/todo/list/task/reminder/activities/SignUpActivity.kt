@@ -27,9 +27,9 @@ import com.sag.todo.list.task.reminder.enums.SecurityQuestions
 import com.sag.todo.list.task.reminder.enums.Visibility
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeVisibility
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.keepActivityOn
+import com.sag.todo.list.task.reminder.utils.SignInAndSignUpCardViewsAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import javax.inject.Named
 
 @AndroidEntryPoint
 class SignUpActivity : BaseActivity(), View.OnClickListener {
@@ -39,7 +39,7 @@ class SignUpActivity : BaseActivity(), View.OnClickListener {
     }
 
     @Inject
-    @Named(value = "SignInAndSignUpCardViewsAnimation")
+    @SignInAndSignUpCardViewsAnimation
     lateinit var animation: Animation
     private var selectedGender = 0
     private var selectedSecurityQuestion = 0

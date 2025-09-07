@@ -138,7 +138,7 @@
     <string name="reminder_text">リマインダー</string>
     <string name="loading_text">読み込み…</string>
     <string name="search_here_hint">ここで検索…</string>
-    <string name="allow_notification_text">通知を許可します</string>
+    <string name="allow_permission_text">通知を許可します</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">通知がタスクについて思い出させることを許可します</string>
     <string name="deny_text">拒否</string>
     <string name="allow_text">許可する</string>

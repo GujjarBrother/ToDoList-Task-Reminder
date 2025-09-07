@@ -138,7 +138,7 @@
     <string name="reminder_text">알림</string>
     <string name="loading_text">로딩…</string>
     <string name="search_here_hint">여기서 검색…</string>
-    <string name="allow_notification_text">알림을 허용합니다</string>
+    <string name="allow_permission_text">알림을 허용합니다</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">알림을 통해 작업에 대해 상기시켜줍니다</string>
     <string name="deny_text">부인하다</string>
     <string name="allow_text">허용하다</string>

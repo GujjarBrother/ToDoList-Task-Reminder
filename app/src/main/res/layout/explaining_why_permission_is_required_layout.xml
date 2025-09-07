@@ -9,10 +9,9 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/titleTV"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/allow_notification_text"
+        android:text="@string/allow_permission_text"
         android:textColor="@color/defaultColor"
         android:textSize="@dimen/_18ssp"
         android:textStyle="bold"
@@ -23,10 +22,9 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/descriptionTV"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10sdp"
-        android:gravity="center"
         android:text="@string/allow_notification_s_to_remind_you_about_your_tasks_text"
         android:textColor="@color/blackAndWhiteViewsColor"
         android:textSize="@dimen/_13ssp"
@@ -37,7 +35,7 @@
         app:layout_constraintTop_toBottomOf="@id/titleTV" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/denyBtn"
+        android:id="@+id/denyAndCancelBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_15sdp"
@@ -52,14 +50,14 @@
         android:textStyle="bold"
         app:cornerRadius="@dimen/_5sdp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/allowBtn"
+        app:layout_constraintEnd_toStartOf="@id/allowAndOpenSettingsBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/descriptionTV"
         app:strokeColor="@color/defaultColor"
         app:strokeWidth="@dimen/_1sdp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/allowBtn"
+        android:id="@+id/allowAndOpenSettingsBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_30sdp"
@@ -76,7 +74,7 @@
         app:cornerRadius="@dimen/_5sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/denyBtn"
+        app:layout_constraintStart_toEndOf="@id/denyAndCancelBtn"
         app:layout_constraintTop_toBottomOf="@id/descriptionTV" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

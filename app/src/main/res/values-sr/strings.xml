@@ -138,7 +138,7 @@
     <string name="reminder_text">Подсетник</string>
     <string name="loading_text">Учитавање…</string>
     <string name="search_here_hint">Потражите овде…</string>
-    <string name="allow_notification_text">Дозволи обавештење</string>
+    <string name="allow_permission_text">Дозволи обавештење</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Дозволите да вас обавештење подсети на ваше задатке</string>
     <string name="deny_text">Одбити</string>
     <string name="allow_text">Дозволити</string>

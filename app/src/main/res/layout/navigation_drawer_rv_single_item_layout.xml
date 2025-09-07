@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/headingTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/defaultTransparentColor"
+        android:fontFamily="@font/cabin_medium"
+        android:padding="@dimen/_8ssp"
+        android:text="@string/title_text"
+        android:textColor="@color/whiteColor"
+        android:textSize="@dimen/_14ssp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/optionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_1sdp"
+        android:background="?attr/selectableItemBackground"
+        android:padding="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headingTV">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/optionIV"
+            android:layout_width="@dimen/_16sdp"
+            android:layout_height="@dimen/_16sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/titleTV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/sun_image"
+            app:tint="@color/defaultColor" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/titleTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:fontFamily="@font/cabin_medium"
+            android:text="@string/light_mode_text"
+            android:textColor="@color/blackAndWhiteViewsColor"
+            android:textSize="@dimen/_12ssp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/subTitleTV"
+            app:layout_constraintEnd_toStartOf="@id/optionSwitch"
+            app:layout_constraintStart_toEndOf="@id/optionIV"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/subTitleTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:ellipsize="end"
+            android:fontFamily="@font/cabin_medium"
+            android:singleLine="true"
+            android:text="@string/switch_between_light_dark_mode_text"
+            android:textColor="@color/subColor"
+            android:textSize="@dimen/_8ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/optionSwitch"
+            app:layout_constraintStart_toEndOf="@id/optionIV"
+            app:layout_constraintTop_toBottomOf="@id/titleTV" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/optionSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/titleTV"
+            app:layout_constraintTop_toTopOf="parent"
+            app:thumbTint="@color/switchThumbColor"
+            app:trackTint="@color/switchTrackColor" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/optionArrowIV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/subTitleTV"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/forward_arrow_image"
+            app:tint="@color/defaultColor" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

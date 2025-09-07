@@ -140,13 +140,15 @@
     <string name="reminder_text">Reminder</string>
     <string name="loading_text">Loading…</string>
     <string name="search_here_hint">Search here…</string>
-    <string name="allow_notification_text">Allow Notification</string>
-    <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Allow notification\'s to remind you about your tasks</string>
+    <string name="allow_permission_text">Allow Permission</string>
+    <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Allow notification\'s to remind you about your task\'s.</string>
     <string name="deny_text">Deny</string>
     <string name="allow_text">Allow</string>
     <string name="select_language_text">Select Language</string>
     <string name="choose_your_native_language_text">Choose your native language</string>
     <string name="language_text">Language</string>
     <string name="search_language_hint">Search language…</string>
+    <string name="open_settings_text">Open Setting\'s</string>
+    <string name="allow_notifications_permission_from_settings_text">Allow notification\'s permission from setting\'s.</string>
 
 </resources>

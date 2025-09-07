@@ -138,7 +138,7 @@
     <string name="reminder_text">یادآوری</string>
     <string name="loading_text">بارگیری…</string>
     <string name="search_here_hint">در اینجا جستجو کنید…</string>
-    <string name="allow_notification_text">اعلان اجازه دهید</string>
+    <string name="allow_permission_text">اعلان اجازه دهید</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">به اعلان اجازه دهید تا در مورد وظایف خود به شما یادآوری کند</string>
     <string name="deny_text">انکار کردن</string>
     <string name="allow_text">اجازه دادن</string>

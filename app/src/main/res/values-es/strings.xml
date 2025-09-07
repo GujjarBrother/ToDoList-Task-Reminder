@@ -138,7 +138,7 @@
     <string name="reminder_text">Recordatorio</string>
     <string name="loading_text">Cargando…</string>
     <string name="search_here_hint">Buscar aquí…</string>
-    <string name="allow_notification_text">Permitir notificación</string>
+    <string name="allow_permission_text">Permitir notificación</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Permitir las notificaciones para recordarle sus tareas</string>
     <string name="deny_text">Denegar</string>
     <string name="allow_text">Permitir</string>

@@ -138,7 +138,7 @@
     <string name="reminder_text">Isikhumbuziso</string>
     <string name="loading_text">Iyalayisha…</string>
     <string name="search_here_hint">Sesha lapha…</string>
-    <string name="allow_notification_text">Vumela Isaziso</string>
+    <string name="allow_permission_text">Vumela Isaziso</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Vumela izaziso zikukhumbuze ngemisebenzi yakho</string>
     <string name="deny_text">Phika</string>
     <string name="allow_text">Vuma</string>

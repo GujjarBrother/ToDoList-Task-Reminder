@@ -19,7 +19,6 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.slider.Slider
 import com.sag.todo.list.task.reminder.BuildConfig
 import com.sag.todo.list.task.reminder.R
-import com.sag.todo.list.task.reminder.adsPlugin.bannerAd.BannerAdController
 import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.databinding.ActivitySettingsBinding
 import com.sag.todo.list.task.reminder.databinding.RateUsDialogLayoutBinding
@@ -30,10 +29,10 @@ import com.sag.todo.list.task.reminder.utils.CommonFunctions.keepActivityOn
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.openAppInPlayStore
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.openGoogleAppStore
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.openPrivacyPolicyActivity
+import com.sag.todo.list.task.reminder.utils.FabRateUsAndApplyAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 import javax.inject.Inject
-import javax.inject.Named
 
 @AndroidEntryPoint
 class SettingsActivity : BaseActivity(), View.OnClickListener {
@@ -43,7 +42,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
     }
 
     @Inject
-    @Named(value = "FabRateUsAndApplyAnimation")
+    @FabRateUsAndApplyAnimation
     lateinit var animation: Animation
 
     private val appLanguageLauncher =
@@ -69,14 +68,6 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
         }
 
         with(binding) {
-            BannerAdController.loadAndShowBannerAd(
-                activity = activityContext,
-                containerLayout = adLayout,
-                loadingLayout = adLoadingInclude.root,
-                isInternetConnected = internetController.isInternetConnected,
-                adID = getString(R.string.settingsScreenBannerAdId)
-            )
-
             keepActivityOn(activityContext)
 
             setSelectedLanguageFlag()
@@ -103,20 +94,14 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
                 }
             })
 
-            textSizeSlider.addOnChangeListener(object : Slider.OnChangeListener {
-                override fun onValueChange(
-                    slider: Slider,
-                    value: Float,
-                    fromUser: Boolean
-                ) {
-                    if (value.toInt() < 14) {
-                        textSizeValueTV.text = String.format(Locale.getDefault(), "%d", 14)
-                        textSizeSlider.value = 14F
-                    } else {
-                        textSizeValueTV.text = String.format(Locale.getDefault(), "%d", value.toInt())
-                    }
+            textSizeSlider.addOnChangeListener { slider, value, fromUser ->
+                if (value.toInt() < 14) {
+                    textSizeValueTV.text = String.format(Locale.getDefault(), "%d", 14)
+                    textSizeSlider.value = 14F
+                } else {
+                    textSizeValueTV.text = String.format(Locale.getDefault(), "%d", value.toInt())
                 }
-            })
+            }
         }
 
         val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {

@@ -138,7 +138,7 @@
     <string name="reminder_text">Peringatan</string>
     <string name="loading_text">Memuatkan…</string>
     <string name="search_here_hint">Cari di sini…</string>
-    <string name="allow_notification_text">Benarkan pemberitahuan</string>
+    <string name="allow_permission_text">Benarkan pemberitahuan</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Benarkan pemberitahuan untuk mengingatkan anda mengenai tugas anda</string>
     <string name="deny_text">Menafikan</string>
     <string name="allow_text">Benarkan</string>

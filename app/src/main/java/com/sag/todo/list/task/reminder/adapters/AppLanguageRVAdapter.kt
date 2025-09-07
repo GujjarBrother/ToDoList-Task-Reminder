@@ -12,11 +12,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.controllers.localization.AppLanguage
 import com.sag.todo.list.task.reminder.databinding.LanguageRvSingleItemLayoutBinding
+import com.sag.todo.list.task.reminder.listeners.AdaptersListener
 
-class AppLanguageRVAdapter(private val appLanguageClickCallback: (AppLanguage, Int, Int) -> Unit) :
-    ListAdapter<AppLanguage, AppLanguageRVAdapter.ViewHolder>(LANGUAGE_DIFFUTIL) {
+class AppLanguageRVAdapter(
+    private val listener: AdaptersListener<AppLanguage, Int, Int>? = null,
+//    private val appLanguageClickCallback: (AppLanguage, Int, Int) -> Unit
+) : ListAdapter<AppLanguage, AppLanguageRVAdapter.ViewHolder>(LANGUAGE_DIFFUTIL) {
 
-        private var previouslySelectedPosition = 0
+        var previouslySelectedPosition = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
         LanguageRvSingleItemLayoutBinding.inflate(
@@ -59,7 +62,8 @@ class AppLanguageRVAdapter(private val appLanguageClickCallback: (AppLanguage, I
                 root.setOnClickListener {
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
-                        appLanguageClickCallback.invoke(getItem(position), position, previouslySelectedPosition)
+                        listener?.itemClicked(getItem(position), position, previouslySelectedPosition)
+//                        appLanguageClickCallback.invoke(getItem(position), position, previouslySelectedPosition)
                     }
                 }
             }

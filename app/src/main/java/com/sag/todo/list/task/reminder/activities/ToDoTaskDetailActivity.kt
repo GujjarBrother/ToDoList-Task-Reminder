@@ -9,7 +9,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.sag.todo.list.task.reminder.R
-import com.sag.todo.list.task.reminder.adsPlugin.bannerAd.BannerAdController
 import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.databinding.ActivityToDoTaskDetailBinding
 import com.sag.todo.list.task.reminder.db.ToDoTask
@@ -40,14 +39,6 @@ class ToDoTaskDetailActivity : BaseActivity(), View.OnClickListener {
         val toDoTask = intent.getSerializableExtra("taskDetail") as ToDoTask?
 
         with(binding) {
-            BannerAdController.loadAndShowBannerAd(
-                activity = activityContext,
-                containerLayout = adLayout,
-                loadingLayout = adLoadingInclude.rootLayout,
-                isInternetConnected = internetController.isInternetConnected,
-                adID = getString(R.string.detailScreenBannerAdId)
-            )
-
             if (toDoTask != null) {
                 toolbarTV.text = toDoTask.title
                 titleTV.text = toDoTask.title

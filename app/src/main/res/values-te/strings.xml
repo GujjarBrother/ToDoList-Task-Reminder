@@ -138,7 +138,7 @@
     <string name="reminder_text">రిమైండర్</string>
     <string name="loading_text">లోడ్ అవుతోంది…</string>
     <string name="search_here_hint">ఇక్కడ శోధించండి…</string>
-    <string name="allow_notification_text">నోటిఫికేషన్‌ను అనుమతించండి</string>
+    <string name="allow_permission_text">నోటిఫికేషన్‌ను అనుమతించండి</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">మీ పనుల గురించి మీకు గుర్తు చేయడానికి నోటిఫికేషన్ అనుమతించండి</string>
     <string name="deny_text">తిరస్కరించండి</string>
     <string name="allow_text">అనుమతించండి</string>

@@ -138,7 +138,7 @@
     <string name="reminder_text">เตือนความจำ</string>
     <string name="loading_text">กำลังโหลด…</string>
     <string name="search_here_hint">ค้นหาที่นี่…</string>
-    <string name="allow_notification_text">อนุญาตให้มีการแจ้งเตือน</string>
+    <string name="allow_permission_text">อนุญาตให้มีการแจ้งเตือน</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">อนุญาตให้การแจ้งเตือนเตือนคุณเกี่ยวกับงานของคุณ</string>
     <string name="deny_text">ปฏิเสธ</string>
     <string name="allow_text">อนุญาต</string>

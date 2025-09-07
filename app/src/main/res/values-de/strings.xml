@@ -138,7 +138,7 @@
     <string name="reminder_text">Erinnerung</string>
     <string name="loading_text">Laden…</string>
     <string name="search_here_hint">Suche hier…</string>
-    <string name="allow_notification_text">Benachrichtigung zulassen</string>
+    <string name="allow_permission_text">Benachrichtigung zulassen</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Erlauben Sie Benachrichtigungen, Sie an Ihre Aufgaben zu erinnern</string>
     <string name="deny_text">Leugnen</string>
     <string name="allow_text">Erlauben</string>

@@ -138,7 +138,7 @@
     <string name="reminder_text">提醒</string>
     <string name="loading_text">加载中…</string>
     <string name="search_here_hint">在这里搜索…</string>
-    <string name="allow_notification_text">允许通知</string>
+    <string name="allow_permission_text">允许通知</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">允许通知提醒您您的任务</string>
     <string name="deny_text">否定</string>
     <string name="allow_text">允许</string>

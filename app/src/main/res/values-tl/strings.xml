@@ -138,7 +138,7 @@
     <string name="reminder_text">Paalala</string>
     <string name="loading_text">Naglo -load…</string>
     <string name="search_here_hint">Maghanap dito…</string>
-    <string name="allow_notification_text">Payagan ang abiso</string>
+    <string name="allow_permission_text">Payagan ang abiso</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Payagan ang abiso na ipaalala sa iyo ang tungkol sa iyong mga gawain</string>
     <string name="deny_text">Tanggihan</string>
     <string name="allow_text">Payagan</string>

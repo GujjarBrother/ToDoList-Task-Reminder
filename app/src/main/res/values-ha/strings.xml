@@ -138,7 +138,7 @@
     <string name="reminder_text">Tunatarwa</string>
     <string name="loading_text">Loading…</string>
     <string name="search_here_hint">Bincika anan…</string>
-    <string name="allow_notification_text">Ba da damar sanarwar</string>
+    <string name="allow_permission_text">Ba da damar sanarwar</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Bada izinin sanarwar don tunatar da ku game da ayyukan ku</string>
     <string name="deny_text">Yi musu</string>
     <string name="allow_text">Yarje wa</string>

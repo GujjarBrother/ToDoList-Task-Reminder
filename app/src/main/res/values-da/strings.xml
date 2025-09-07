@@ -138,7 +138,7 @@
     <string name="reminder_text">Påmindelse</string>
     <string name="loading_text">Indlæser…</string>
     <string name="search_here_hint">Søg her…</string>
-    <string name="allow_notification_text">Tillad anmeldelse</string>
+    <string name="allow_permission_text">Tillad anmeldelse</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Tillad meddelelser at minde dig om dine opgaver</string>
     <string name="deny_text">Nægte</string>
     <string name="allow_text">Tillade</string>

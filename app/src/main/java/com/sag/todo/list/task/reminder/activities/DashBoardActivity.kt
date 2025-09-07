@@ -1,15 +1,17 @@
 package com.sag.todo.list.task.reminder.activities
 
+import android.Manifest
 import android.app.AlarmManager
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.animation.Animation
-import android.widget.CompoundButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -18,21 +20,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textview.MaterialTextView
 import com.sag.todo.list.task.reminder.BuildConfig
 import com.sag.todo.list.task.reminder.R
+import com.sag.todo.list.task.reminder.adapters.NavigationDrawerRVAdapter
 import com.sag.todo.list.task.reminder.adapters.ViewPagerAdapter
-import com.sag.todo.list.task.reminder.adsPlugin.bannerAd.BannerAdController
 import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.controllers.PermissionsController
 import com.sag.todo.list.task.reminder.databinding.ActivityDashBoardBinding
@@ -42,18 +45,20 @@ import com.sag.todo.list.task.reminder.databinding.SignOutDialogLayoutBinding
 import com.sag.todo.list.task.reminder.enums.Tabs
 import com.sag.todo.list.task.reminder.enums.Visibility
 import com.sag.todo.list.task.reminder.fragments.AllTasksFragment
+import com.sag.todo.list.task.reminder.listeners.AdaptersListener
 import com.sag.todo.list.task.reminder.listeners.SearchViewVisibilityListener
 import com.sag.todo.list.task.reminder.listeners.StartAndStopFABAnimationListener
+import com.sag.todo.list.task.reminder.models.NavigationDrawer
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeAppMode
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeVisibility
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.isSomethingChanged
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.keepActivityOn
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.openAppInPlayStore
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.openGoogleAppStore
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.openPrivacyPolicyActivity
+import com.sag.todo.list.task.reminder.utils.CommonFunctions.showExplainingWhyNotificationPermissionIsRequiredDialog
+import com.sag.todo.list.task.reminder.utils.FabRateUsAndApplyAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import javax.inject.Named
 
 @AndroidEntryPoint
 class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibilityListener {
@@ -66,16 +71,73 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
     lateinit var alarmManager: AlarmManager
 
     @Inject
-    @Named(value = "FabRateUsAndApplyAnimation")
+    @FabRateUsAndApplyAnimation
     lateinit var animation: Animation
 
     private lateinit var startAndStopFABAnimationListener: StartAndStopFABAnimationListener
-    private val postNotificationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
+    private val postNotificationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        if (it) {
             Toast.makeText(activityContext, "Granted...!", Toast.LENGTH_LONG).show()
         } else {
-            Toast.makeText(activityContext, "Not-Granted...!", Toast.LENGTH_LONG).show()
+            if (!shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                showExplainingWhyNotificationPermissionIsRequiredDialog(activityContext, true) {
+                    openAppSettings()
+                }
+            } else {
+                Toast.makeText(activityContext, "Not-Granted...!", Toast.LENGTH_LONG).show()
+            }
         }
+    }
+    private val navigationDrawerRVAdapter: NavigationDrawerRVAdapter by lazy {
+        NavigationDrawerRVAdapter(object : AdaptersListener<NavigationDrawer, Int, Int> {
+            override fun itemClicked(
+                item: NavigationDrawer?, currentPosition: Int?, previousPosition: Int?, isSwitchChecked: Boolean?
+            ) {
+                when (currentPosition) {
+                    0 -> {
+                        changeAppMode(isSwitchChecked ?: false)
+                        prefs.isDarkModeEnable = isSwitchChecked ?: false
+                    }
+
+                    1 -> openSettingsActivity()
+                    2 -> openGoogleAppStore(activityContext)
+                    3 -> openPrivacyPolicyActivity(
+                        activityContext, internetController.isInternetConnected
+                    )
+
+                    4 -> openAppInPlayStore(activityContext, BuildConfig.APPLICATION_ID)
+                }
+                binding.dashBoardActivityDrawerLayout.closeDrawer(GravityCompat.START)
+            }
+        })
+    }
+    private val navigationDrawerList by lazy {
+        mutableListOf(
+            NavigationDrawer(
+                heading = getString(R.string.features_text),
+                image = R.drawable.sun_image,
+                title = getString(R.string.light_mode_text),
+                subTitle = getString(R.string.switch_between_light_dark_mode_text),
+                isSwitch = true
+            ), NavigationDrawer(
+                heading = getString(R.string.general_settings_text),
+                image = R.drawable.settings_icon,
+                title = getString(R.string.setting_s_text),
+                subTitle = getString(R.string.see_the_required_settings_text)
+            ), NavigationDrawer(
+                image = R.drawable.visit_our_app_store_image,
+                title = getString(R.string.visit_our_app_store_text),
+                subTitle = getString(R.string.check_our_more_app_s_on_play_store_text)
+            ), NavigationDrawer(
+                image = R.drawable.privacy_policy_image,
+                title = getString(R.string.privacy_policy_text),
+                subTitle = getString(R.string.read_our_privacy_policy_text)
+            ), NavigationDrawer(
+                image = R.drawable.check_update_image,
+                title = getString(R.string.check_update_text),
+                subTitle = String.format("%s%s", "v", BuildConfig.VERSION_NAME)
+            )
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,27 +161,19 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
         ))
 
         with(binding) {
-            BannerAdController.loadAndShowBannerAd(
-                activity = activityContext,
-                containerLayout = adLayout,
-                loadingLayout = adLoadingInclude.rootLayout,
-                isInternetConnected = internetController.isInternetConnected,
-                adID = getString(R.string.dashboardScreenBannerAdId)
-            )
-
-            navigationDrawerInclude.lightAndDarkModeSwitch.isChecked = when (AppCompatDelegate.getDefaultNightMode()) {
-                AppCompatDelegate.MODE_NIGHT_YES -> {
-                    navigationDrawerInclude.lightAndDarkModeIV.setImageResource(R.drawable.moon_image)
-                    navigationDrawerInclude.lightAndDarkModeTV.text = getString(R.string.dark_mode_text)
-                    true
-                }
-
-                else -> {
-                    navigationDrawerInclude.lightAndDarkModeIV.setImageResource(R.drawable.sun_image)
-                    navigationDrawerInclude.lightAndDarkModeTV.text = getString(R.string.light_mode_text)
-                    false
+            navigationDrawerList.forEach {
+                if (it.isSwitch) {
+                    it.isSwitchChecked = prefs.isDarkModeEnable
+                    it.image =
+                        if (it.isSwitchChecked) R.drawable.moon_image else R.drawable.sun_image
+                    it.title =
+                        if (it.isSwitchChecked) getString(R.string.dark_mode_text) else getString(R.string.light_mode_text)
                 }
             }
+            navigationDrawerInclude.navigationDrawerRV.layoutManager =
+                LinearLayoutManager(activityContext, VERTICAL, false)
+            navigationDrawerRVAdapter.submitList(navigationDrawerList)
+            navigationDrawerInclude.navigationDrawerRV.adapter = navigationDrawerRVAdapter
 
             keepActivityOn(activityContext)
 
@@ -128,19 +182,16 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
             dashBoardActivityDrawerLayout.addDrawerListener(actionBarDrawerToggle)
             actionBarDrawerToggle.syncState()
 
-            navigationDrawerInclude.versionNumberTV.text = String.format("%s%s", "v", BuildConfig.VERSION_NAME)
-
             val viewPagerAdapter = ViewPagerAdapter(activityContext)
             dashBoardViewPager.adapter = viewPagerAdapter
             TabLayoutMediator(tabLayout, dashBoardViewPager) {
                 tab: TabLayout.Tab, position: Int ->
                 val customTabBinding = CustomTabBinding.inflate(layoutInflater)
                 customTabBinding.apply {
-                    tabTV.text = if (position == Tabs.TASKS_TAB.ordinal) {
+                    tabTV.text = if (position == Tabs.TASKS_TAB.ordinal)
                         getString(R.string.tasks_text)
-                    } else {
+                    else
                         getString(R.string.completed_text)
-                    }
                     tabTV.setTextColor(ContextCompat.getColor(activityContext, R.color.tabLayoutUnSelectedTabTextColor))
                     tab.customView = root
                 }
@@ -182,10 +233,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
             searchIV.setOnClickListener(this@DashBoardActivity)
             searchCrossIV.setOnClickListener(this@DashBoardActivity)
             openAndCloseDrawerIV.setOnClickListener(this@DashBoardActivity)
-            navigationDrawerInclude.settingsOuterLayout.setOnClickListener(this@DashBoardActivity)
-            navigationDrawerInclude.visitOurAppStoreOuterLayout.setOnClickListener(this@DashBoardActivity)
-            navigationDrawerInclude.privacyPolicyOuterLayout.setOnClickListener(this@DashBoardActivity)
-            navigationDrawerInclude.checkUpdateOuterLayout.setOnClickListener(this@DashBoardActivity)
             navigationDrawerInclude.appNameTV.isSelected = true
 
             searchET.addTextChangedListener(object : TextWatcher {
@@ -206,13 +253,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
                 override fun afterTextChanged(s: Editable?) {
                 }
             })
-
-            navigationDrawerInclude.lightAndDarkModeSwitch.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
-                changeAppMode(isChecked)
-                prefs.isDarkModeEnable = isChecked
-                isSomethingChanged.value = true
-                dashBoardActivityDrawerLayout.closeDrawer(GravityCompat.START)
-            }
 
             val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
@@ -248,28 +288,6 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
                 R.id.signOutIV -> showSignOutDialog()
                 R.id.settingsIV -> openSettingsActivity()
                 R.id.openAndCloseDrawerIV -> dashBoardActivityDrawerLayout.openDrawer(GravityCompat.START)
-                R.id.settingsOuterLayout -> {
-                    openSettingsActivity()
-                    dashBoardActivityDrawerLayout.closeDrawer(GravityCompat.START)
-                }
-
-                R.id.visitOurAppStoreOuterLayout -> {
-                    openGoogleAppStore(activityContext)
-                    dashBoardActivityDrawerLayout.closeDrawer(GravityCompat.START)
-                }
-
-                R.id.privacyPolicyOuterLayout -> {
-                    openPrivacyPolicyActivity(
-                        activityContext,
-                        internetController.isInternetConnected
-                    )
-                    dashBoardActivityDrawerLayout.closeDrawer(GravityCompat.START)
-                }
-
-                R.id.checkUpdateOuterLayout -> {
-                    openAppInPlayStore(activityContext, BuildConfig.APPLICATION_ID)
-                    dashBoardActivityDrawerLayout.closeDrawer(GravityCompat.START)
-                }
 
                 R.id.searchIV -> {
                     toolbarGroup.changeVisibility(Visibility.GONE.ordinal)
@@ -401,14 +419,22 @@ class DashBoardActivity : BaseActivity(), View.OnClickListener, SearchViewVisibi
     override fun isShowSearchViewORNot(isShow: Boolean) {
         with(binding) {
             searchIV.changeVisibility(if (isShow) {
-                if (searchLayout.isVisible) {
+                if (searchLayout.isVisible)
                     Visibility.GONE.ordinal
-                } else {
+                else
                     Visibility.VISIBLE.ordinal
-                }
             } else {
                 Visibility.GONE.ordinal
             })
         }
+    }
+
+    private fun openAppSettings() {
+        val intent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", packageName, null)
+        )
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 }

@@ -138,7 +138,7 @@
     <string name="reminder_text">Yaadachiisaa</string>
     <string name="loading_text">Fe&amp;#39;aa…</string>
     <string name="search_here_hint">As barbaadi…</string>
-    <string name="allow_notification_text">Beeksisa hayyamaa .</string>
+    <string name="allow_permission_text">Beeksisa hayyamaa .</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Waa&amp;#39;ee hojiiwwan keessanii akka isin yaadachiisan beeksisaa hayyami .</string>
     <string name="deny_text">Ganuu</string>
     <string name="allow_text">Hayyamuu</string>

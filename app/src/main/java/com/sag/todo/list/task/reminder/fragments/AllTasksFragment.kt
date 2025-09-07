@@ -21,6 +21,7 @@ import android.widget.PopupMenu
 import android.widget.PopupWindow
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
@@ -55,6 +56,7 @@ import com.sag.todo.list.task.reminder.listeners.StartAndStopFABAnimationListene
 import com.sag.todo.list.task.reminder.receivers.ReminderReceiver
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.applyCustomFontAndColorToPopupMenuItemsText
 import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeVisibility
+import com.sag.todo.list.task.reminder.utils.FabRateUsAndApplyAnimation
 import com.sag.todo.list.task.reminder.viewModels.TasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -65,7 +67,6 @@ import java.util.Collections
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
-import javax.inject.Named
 
 @AndroidEntryPoint
 class AllTasksFragment : BaseFragment(), View.OnClickListener {
@@ -77,7 +78,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     lateinit var alarmManager: AlarmManager
 
     @Inject
-    @Named(value = "FabRateUsAndApplyAnimation")
+    @FabRateUsAndApplyAnimation
     lateinit var animation: Animation
 
     private var category = 0
@@ -518,26 +519,26 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
                         if (dateSDF.format(parseDate).isNotEmpty() && monthSDF.format(parseDate).isNotEmpty()
                             && yearSDF.format(parseDate).isNotEmpty()) {
                             toDoTask = ToDoTask(
-                                0,
-                                dayOfWeek,
-                                dateSDF.format(parseDate),
-                                monthSDF.format(parseDate),
-                                yearSDF.format(parseDate),
-                                title,
-                                description,
-                                time,
-                                category,
-                                completeDateAndTimeDate,
-                                false
+                                0, dayOfWeek, dateSDF.format(parseDate), monthSDF.format(parseDate),
+                                yearSDF.format(parseDate), title, description, time, category,
+                                completeDateAndTimeDate, false
                             )
                             lifecycleScope.launch(Dispatchers.IO) {
                                 tasksViewModel.saveTask(
                                     toDoTask = toDoTask,
                                     isPastTimeCallback = {
-                                        toastController.showToast(fragmentContext, getString(R.string.past_date_and_time_is_not_acceptable_toast), false)
+                                        toastController.showToast(
+                                            fragmentContext,
+                                            getString(R.string.past_date_and_time_is_not_acceptable_toast),
+                                            false
+                                        )
                                     },
                                     isAlreadySavedCallback = {
-                                        toastController.showToast(fragmentContext, getString(R.string.this_task_is_already_saved_toast_text), false)
+                                        toastController.showToast(
+                                            fragmentContext,
+                                            getString(R.string.this_task_is_already_saved_toast_text),
+                                            false
+                                        )
                                     },
                                     isSavedSuccessfully = { isSavedSuccessfully, savedTaskID ->
                                         if (isSavedSuccessfully) {

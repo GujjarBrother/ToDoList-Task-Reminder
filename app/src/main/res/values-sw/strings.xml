@@ -138,7 +138,7 @@
     <string name="reminder_text">Ukumbusho</string>
     <string name="loading_text">Inapakia…</string>
     <string name="search_here_hint">Tafuta hapa…</string>
-    <string name="allow_notification_text">Ruhusu arifa</string>
+    <string name="allow_permission_text">Ruhusu arifa</string>
     <string name="allow_notification_s_to_remind_you_about_your_tasks_text">Ruhusu arifu kukukumbusha juu ya kazi zako</string>
     <string name="deny_text">Kukataa</string>
     <string name="allow_text">Ruhusu</string>
