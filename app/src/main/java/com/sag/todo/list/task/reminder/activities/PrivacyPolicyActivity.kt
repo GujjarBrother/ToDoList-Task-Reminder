@@ -15,9 +15,9 @@ import androidx.core.view.WindowInsetsCompat
 import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.databinding.ActivityPrivacyPolicyBinding
 import com.sag.todo.list.task.reminder.enums.Visibility
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeStatusBarColor
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeVisibility
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.keepActivityOn
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.changeStatusBarColor
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.changeVisibility
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.keepActivityOn
 
 class PrivacyPolicyActivity : AppCompatActivity() {
 

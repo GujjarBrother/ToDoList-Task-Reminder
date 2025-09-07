@@ -21,7 +21,6 @@ import android.widget.PopupMenu
 import android.widget.PopupWindow
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
@@ -54,9 +53,9 @@ import com.sag.todo.list.task.reminder.enums.Visibility
 import com.sag.todo.list.task.reminder.listeners.SearchViewVisibilityListener
 import com.sag.todo.list.task.reminder.listeners.StartAndStopFABAnimationListener
 import com.sag.todo.list.task.reminder.receivers.ReminderReceiver
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.applyCustomFontAndColorToPopupMenuItemsText
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeVisibility
-import com.sag.todo.list.task.reminder.utils.FabRateUsAndApplyAnimation
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.applyCustomFontAndColorToPopupMenuItemsText
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.changeVisibility
+import com.sag.todo.list.task.reminder.core.utils.FabRateUsAndApplyAnimation
 import com.sag.todo.list.task.reminder.viewModels.TasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers

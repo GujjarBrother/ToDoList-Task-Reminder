@@ -24,9 +24,9 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.databinding.ActivitySplashBinding
-import com.sag.todo.list.task.reminder.utils.FetchRemoteConfig
-import com.sag.todo.list.task.reminder.utils.RemoteConfigValues.IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN
-import com.sag.todo.list.task.reminder.utils.SplashImageAnimation
+import com.sag.todo.list.task.reminder.core.utils.FetchRemoteConfig
+import com.sag.todo.list.task.reminder.core.utils.RemoteConfigValues.IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN
+import com.sag.todo.list.task.reminder.core.utils.SplashImageAnimation
 import com.sag.todo.list.task.reminder.viewModels.TasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers

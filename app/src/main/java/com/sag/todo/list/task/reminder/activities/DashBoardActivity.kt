@@ -49,14 +49,14 @@ import com.sag.todo.list.task.reminder.listeners.AdaptersListener
 import com.sag.todo.list.task.reminder.listeners.SearchViewVisibilityListener
 import com.sag.todo.list.task.reminder.listeners.StartAndStopFABAnimationListener
 import com.sag.todo.list.task.reminder.models.NavigationDrawer
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeAppMode
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeVisibility
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.keepActivityOn
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.openAppInPlayStore
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.openGoogleAppStore
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.openPrivacyPolicyActivity
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.showExplainingWhyNotificationPermissionIsRequiredDialog
-import com.sag.todo.list.task.reminder.utils.FabRateUsAndApplyAnimation
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.changeAppMode
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.changeVisibility
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.keepActivityOn
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.openAppInPlayStore
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.openGoogleAppStore
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.openPrivacyPolicyActivity
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.showExplainingWhyNotificationPermissionIsRequiredDialog
+import com.sag.todo.list.task.reminder.core.utils.FabRateUsAndApplyAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

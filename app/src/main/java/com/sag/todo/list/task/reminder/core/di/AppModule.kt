@@ -1,4 +1,4 @@
-package com.sag.todo.list.task.reminder.di
+package com.sag.todo.list.task.reminder.core.di
 
 import android.app.AlarmManager
 import android.app.NotificationManager
@@ -11,9 +11,9 @@ import androidx.room.Room
 import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.db.ToDosDatabase
 import com.sag.todo.list.task.reminder.db.ToDosDatabase.Companion.migration1to2
-import com.sag.todo.list.task.reminder.utils.FabRateUsAndApplyAnimation
-import com.sag.todo.list.task.reminder.utils.SignInAndSignUpCardViewsAnimation
-import com.sag.todo.list.task.reminder.utils.SplashImageAnimation
+import com.sag.todo.list.task.reminder.core.utils.FabRateUsAndApplyAnimation
+import com.sag.todo.list.task.reminder.core.utils.SignInAndSignUpCardViewsAnimation
+import com.sag.todo.list.task.reminder.core.utils.SplashImageAnimation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

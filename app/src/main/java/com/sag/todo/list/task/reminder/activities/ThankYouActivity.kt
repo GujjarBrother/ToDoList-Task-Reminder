@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.databinding.ActivityThankYouBinding
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.keepActivityOn
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.keepActivityOn
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

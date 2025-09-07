@@ -13,9 +13,9 @@ import com.sag.todo.list.task.reminder.databinding.ToDosRecyclerViewSingleItemLa
 import com.sag.todo.list.task.reminder.db.ToDoTask
 import com.sag.todo.list.task.reminder.enums.Tabs
 import com.sag.todo.list.task.reminder.enums.Visibility
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeVisibility
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.isSomethingChanged
-import com.sag.todo.list.task.reminder.utils.Prefs
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.changeVisibility
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.isSomethingChanged
+import com.sag.todo.list.task.reminder.core.utils.Prefs
 
 class TasksRecyclerViewAdapter(
     private val lifecycleOwner: LifecycleOwner,

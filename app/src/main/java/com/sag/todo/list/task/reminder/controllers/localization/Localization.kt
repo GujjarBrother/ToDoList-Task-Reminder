@@ -1,7 +1,7 @@
 package com.sag.todo.list.task.reminder.controllers.localization
 
 import android.content.Context
-import com.sag.todo.list.task.reminder.utils.Prefs
+import com.sag.todo.list.task.reminder.core.utils.Prefs
 import java.util.Locale
 
 object Localization  {

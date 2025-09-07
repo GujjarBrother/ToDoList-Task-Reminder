@@ -10,7 +10,7 @@ import androidx.core.net.toUri
 import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.activities.ToDoTaskDetailActivity
 import com.sag.todo.list.task.reminder.db.ToDoTask
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.TASK_REMINDER_NOTIFICATION_CHANNEL_ID
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.TASK_REMINDER_NOTIFICATION_CHANNEL_ID
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
