@@ -35,11 +35,11 @@
         tools:ignore="DiscouragedApi,LockedOrientationActivity"
         tools:targetApi="31">
         <activity
-            android:name=".activities.AppLanguageActivity"
+            android:name=".presentation.activities.AppLanguageActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".activities.SplashActivity"
+            android:name=".presentation.activities.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,18 +53,18 @@
             android:value="@string/appId" />
 
         <activity
-            android:name=".activities.ThankYouActivity"
+            android:name=".presentation.activities.ThankYouActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.FeedbackActivity"
+            android:name=".presentation.activities.FeedbackActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".activities.PrivacyPolicyActivity"
+            android:name=".presentation.activities.PrivacyPolicyActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ToDoTaskDetailActivity"
+            android:name=".presentation.activities.ToDoTaskDetailActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:noHistory="true">
@@ -73,7 +73,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.DashBoardActivity"
+            android:name=".presentation.activities.DashBoardActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false">
             <meta-data
@@ -81,7 +81,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.SignUpActivity"
+            android:name=".presentation.activities.SignUpActivity"
             android:exported="false"
             android:noHistory="true"
             android:screenOrientation="portrait">
@@ -90,7 +90,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.SignInActivity"
+            android:name=".presentation.activities.SignInActivity"
             android:exported="false"
             android:noHistory="true"
             android:screenOrientation="portrait">
@@ -99,7 +99,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".presentation.activities.SettingsActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false">
             <meta-data
@@ -107,7 +107,7 @@
                 android:value="" />
         </activity>
 
-        <receiver android:name=".receivers.ReminderReceiver" />
+        <receiver android:name=".presentation.receivers.ReminderReceiver" />
     </application>
 
 </manifest>

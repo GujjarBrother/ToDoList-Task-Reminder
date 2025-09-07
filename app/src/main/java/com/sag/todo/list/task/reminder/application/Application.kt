@@ -8,7 +8,7 @@ import android.media.AudioAttributes
 import android.os.Build
 import com.google.firebase.FirebaseApp
 import com.sag.todo.list.task.reminder.R
-import com.sag.todo.list.task.reminder.controllers.localization.Localization
+import com.sag.todo.list.task.reminder.core.utils.controllers.localization.Localization
 import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.TASK_REMINDER_NOTIFICATION_CHANNEL_ID
 import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.TASK_REMINDER_NOTIFICATION_CHANNEL_NAME
 import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.changeAppMode

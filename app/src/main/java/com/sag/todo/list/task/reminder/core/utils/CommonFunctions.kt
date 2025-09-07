@@ -20,9 +20,9 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import com.sag.todo.list.task.reminder.R
-import com.sag.todo.list.task.reminder.activities.PrivacyPolicyActivity
-import com.sag.todo.list.task.reminder.customFonts.PopUpMenuItemsTypefaceAndColor
+import com.sag.todo.list.task.reminder.core.utils.customFonts.PopUpMenuItemsTypefaceAndColor
 import com.sag.todo.list.task.reminder.databinding.ExplainingWhyPermissionIsRequiredLayoutBinding
+import com.sag.todo.list.task.reminder.presentation.activities.PrivacyPolicyActivity
 
 object CommonFunctions {
 
@@ -34,8 +34,8 @@ object CommonFunctions {
     fun openGoogleAppStore(activity: Activity) {
         val openGoogleAppStoreIntent = Intent()
         with(openGoogleAppStoreIntent) {
-            Intent.setAction = Intent.ACTION_VIEW
-            Intent.setData = "https://play.google.com/store/apps/developer?id=SAG+Inc.".toUri()
+            action = Intent.ACTION_VIEW
+            data = "https://play.google.com/store/apps/developer?id=SAG+Inc.".toUri()
             activity.startActivity(this)
         }
     }
@@ -51,8 +51,8 @@ object CommonFunctions {
     fun openAppInPlayStore(activity: Activity, appPackageName: String) {
         val openAppInPlayStoreIntent = Intent()
         with(openAppInPlayStoreIntent) {
-            Intent.setAction = Intent.ACTION_VIEW
-            Intent.setData = "https://play.google.com/store/apps/details?id=$appPackageName".toUri()
+            action = Intent.ACTION_VIEW
+            data = "https://play.google.com/store/apps/details?id=$appPackageName".toUri()
             activity.startActivity(this)
         }
     }

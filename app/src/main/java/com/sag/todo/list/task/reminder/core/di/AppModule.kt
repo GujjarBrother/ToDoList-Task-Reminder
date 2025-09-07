@@ -9,8 +9,8 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import androidx.room.Room
 import com.sag.todo.list.task.reminder.R
-import com.sag.todo.list.task.reminder.db.ToDosDatabase
-import com.sag.todo.list.task.reminder.db.ToDosDatabase.Companion.migration1to2
+import com.sag.todo.list.task.reminder.data.db.ToDosDatabase
+import com.sag.todo.list.task.reminder.data.db.ToDosDatabase.Companion.migration1to2
 import com.sag.todo.list.task.reminder.core.utils.FabRateUsAndApplyAnimation
 import com.sag.todo.list.task.reminder.core.utils.SignInAndSignUpCardViewsAnimation
 import com.sag.todo.list.task.reminder.core.utils.SplashImageAnimation

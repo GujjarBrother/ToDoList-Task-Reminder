@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".activities.DashBoardActivity">
+    tools:context=".presentation.activities.DashBoardActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rootLayout"
@@ -191,7 +191,6 @@
             android:layout_marginBottom="@dimen/_5sdp"
             android:orientation="vertical"
             android:visibility="gone"
-            android:layout_marginBottom="@dimen/_5sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">

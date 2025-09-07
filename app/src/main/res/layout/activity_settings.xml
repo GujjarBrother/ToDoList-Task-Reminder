@@ -268,7 +268,7 @@
                                 app:layout_constraintStart_toEndOf="@id/textSizeTV"
                                 app:layout_constraintTop_toTopOf="parent" />
 
-                            <com.sag.todo.list.task.reminder.utils.SliderCustomThumb
+                            <com.sag.todo.list.task.reminder.core.utils.SliderCustomThumb
                                 android:id="@+id/textSizeSlider"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
