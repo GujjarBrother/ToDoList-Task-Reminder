@@ -1,4 +1,4 @@
-package com.sag.todo.list.task.reminder.utils
+package com.sag.todo.list.task.reminder.core.utils
 
 import android.content.Context
 import android.graphics.Canvas

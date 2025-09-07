@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.showExplainingWhyNotificationPermissionIsRequiredDialog
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.showExplainingWhyNotificationPermissionIsRequiredDialog
 
 class PermissionsController(
     private val context: Activity,

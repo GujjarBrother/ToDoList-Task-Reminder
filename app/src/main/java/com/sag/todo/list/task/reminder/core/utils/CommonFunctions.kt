@@ -1,4 +1,4 @@
-package com.sag.todo.list.task.reminder.utils
+package com.sag.todo.list.task.reminder.core.utils
 
 import android.app.Activity
 import android.content.Intent
@@ -34,8 +34,8 @@ object CommonFunctions {
     fun openGoogleAppStore(activity: Activity) {
         val openGoogleAppStoreIntent = Intent()
         with(openGoogleAppStoreIntent) {
-            action = Intent.ACTION_VIEW
-            data = "https://play.google.com/store/apps/developer?id=SAG+Inc.".toUri()
+            Intent.setAction = Intent.ACTION_VIEW
+            Intent.setData = "https://play.google.com/store/apps/developer?id=SAG+Inc.".toUri()
             activity.startActivity(this)
         }
     }
@@ -51,8 +51,8 @@ object CommonFunctions {
     fun openAppInPlayStore(activity: Activity, appPackageName: String) {
         val openAppInPlayStoreIntent = Intent()
         with(openAppInPlayStoreIntent) {
-            action = Intent.ACTION_VIEW
-            data = "https://play.google.com/store/apps/details?id=$appPackageName".toUri()
+            Intent.setAction = Intent.ACTION_VIEW
+            Intent.setData = "https://play.google.com/store/apps/details?id=$appPackageName".toUri()
             activity.startActivity(this)
         }
     }

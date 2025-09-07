@@ -9,7 +9,7 @@ import com.sag.todo.list.task.reminder.databinding.NavigationDrawerRvSingleItemL
 import com.sag.todo.list.task.reminder.enums.Visibility
 import com.sag.todo.list.task.reminder.listeners.AdaptersListener
 import com.sag.todo.list.task.reminder.models.NavigationDrawer
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeVisibility
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.changeVisibility
 
 class NavigationDrawerRVAdapter(
     private val listener: AdaptersListener<NavigationDrawer, Int, Int>? = null,

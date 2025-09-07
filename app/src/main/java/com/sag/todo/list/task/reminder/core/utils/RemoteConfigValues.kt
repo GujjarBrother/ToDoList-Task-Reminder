@@ -1,4 +1,4 @@
-package com.sag.todo.list.task.reminder.utils
+package com.sag.todo.list.task.reminder.core.utils
 
 object RemoteConfigValues {
     var IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN = true

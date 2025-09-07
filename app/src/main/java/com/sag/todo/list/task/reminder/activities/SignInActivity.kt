@@ -19,9 +19,9 @@ import com.sag.todo.list.task.reminder.databinding.ActivitySignInBinding
 import com.sag.todo.list.task.reminder.databinding.RecoverPasswordDialogLayoutBinding
 import com.sag.todo.list.task.reminder.enums.SecurityQuestions
 import com.sag.todo.list.task.reminder.enums.Visibility
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeVisibility
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.keepActivityOn
-import com.sag.todo.list.task.reminder.utils.SignInAndSignUpCardViewsAnimation
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.changeVisibility
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.keepActivityOn
+import com.sag.todo.list.task.reminder.core.utils.SignInAndSignUpCardViewsAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

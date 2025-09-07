@@ -12,7 +12,7 @@ import com.sag.todo.list.task.reminder.adapters.CategoryAdapter.CustomViewHolder
 import com.sag.todo.list.task.reminder.enums.Gender
 import com.sag.todo.list.task.reminder.enums.SecurityQuestions
 import com.sag.todo.list.task.reminder.enums.TasksCategories
-import com.sag.todo.list.task.reminder.utils.Prefs
+import com.sag.todo.list.task.reminder.core.utils.Prefs
 
 class CategoryAdapter(
     private val forWhichInvoked: String,

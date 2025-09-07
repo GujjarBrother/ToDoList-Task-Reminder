@@ -20,7 +20,7 @@ import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.controllers.localization.AppLanguage
 import com.sag.todo.list.task.reminder.databinding.ActivityAppLanguageBinding
 import com.sag.todo.list.task.reminder.listeners.AdaptersListener
-import com.sag.todo.list.task.reminder.utils.FabRateUsAndApplyAnimation
+import com.sag.todo.list.task.reminder.core.utils.FabRateUsAndApplyAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

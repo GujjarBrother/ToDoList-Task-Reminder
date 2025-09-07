@@ -12,7 +12,7 @@ import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.databinding.ActivityToDoTaskDetailBinding
 import com.sag.todo.list.task.reminder.db.ToDoTask
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.keepActivityOn
+import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.keepActivityOn
 import java.util.Locale
 
 class ToDoTaskDetailActivity : BaseActivity(), View.OnClickListener {
