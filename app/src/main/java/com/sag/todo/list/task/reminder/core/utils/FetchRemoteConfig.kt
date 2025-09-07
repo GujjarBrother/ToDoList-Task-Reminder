@@ -1,7 +1,6 @@
 package com.sag.todo.list.task.reminder.core.utils
 
 import com.google.firebase.Firebase
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.sag.todo.list.task.reminder.R
@@ -12,7 +11,7 @@ class FetchRemoteConfig {
         fun fetchRemoteConfigValues(isFetchedCallback: () -> Unit) {
             val remoteConfig = Firebase.remoteConfig
             val remoteConfigSettings = remoteConfigSettings {
-                FirebaseRemoteConfigSettings.Builder.setMinimumFetchIntervalInSeconds = 20
+                setMinimumFetchIntervalInSeconds(20)
             }
             remoteConfig.setConfigSettingsAsync(remoteConfigSettings)
             remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)

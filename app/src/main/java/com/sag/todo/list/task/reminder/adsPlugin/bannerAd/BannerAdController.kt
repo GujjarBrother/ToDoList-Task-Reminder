@@ -6,7 +6,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import com.google.android.gms.ads.AdView
 import com.sag.todo.list.task.reminder.R
-import com.sag.todo.list.task.reminder.controllers.InternetController
+import com.sag.todo.list.task.reminder.core.utils.controllers.InternetController
 import com.sag.todo.list.task.reminder.core.utils.Prefs
 
 class BannerAdController(

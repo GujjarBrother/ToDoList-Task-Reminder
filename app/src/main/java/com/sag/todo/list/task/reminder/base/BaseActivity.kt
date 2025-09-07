@@ -6,10 +6,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.sag.todo.list.task.reminder.R
-import com.sag.todo.list.task.reminder.controllers.InternetController
-import com.sag.todo.list.task.reminder.controllers.SoftKeyboardVisibilityController
-import com.sag.todo.list.task.reminder.controllers.localization.Localization
-import com.sag.todo.list.task.reminder.toasts.ToastController
+import com.sag.todo.list.task.reminder.core.utils.controllers.InternetController
+import com.sag.todo.list.task.reminder.core.utils.controllers.SoftKeyboardVisibilityController
+import com.sag.todo.list.task.reminder.core.utils.controllers.localization.Localization
+import com.sag.todo.list.task.reminder.core.utils.toasts.ToastController
 import com.sag.todo.list.task.reminder.core.utils.Prefs
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
