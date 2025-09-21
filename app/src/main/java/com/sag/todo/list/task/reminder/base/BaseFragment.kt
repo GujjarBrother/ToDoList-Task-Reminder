@@ -6,8 +6,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.sag.todo.list.task.reminder.R
-import com.sag.todo.list.task.reminder.core.utils.Prefs
-import com.sag.todo.list.task.reminder.core.utils.toasts.ToastController
+import com.sag.todo.list.task.reminder.utils.Prefs
+import com.sag.todo.list.task.reminder.utils.toasts.ToastController
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Calendar

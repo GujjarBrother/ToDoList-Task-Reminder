@@ -6,16 +6,16 @@ import android.app.NotificationManager
 import android.content.Context
 import android.media.AudioAttributes
 import android.os.Build
+import androidx.core.net.toUri
 import com.google.firebase.FirebaseApp
 import com.sag.todo.list.task.reminder.R
-import com.sag.todo.list.task.reminder.core.utils.controllers.localization.Localization
-import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.TASK_REMINDER_NOTIFICATION_CHANNEL_ID
-import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.TASK_REMINDER_NOTIFICATION_CHANNEL_NAME
-import com.sag.todo.list.task.reminder.core.utils.CommonFunctions.changeAppMode
-import com.sag.todo.list.task.reminder.core.utils.Prefs
+import com.sag.todo.list.task.reminder.utils.CommonFunctions.TASK_REMINDER_NOTIFICATION_CHANNEL_ID
+import com.sag.todo.list.task.reminder.utils.CommonFunctions.TASK_REMINDER_NOTIFICATION_CHANNEL_NAME
+import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeAppMode
+import com.sag.todo.list.task.reminder.utils.Prefs
+import com.sag.todo.list.task.reminder.utils.controllers.Localization
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
-import androidx.core.net.toUri
 
 @HiltAndroidApp
 class Application : Application() {
