@@ -635,6 +635,7 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun showCustomPopupForCategorySelection(view: View, isForUpdateTask: Boolean) {
+
         val customPopupMenuLayoutBinding = CustomPopupMenuLayoutBinding.inflate(layoutInflater)
         popupWindow = PopupWindow(
             customPopupMenuLayoutBinding.root,
