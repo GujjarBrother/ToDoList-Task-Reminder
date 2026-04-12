@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.showExplainingWhyNotificationPermissionIsRequiredDialog
+import com.sag.todo.list.task.reminder.utils.AppConstants.showExplainingWhyNotificationPermissionIsRequiredDialog
 
 class PermissionsController(
     private val context: Activity,
@@ -31,19 +31,16 @@ class PermissionsController(
     }
 
     private fun checkPostNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            when {
-                ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
+        when {
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED ->
+                postNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+
+            shouldShowRequestPermissionRationale(context, Manifest.permission.POST_NOTIFICATIONS) ->
+                showExplainingWhyNotificationPermissionIsRequiredDialog(context) {
                     postNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
 
-                shouldShowRequestPermissionRationale(context, Manifest.permission.POST_NOTIFICATIONS) ->
-                    showExplainingWhyNotificationPermissionIsRequiredDialog(context) {
-                        postNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                    }
-
-                else -> postNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
+            else -> postNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 

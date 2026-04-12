@@ -13,8 +13,6 @@ import javax.inject.Inject
 @HiltViewModel
 class TasksViewModel @Inject constructor(private val tasksRepo: TasksRepo) : ViewModel() {
 
-//    private var mutableData: LiveData<List<ToDoTask>> = tasksRepo.getAllTasks()
-
     fun saveTask(
         toDoTask: ToDoTask,
         isPastTimeCallback: () -> Unit,

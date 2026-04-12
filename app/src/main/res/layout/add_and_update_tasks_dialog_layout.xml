@@ -1,292 +1,298 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialog_boxes_background"
-    android:paddingBottom="@dimen/_8sdp">
+    app:cardBackgroundColor="@color/screensBackgroundColor"
+    app:cardCornerRadius="@dimen/_10sdp"
+    app:strokeColor="@android:color/transparent">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/crossIV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="@dimen/_5sdp"
-        app:layout_constraintBottom_toTopOf="@id/sv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/cross_image" />
-
-    <ScrollView
-        android:id="@+id/sv"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:paddingHorizontal="@dimen/_10sdp"
-        android:scrollbarThumbVertical="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/crossIV">
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/_8sdp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/crossIV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/_5sdp"
+            app:layout_constraintBottom_toTopOf="@id/sv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/cross_image" />
+
+        <ScrollView
+            android:id="@+id/sv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:scrollbarThumbVertical="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/crossIV">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/addAndEditIV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@id/addAndUpdateToDoTaskTV"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/add_new_task_image"
-                app:tint="@color/defaultColor" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/addAndUpdateToDoTaskTV"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:fontFamily="@font/cabin_medium"
-                android:gravity="center"
-                android:text="@string/add_todo_task_text"
-                android:textAllCaps="false"
-                android:textColor="@color/defaultColor"
-                android:textSize="@dimen/_17ssp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/infoTV"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/addAndEditIV" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/infoTV"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:ellipsize="marquee"
-                android:fontFamily="@font/cabin_medium"
-                android:gravity="center"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:singleLine="true"
-                android:text="@string/info_message_text"
-                android:textAllCaps="false"
-                android:textColor="@color/subColor"
-                android:textSize="@dimen/_11ssp"
-                app:layout_constraintBottom_toTopOf="@id/titleTIL"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/addAndUpdateToDoTaskTV" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/titleTIL"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="@android:color/transparent"
-                android:textColorHint="@color/subColor"
-                app:boxBackgroundColor="@android:color/transparent"
-                app:boxStrokeColor="@null"
-                app:errorEnabled="true"
-                app:layout_constraintBottom_toTopOf="@id/descriptionTIL"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/infoTV"
-                app:startIconDrawable="@drawable/title_image"
-                app:startIconTint="@color/defaultColor">
+                android:layout_height="wrap_content">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/titleTIET"
-                    android:layout_width="match_parent"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/addAndEditIV"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/cabin_medium"
-                    android:hint="@string/title_hint"
-                    android:imeOptions="actionNext"
-                    android:inputType="textCapWords"
+                    app:layout_constraintBottom_toTopOf="@id/addAndUpdateToDoTaskTV"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/add_new_task_image"
+                    app:tint="@color/defaultColor" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/addAndUpdateToDoTaskTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:gravity="center"
+                    android:text="@string/add_todo_task_text"
                     android:textAllCaps="false"
-                    android:textCursorDrawable="@null"
-                    android:textColor="@color/blackAndWhiteViewsColor" />
+                    android:textColor="@color/defaultColor"
+                    android:textSize="@dimen/_17ssp"
+                    android:textStyle="bold"
+                    app:fontFamily="@font/cabin_medium"
+                    app:layout_constraintBottom_toTopOf="@id/infoTV"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/addAndEditIV" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/descriptionTIL"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:textColorHint="@color/subColor"
-                app:boxBackgroundColor="@android:color/transparent"
-                app:boxStrokeColor="@null"
-                app:errorEnabled="true"
-                app:layout_constraintBottom_toTopOf="@id/dayOfWeekTIL"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/titleTIL"
-                app:startIconDrawable="@drawable/description_icon"
-                app:startIconTint="@color/defaultColor">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/descriptionTIET"
-                    android:layout_width="match_parent"
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/infoTV"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/cabin_medium"
-                    android:hint="@string/description_hint"
-                    android:imeOptions="actionNext"
-                    android:inputType="textCapWords"
-                    android:textAllCaps="false"
-                    android:textCursorDrawable="@null"
-                    android:textColor="@color/blackAndWhiteViewsColor" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/dayOfWeekTIL"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:textColorHint="@color/subColor"
-                app:boxBackgroundColor="@android:color/transparent"
-                app:boxStrokeColor="@null"
-                app:errorEnabled="true"
-                app:layout_constraintBottom_toTopOf="@id/dateTIL"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/descriptionTIL"
-                app:startIconDrawable="@drawable/days_of_week_icon"
-                app:startIconTint="@color/defaultColor">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/dayOfWeekTIET"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-                    android:fontFamily="@font/cabin_medium"
-                    android:hint="@string/day_of_week_hint"
-                    android:imeOptions="actionGo"
-                    android:inputType="textCapWords"
-                    android:maxLength="9"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:ellipsize="marquee"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
                     android:singleLine="true"
+                    android:text="@string/info_message_text"
                     android:textAllCaps="false"
-                    android:textCursorDrawable="@null"
-                    android:textColor="@color/blackAndWhiteViewsColor" />
+                    android:textColor="@color/subColor"
+                    android:textSize="@dimen/_11ssp"
+                    app:fontFamily="@font/cabin_medium"
+                    app:layout_constraintBottom_toTopOf="@id/titleTIL"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/addAndUpdateToDoTaskTV" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/dateTIL"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_5sdp"
-                android:background="@android:color/transparent"
-                android:textColorHint="@color/subColor"
-                app:boxBackgroundColor="@android:color/transparent"
-                app:boxStrokeColor="@null"
-                app:errorEnabled="true"
-                app:layout_constraintBottom_toTopOf="@id/selectCategoryBtn"
-                app:layout_constraintEnd_toStartOf="@id/timeTIL"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/dayOfWeekTIL"
-                app:startIconDrawable="@drawable/date_image"
-                app:startIconTint="@color/defaultColor">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/dateTIET"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/titleTIL"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:fontFamily="@font/cabin_medium"
-                    android:hint="@string/date_hint"
-                    android:inputType="date"
-                    android:textAllCaps="false"
-                    android:textCursorDrawable="@null"
-                    android:textColor="@color/blackAndWhiteViewsColor" />
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@android:color/transparent"
+                    android:textColorHint="@color/subColor"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    app:boxStrokeColor="@null"
+                    app:errorEnabled="true"
+                    app:layout_constraintBottom_toTopOf="@id/descriptionTIL"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/infoTV"
+                    app:startIconDrawable="@drawable/title_image"
+                    app:startIconTint="@color/defaultColor">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/titleTIET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/title_hint"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:textAllCaps="false"
+                        android:textColor="@color/blackAndWhiteViewsColor"
+                        android:textCursorDrawable="@null"
+                        app:fontFamily="@font/cabin_medium" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timeTIL"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:textColorHint="@color/subColor"
-                app:boxBackgroundColor="@android:color/transparent"
-                app:boxStrokeColor="@null"
-                app:errorEnabled="true"
-                app:layout_constraintBottom_toTopOf="@id/selectCategoryBtn"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/dateTIL"
-                app:layout_constraintTop_toBottomOf="@id/dayOfWeekTIL"
-                app:startIconDrawable="@drawable/time_image"
-                app:startIconTint="@color/defaultColor">
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/timeTIET"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/descriptionTIL"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:fontFamily="@font/cabin_medium"
-                    android:hint="@string/time_hint"
-                    android:inputType="time"
+                    android:background="@android:color/transparent"
+                    android:textColorHint="@color/subColor"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    app:boxStrokeColor="@null"
+                    app:errorEnabled="true"
+                    app:layout_constraintBottom_toTopOf="@id/dayOfWeekTIL"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/titleTIL"
+                    app:startIconDrawable="@drawable/description_icon"
+                    app:startIconTint="@color/defaultColor">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/descriptionTIET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/description_hint"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:textAllCaps="false"
+                        android:textColor="@color/blackAndWhiteViewsColor"
+                        android:textCursorDrawable="@null"
+                        app:fontFamily="@font/cabin_medium" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/dayOfWeekTIL"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:textColorHint="@color/subColor"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    app:boxStrokeColor="@null"
+                    app:errorEnabled="true"
+                    app:layout_constraintBottom_toTopOf="@id/dateTIL"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/descriptionTIL"
+                    app:startIconDrawable="@drawable/days_of_week_icon"
+                    app:startIconTint="@color/defaultColor">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dayOfWeekTIET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+                        android:hint="@string/day_of_week_hint"
+                        android:imeOptions="actionGo"
+                        android:inputType="textCapWords"
+                        android:maxLength="9"
+                        android:singleLine="true"
+                        android:textAllCaps="false"
+                        android:textColor="@color/blackAndWhiteViewsColor"
+                        android:textCursorDrawable="@null"
+                        app:fontFamily="@font/cabin_medium" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/dateTIL"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_5sdp"
+                    android:background="@android:color/transparent"
+                    android:textColorHint="@color/subColor"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    app:boxStrokeColor="@null"
+                    app:errorEnabled="true"
+                    app:layout_constraintBottom_toTopOf="@id/selectCategoryBtn"
+                    app:layout_constraintEnd_toStartOf="@id/timeTIL"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/dayOfWeekTIL"
+                    app:startIconDrawable="@drawable/date_image"
+                    app:startIconTint="@color/defaultColor">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dateTIET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:hint="@string/date_hint"
+                        android:inputType="date"
+                        android:textAllCaps="false"
+                        android:textColor="@color/blackAndWhiteViewsColor"
+                        android:textCursorDrawable="@null"
+                        app:fontFamily="@font/cabin_medium" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/timeTIL"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:textColorHint="@color/subColor"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    app:boxStrokeColor="@null"
+                    app:errorEnabled="true"
+                    app:layout_constraintBottom_toTopOf="@id/selectCategoryBtn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/dateTIL"
+                    app:layout_constraintTop_toBottomOf="@id/dayOfWeekTIL"
+                    app:startIconDrawable="@drawable/time_image"
+                    app:startIconTint="@color/defaultColor">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/timeTIET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:hint="@string/time_hint"
+                        android:inputType="time"
+                        android:textAllCaps="false"
+                        android:textColor="@color/blackAndWhiteViewsColor"
+                        android:textCursorDrawable="@null"
+                        app:fontFamily="@font/cabin_medium" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/selectCategoryBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableTint="@color/defaultColor"
+                    android:gravity="start"
+                    android:padding="@dimen/_13sdp"
+                    android:text="@string/select_category_text"
+                    android:textColor="@color/subColor"
+                    android:textSize="@dimen/_13ssp"
+                    app:backgroundTint="@android:color/transparent"
+                    app:cornerRadius="@dimen/_5sdp"
+                    app:drawableEndCompat="@drawable/drop_down_image"
+                    app:fontFamily="@font/cabin_medium"
+                    app:layout_constraintBottom_toTopOf="@id/saveAndUpdateBtn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/timeTIL"
+                    app:strokeColor="@color/subColor"
+                    app:strokeWidth="@dimen/_1sdp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/saveAndUpdateBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:gravity="center"
+                    android:minWidth="@dimen/_200sdp"
+                    android:minHeight="@dimen/_55sdp"
+                    android:padding="@dimen/_12ssp"
+                    android:stateListAnimator="@null"
+                    android:text="@string/save_button_text"
                     android:textAllCaps="false"
-                    android:textCursorDrawable="@null"
-                    android:textColor="@color/blackAndWhiteViewsColor" />
+                    android:textColor="@color/whiteColor"
+                    android:textSize="@dimen/_15ssp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/positive_buttons_pressed_and_unpressed_states_background"
+                    app:cornerRadius="@dimen/_7sdp"
+                    app:fontFamily="@font/cabin_medium"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/selectCategoryBtn" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/selectCategoryBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/select_category_text"
-                app:fontFamily="@font/cabin_medium"
-                android:textSize="@dimen/_13ssp"
-                android:textColor="@color/subColor"
-                android:padding="@dimen/_13sdp"
-                app:backgroundTint="@android:color/transparent"
-                app:strokeColor="@color/subColor"
-                app:strokeWidth="@dimen/_1sdp"
-                app:cornerRadius="@dimen/_5sdp"
-                android:gravity="start"
-                app:drawableEndCompat="@drawable/drop_down_image"
-                android:drawableTint="@color/defaultColor"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/timeTIL"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/saveAndUpdateBtn"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/saveAndUpdateBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_14sdp"
-                android:fontFamily="@font/cabin_medium"
-                android:gravity="center"
-                android:minWidth="@dimen/_200sdp"
-                android:minHeight="@dimen/_55sdp"
-                android:padding="@dimen/_12ssp"
-                android:stateListAnimator="@null"
-                android:text="@string/save_button_text"
-                android:textAllCaps="false"
-                android:textColor="@color/whiteColor"
-                android:textSize="@dimen/_15ssp"
-                android:textStyle="bold"
-                app:backgroundTint="@color/positive_buttons_pressed_and_unpressed_states_background"
-                app:cornerRadius="@dimen/_7sdp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/selectCategoryBtn" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -4,7 +4,7 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground">
+    android:background="@drawable/special_clicked_ripple_background">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/categoryNameTV"
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:layout_marginVertical="@dimen/_5sdp"
-        android:fontFamily="@font/cabin_medium"
+        app:fontFamily="@font/cabin_medium"
         android:text="@string/select_category_text"
         android:textAllCaps="false"
         android:textColor="@color/blackColor"

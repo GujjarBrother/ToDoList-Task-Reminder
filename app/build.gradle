@@ -1,40 +1,42 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'com.google.devtools.ksp'
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 
-    id 'com.google.gms.google-services'
+    id("com.google.gms.google-services")
 }
 
 android {
     namespace "com.sag.todo.list.task.reminder"
-    compileSdk 35
+    compileSdkVersion 36
 
     defaultConfig {
 //        applicationId "com.sag.todo.list.task.reminder"
         applicationId "com.example.debug"
 
-        minSdk 23
+        minSdk 24
         targetSdk 35
-        versionCode 4
-        versionName "1.0.4"
+        versionCode 1
+        versionName "1.0.1"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
 
-        def appName = "To-Do-List-Task-Reminder"
+    base {
+        def appName = "Task-Reminder"
         def versionCode = android.defaultConfig.versionCode.toString().trim()
         def versionName = android.defaultConfig.versionName
-        setProperty("archivesBaseName", "$appName-VC-$versionCode-VN-$versionName")
+        archivesName = "$appName-VC-$versionCode-VN-$versionName"
     }
 
     buildTypes {
         release {
-            resValue "string", "appId", "ca-app-pub-3940256099942544~3347511713"
+            /*resValue "string", "appId", "ca-app-pub-3940256099942544~3347511713"
             resValue "string", "dashboardScreenBannerAdId", "ca-app-pub-3342111410257125/9943801959"
             resValue "string", "settingsScreenBannerAdId", ""
-            resValue "string", "detailScreenBannerAdId", ""
+            resValue "string", "detailScreenBannerAdId", ""*/
 
             minifyEnabled true
             shrinkResources true
@@ -42,10 +44,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            resValue "string", "appId", "ca-app-pub-3342111410257125~8073205135"
+            /*resValue "string", "appId", "ca-app-pub-3342111410257125~8073205135"
             resValue "string", "dashboardScreenBannerAdId", "ca-app-pub-3940256099942544/9214589741"
             resValue "string", "settingsScreenBannerAdId", "ca-app-pub-3940256099942544/9214589741"
-            resValue "string", "detailScreenBannerAdId", "ca-app-pub-3940256099942544/9214589741"
+            resValue "string", "detailScreenBannerAdId", "ca-app-pub-3940256099942544/9214589741"*/
 
             minifyEnabled false
             shrinkResources false
@@ -67,54 +69,56 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.7.1'
-    implementation 'com.google.android.material:material:1.13.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
-    implementation 'androidx.activity:activity-ktx:1.10.1'
-    implementation 'androidx.fragment:fragment-ktx:1.8.9'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
+//    Import module...
+    implementation project(":core")
+    implementation project(":localization")
+    implementation project(":notification")
+
+    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("com.google.android.material:material:1.13.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+    implementation("androidx.activity:activity-ktx:1.13.0")
+    implementation("androidx.fragment:fragment-ktx:1.8.9")
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
 
 //    'sdp & ssp' dependencies...
-    api 'com.intuit.sdp:sdp-android:1.1.1'
-    api 'com.intuit.ssp:ssp-android:1.1.1'
+    api("com.intuit.sdp:sdp-android:1.1.1")
+    api("com.intuit.ssp:ssp-android:1.1.1")
 
 //    'Lottie Animation' dependency...
-    api 'com.airbnb.android:lottie:6.6.9'
+    api("com.airbnb.android:lottie:6.7.1")
 
 //    'ViewModel & LiveData' dependency...
-    api 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4'
-    api 'androidx.lifecycle:lifecycle-livedata-ktx:2.9.4'
+    api("androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0")
+    api("androidx.lifecycle:lifecycle-livedata-ktx:2.10.0")
 
 //    'CircularImageView' dependency...
-    api 'com.github.AtifSayings:CircularImageView:1.0.2'
+    api("com.github.AtifSayings:CircularImageView:1.0.2")
 
 //    'MultiDex' dependency...
-    api "androidx.multidex:multidex:2.0.1"
+    api("androidx.multidex:multidex:2.0.1")
 
 //    'Ads' dependency...
-    api "com.google.android.gms:play-services-ads:24.6.0"
+//    api("com.google.android.gms:play-services-ads:24.8.0")
 
 //    'Coroutines' dependencies...
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2"
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
 //    'ROOM database' dependency...
-    api "androidx.room:room-runtime:2.8.0"
-    ksp "androidx.room:room-compiler:2.8.0"
-
-//    To use Kotlin Coroutines...
-    api "androidx.room:room-ktx:2.8.0"
+    api("androidx.room:room-ktx:2.8.4")
+    ksp("androidx.room:room-compiler:2.8.4")
 
 //    'In-App update' dependency...
-    api 'com.google.android.play:app-update-ktx:2.1.0'
+    api("com.google.android.play:app-update-ktx:2.1.0")
 
 //    "Hilt" dependency...
-    api "com.google.dagger:hilt-android:2.57.1"
-    ksp "com.google.dagger:hilt-android-compiler:2.57.1"
+    api("com.google.dagger:hilt-android:2.59.2")
+    ksp("com.google.dagger:hilt-android-compiler:2.59.2")
 
 //    "Firebase" dependencies...
-    api platform('com.google.firebase:firebase-bom:34.3.0')
-    api 'com.google.firebase:firebase-config'
+    api platform("com.google.firebase:firebase-bom:34.11.0")
+    api("com.google.firebase:firebase-config")
 }

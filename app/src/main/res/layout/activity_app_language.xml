@@ -4,74 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:keepScreenOn="true"
     android:background="@color/screensBackgroundColor"
-    android:fitsSystemWindows="true"
     tools:context="activities.AppLanguageActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
         android:background="@color/defaultColor"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingHorizontal="@dimen/_5sdp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/backArrowIV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/_10sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/back_arrow_icon" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_10sdp">
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/toolbarTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:text="@string/language_text"
+            android:textColor="@color/whiteColor"
+            android:textSize="@dimen/_15ssp"
+            android:textStyle="bold"
+            app:fontFamily="@font/cabin_medium"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/applyBtn"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/backArrowIV"
+            app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/backArrowIV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="@dimen/_10sdp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/back_arrow_icon" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/applyBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/apply_text"
+            android:textSize="@dimen/_14ssp"
+            android:textStyle="bold"
+            app:fontFamily="@font/cabin_medium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/toolbarTV"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/language_text"
-                    android:textAllCaps="false"
-                    android:textColor="@color/whiteColor"
-                    android:textSize="@dimen/_15ssp"
-                    android:textStyle="bold"
-                    app:fontFamily="@font/cabin_medium"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/applyBtn"
-                    app:layout_constraintStart_toEndOf="@id/backArrowIV"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/applyBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/apply_text"
-                    android:textSize="@dimen/_14ssp"
-                    android:textStyle="bold"
-                    app:fontFamily="@font/cabin_medium"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.appbar.MaterialToolbar>
-    </com.google.android.material.appbar.AppBarLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/languageSearchCV"
@@ -83,7 +71,7 @@
         app:cardCornerRadius="@dimen/_10sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+        app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
         app:strokeColor="@android:color/transparent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -142,6 +130,7 @@
         android:layout_height="0dp"
         android:overScrollMode="never"
         android:padding="@dimen/_5sdp"
+        android:layoutDirection="ltr"
         android:scrollbarThumbVertical="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

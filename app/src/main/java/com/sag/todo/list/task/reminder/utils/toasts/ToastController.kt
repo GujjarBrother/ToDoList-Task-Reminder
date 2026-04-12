@@ -8,13 +8,11 @@ import javax.inject.Inject
 class ToastController @Inject constructor() {
     fun showToast(context: Activity, message: String?, isForSuccessOrNot: Boolean) {
         val customToastLayoutBinding = CustomToastLayoutBinding.inflate(context.layoutInflater)
-
-        with(customToastLayoutBinding) {
+        customToastLayoutBinding.apply {
             toastIV.setImageResource(if (isForSuccessOrNot) R.drawable.toast_tick_image else R.drawable.toast_cross_image)
             toastMessageTV.isSelected = true
             toastMessageTV.text = message
         }
-
         CustomToastCompat.showCustomToast(context, customToastLayoutBinding.root)
     }
 }

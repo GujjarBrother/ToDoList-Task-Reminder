@@ -5,12 +5,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.animation.Animation
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.SystemBarStyle
-import androidx.activity.enableEdgeToEdge
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
@@ -19,8 +13,8 @@ import com.sag.todo.list.task.reminder.adapters.AppLanguageRVAdapter
 import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.databinding.ActivityAppLanguageBinding
 import com.sag.todo.list.task.reminder.listeners.AdaptersListener
-import com.sag.todo.list.task.reminder.utils.FabRateUsAndApplyAnimation
 import com.sag.todo.list.task.reminder.models.AppLanguage
+import com.sag.todo.list.task.reminder.utils.FabRateUsAndApplyAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -45,7 +39,7 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
                 isSwitchChecked: Boolean?
             ) {
                 selectedAppLanguage = item
-                with(appLanguageRVAdapter) {
+                appLanguageRVAdapter.apply {
                     previouslySelectedPosition = currentPosition ?: 0
                     if (isFirstTimeClickedAfterSearchLanguage) {
                         isFirstTimeClickedAfterSearchLanguage = false
@@ -115,51 +109,26 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val defaultColor = ContextCompat.getColor(activityContext, R.color.defaultColor)
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.dark(defaultColor),
-            navigationBarStyle = SystemBarStyle.dark(defaultColor)
-        )
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-            val bottomInset = maxOf(systemBars.bottom, ime.bottom)
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, bottomInset)
-            insets
-        }
 
-        with(binding) {
+        binding.apply {
             applyBtn.startAnimation(animation)
             backArrowIV.setOnClickListener(this@AppLanguageActivity)
             applyBtn.setOnClickListener(this@AppLanguageActivity)
             crossIV.setOnClickListener(this@AppLanguageActivity)
 
             languageSearchET.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    p0: CharSequence?,
-                    p1: Int,
-                    p2: Int,
-                    p3: Int
-                ) {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
 
-                override fun onTextChanged(
-                    p0: CharSequence?,
-                    p1: Int,
-                    p2: Int,
-                    p3: Int
-                ) {
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     p0?.let {
                         if (!it.isNotEmpty()) {
                             isFirstTimeClickedAfterSearchLanguage = true
                         }
                         crossIV.isVisible = it.isNotEmpty()
                         val filteredLanguagesList = languagesList.filter { appLanguage ->
-                            appLanguage.languageName.contains(
-                                other = it.toString().trim(),
-                                ignoreCase = true
-                            )
+                            appLanguage.languageName.contains(it.toString().trim(), true)
                         }
                         appLanguageRVAdapter.submitList(filteredLanguagesList) {
                             languageRV.smoothScrollToPosition(0)
@@ -181,27 +150,23 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
             appLanguageRVAdapter.submitList(languagesList)
             languageRV.adapter = appLanguageRVAdapter
         }
-
-        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                goBack()
-            }
-        })
     }
 
     override fun onClick(p0: View?) {
         p0?.let {
             binding.apply {
                 when (it.id) {
-                    R.id.backArrowIV -> goBack()
+                    R.id.backArrowIV -> callBackPressed()
                     R.id.crossIV -> {
                         isFirstTimeClickedAfterSearchLanguage = true
                         languageSearchET.text = null
                     }
                     R.id.applyBtn -> {
                         isFirstTimeClickedAfterSearchLanguage = true
-                        prefs.selectedLanguageCode = selectedAppLanguage?.languageCode ?: ""
-                        setResult(RESULT_OK)
+                        if (prefs.selectedLanguageCode != (selectedAppLanguage?.languageCode ?: "en")) {
+                            prefs.selectedLanguageCode = selectedAppLanguage?.languageCode ?: "en"
+                            setResult(RESULT_OK)
+                        }
                         finish()
                     }
                 }
@@ -209,7 +174,7 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    private fun goBack() {
+    override fun handleActivitiesBackPressed() {
         isFirstTimeClickedAfterSearchLanguage = true
         finish()
     }

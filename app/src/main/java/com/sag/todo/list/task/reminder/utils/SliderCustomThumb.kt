@@ -3,15 +3,15 @@ package com.sag.todo.list.task.reminder.utils
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
-import androidx.core.content.ContextCompat
 import com.google.android.material.slider.Slider
 import com.sag.todo.list.task.reminder.R
+import com.sag.todo.list.task.reminder.utils.AppConstants.getDrawableResource
 
 class SliderCustomThumb @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : Slider(context, attrs) {
 
-    private val customThumb = ContextCompat.getDrawable(context, R.drawable.slider_thumb)
+    private val customThumb = context.getDrawableResource(R.drawable.slider_thumb)
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
