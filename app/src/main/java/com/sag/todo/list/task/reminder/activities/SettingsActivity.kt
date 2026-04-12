@@ -8,14 +8,8 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.animation.Animation
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.SystemBarStyle
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.slider.Slider
 import com.sag.todo.list.task.reminder.BuildConfig
 import com.sag.todo.list.task.reminder.R
@@ -23,12 +17,12 @@ import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.databinding.ActivitySettingsBinding
 import com.sag.todo.list.task.reminder.databinding.RateUsDialogLayoutBinding
 import com.sag.todo.list.task.reminder.enums.Visibility
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeVisibility
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.isSomethingChanged
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.keepActivityOn
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.openAppInPlayStore
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.openGoogleAppStore
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.openPrivacyPolicyActivity
+import com.sag.todo.list.task.reminder.utils.AppConstants.changeVisibility
+import com.sag.todo.list.task.reminder.utils.AppConstants.isSomethingChanged
+import com.sag.todo.list.task.reminder.utils.AppConstants.keepActivityOn
+import com.sag.todo.list.task.reminder.utils.AppConstants.openAppInPlayStore
+import com.sag.todo.list.task.reminder.utils.AppConstants.openGoogleAppStore
+import com.sag.todo.list.task.reminder.utils.AppConstants.openPrivacyPolicyActivity
 import com.sag.todo.list.task.reminder.utils.FabRateUsAndApplyAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
@@ -40,34 +34,22 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
     private val binding by lazy {
         ActivitySettingsBinding.inflate(layoutInflater)
     }
-
     @Inject
     @FabRateUsAndApplyAnimation
     lateinit var animation: Animation
-
     private val appLanguageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 startActivity(Intent(activityContext, DashBoardActivity::class.java))
-                finish()
+                finishAffinity()
             }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val defaultColor = ContextCompat.getColor(activityContext, R.color.defaultColor)
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.dark(defaultColor),
-            navigationBarStyle = SystemBarStyle.dark(defaultColor)
-        )
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
-        with(binding) {
+        binding.apply {
             keepActivityOn(activityContext)
 
             setSelectedLanguageFlag()
@@ -77,7 +59,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
             textSizeSlider.value = prefs.textSizeValue.toFloat()
 
             backArrowIV.setOnClickListener(this@SettingsActivity)
-            visitOurAppStoreLayout.setOnClickListener(this@SettingsActivity)
+            moreAppsChildLayout.setOnClickListener(this@SettingsActivity)
             rateUsLayout.setOnClickListener(this@SettingsActivity)
             feedbackLayout.setOnClickListener(this@SettingsActivity)
             shareAppLayout.setOnClickListener(this@SettingsActivity)
@@ -94,41 +76,26 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
                 }
             })
 
-            textSizeSlider.addOnChangeListener { slider, value, fromUser ->
+            textSizeSlider.addOnChangeListener { _, value, _ ->
                 if (value.toInt() < 14) {
                     textSizeValueTV.text = String.format(Locale.getDefault(), "%d", 14)
                     textSizeSlider.value = 14F
-                } else {
+                } else
                     textSizeValueTV.text = String.format(Locale.getDefault(), "%d", value.toInt())
-                }
             }
         }
-
-        val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                finish()
-            }
-        }
-        onBackPressedDispatcher.addCallback(onBackPressedCallback)
     }
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.backArrowIV -> finish()
-            R.id.selectLanguageChildLayout -> appLanguageLauncher.launch(Intent(activityContext,
-                AppLanguageActivity::class.java))
-            R.id.visitOurAppStoreLayout -> openGoogleAppStore(activityContext)
+            R.id.backArrowIV -> callBackPressed()
+            R.id.selectLanguageChildLayout -> appLanguageLauncher.launch(Intent(activityContext, AppLanguageActivity::class.java))
+            R.id.moreAppsChildLayout -> openGoogleAppStore(activityContext)
             R.id.rateUsLayout -> showRateUsDialog()
             R.id.feedbackLayout -> openFeedbackActivity()
             R.id.shareAppLayout -> shareApp()
-            R.id.privacyPolicyLayout -> openPrivacyPolicyActivity(
-                activityContext,
-                internetController.isInternetConnected
-            )
-            R.id.checkUpdateLayout -> openAppInPlayStore(
-                activityContext,
-                BuildConfig.APPLICATION_ID
-            )
+            R.id.privacyPolicyLayout -> openPrivacyPolicyActivity(activityContext, internetController.isInternetConnected, toastController)
+            R.id.checkUpdateLayout -> openAppInPlayStore(activityContext, BuildConfig.APPLICATION_ID)
         }
     }
 
@@ -138,7 +105,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
         val rateUsDialogLayoutBinding = RateUsDialogLayoutBinding.inflate(layoutInflater)
 
         val rateUsDialogBuilder = AlertDialog.Builder(activityContext)
-        with(rateUsDialogBuilder) {
+        rateUsDialogBuilder.apply {
             setView(rateUsDialogLayoutBinding.root)
             setCancelable(true)
         }
@@ -149,7 +116,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
             rateUsAlertDialog.show()
         }
 
-        with(rateUsDialogLayoutBinding) {
+        rateUsDialogLayoutBinding.apply {
             rateUsDialogIV.startAnimation(animation)
 
             dismissRateUsDialogIV.setOnClickListener { _: View? ->
@@ -161,8 +128,8 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
             rateUsButton.setOnClickListener { _: View? ->
                 val rating = rateUsDialogLayoutBinding.ratingBar.rating
                 if (rating in 1.0..3.0) {
-                    rateUsDialogLayoutBinding.rateUsButton.changeVisibility(Visibility.INVISIBLE.ordinal)
-                    rateUsDialogLayoutBinding.group.changeVisibility(Visibility.VISIBLE.ordinal)
+                    rateUsDialogLayoutBinding.rateUsButton.changeVisibility(Visibility.INVISIBLE)
+                    rateUsDialogLayoutBinding.group.changeVisibility(Visibility.VISIBLE)
                     Handler(Looper.getMainLooper()).postDelayed({
                         if (!activityContext.isFinishing && !activityContext.isDestroyed) {
                             rateUsAlertDialog.dismiss()
@@ -173,24 +140,22 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
                         rateUsAlertDialog.dismiss()
                     }
                 } else {
-                    toastController.showToast(activityContext, getString(R.string.please_rate_our_app_toast_text), false)
+                    toastController.showToast(activityContext, getString(com.example.core.R.string.please_rate_our_app_toast_text), false)
                 }
             }
         }
     }
 
     private fun shareApp() {
-        val shareAppIntent = Intent()
-        with(shareAppIntent) {
+        Intent().apply {
             action = Intent.ACTION_SEND
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}")
             if (this.resolveActivity(packageManager) != null) {
-                val chooserIntent = Intent.createChooser(this, getString(R.string.share_via_text))
+                val chooserIntent = Intent.createChooser(this, getString(com.example.core.R.string.share_via_text))
                 startActivity(chooserIntent)
-            } else {
-                toastController.showToast(activityContext, getString(R.string.there_is_no_activity_available_to_handle_this_action_toast_text), false)
-            }
+            } else
+                toastController.showToast(activityContext, getString(com.example.core.R.string.there_is_no_activity_available_to_handle_this_action_toast_text), false)
         }
     }
 
@@ -255,4 +220,6 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
         }
         return false
     }*/
+
+    override fun handleActivitiesBackPressed() = finish()
 }

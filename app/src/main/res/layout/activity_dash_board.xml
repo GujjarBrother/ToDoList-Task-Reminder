@@ -5,7 +5,6 @@
     android:id="@+id/dashBoardActivityDrawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context="activities.DashBoardActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,144 +13,134 @@
         android:layout_height="match_parent"
         android:background="@color/screensBackgroundColor">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarLayout"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/toolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/defaultColor"
             android:minHeight="?attr/actionBarSize"
+            android:background="@color/defaultColor"
+            android:paddingHorizontal="@dimen/_5sdp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@id/tabLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/openAndCloseDrawerIV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="@dimen/_5sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/drawer_icon" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/toolbarTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:text="@string/tasks_text"
+                android:textAllCaps="false"
+                android:textColor="@color/whiteColor"
+                android:textSize="@dimen/_15ssp"
+                android:textStyle="bold"
+                app:fontFamily="@font/cabin_medium"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/searchIV"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/openAndCloseDrawerIV"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/settingsIV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/settings_icon" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/signOutIV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/settingsIV"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/sign_out_icon" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/searchIV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/_3sdp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="@dimen/_5sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/signOutIV"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/search_image" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/toolbarGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="openAndCloseDrawerIV, toolbarTV,
+                signOutIV, settingsIV" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/searchLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/_35sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:background="@drawable/search_layout_background"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/searchET"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/search_here_hint"
+                    android:paddingHorizontal="@dimen/_10sdp"
+                    android:singleLine="true"
+                    android:textColor="@color/whiteColor"
+                    android:textColorHint="@color/defaultColor"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_10ssp"
+                    app:fontFamily="@font/cabin_medium"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/searchCrossIV"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/openAndCloseDrawerIV"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:padding="@dimen/_5sdp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/drawer_icon" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/searchCrossIV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:minWidth="@dimen/_25sdp"
+                    android:minHeight="@dimen/_25sdp"
+                    android:tint="@color/defaultColor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/cross_image" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/toolbarTV"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginHorizontal="@dimen/_10sdp"
-                        android:fontFamily="@font/cabin_medium"
-                        android:text="@string/tasks_text"
-                        android:textAllCaps="false"
-                        android:textColor="@color/whiteColor"
-                        android:textSize="@dimen/_15ssp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/searchIV"
-                        app:layout_constraintStart_toEndOf="@id/openAndCloseDrawerIV"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/settingsIV"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/_8sdp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/settings_icon" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/signOutIV"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_8sdp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/settingsIV"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/sign_out_icon" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/searchIV"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="@dimen/_3sdp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:padding="@dimen/_5sdp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/signOutIV"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/search_image" />
-
-                    <androidx.constraintlayout.widget.Group
-                        android:id="@+id/toolbarGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:constraint_referenced_ids="openAndCloseDrawerIV, toolbarTV,
-                        signOutIV, settingsIV" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/searchLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_35sdp"
-                        android:layout_marginEnd="@dimen/_10sdp"
-                        android:background="@drawable/search_layout_background"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/searchET"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:background="@android:color/transparent"
-                            android:fontFamily="@font/cabin_medium"
-                            android:hint="@string/search_here_hint"
-                            android:paddingHorizontal="@dimen/_10sdp"
-                            android:singleLine="true"
-                            android:textColor="@color/whiteColor"
-                            android:textColorHint="@color/defaultColor"
-                            android:textCursorDrawable="@null"
-                            android:textSize="@dimen/_10ssp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/searchCrossIV"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/searchCrossIV"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:minWidth="@dimen/_25sdp"
-                            android:minHeight="@dimen/_25sdp"
-                            android:tint="@color/defaultColor"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/cross_image" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.appbar.MaterialToolbar>
-        </com.google.android.material.appbar.AppBarLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
@@ -162,7 +151,7 @@
             app:layout_constraintBottom_toTopOf="@id/dashBoardViewPager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+            app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
             app:tabIndicator="@drawable/tabs_indicator_background"
             app:tabIndicatorAnimationMode="fade"
             app:tabIndicatorColor="@color/screensBackgroundColor"
@@ -209,7 +198,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
         android:focusable="true">
 
         <include

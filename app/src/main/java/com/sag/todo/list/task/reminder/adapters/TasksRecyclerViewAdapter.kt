@@ -9,13 +9,13 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.core.utils.Prefs
 import com.sag.todo.list.task.reminder.databinding.ToDosRecyclerViewSingleItemLayoutBinding
 import com.sag.todo.list.task.reminder.enums.Tabs
 import com.sag.todo.list.task.reminder.enums.Visibility
 import com.sag.todo.list.task.reminder.models.ToDoTask
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.changeVisibility
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.isSomethingChanged
-import com.sag.todo.list.task.reminder.utils.Prefs
+import com.sag.todo.list.task.reminder.utils.AppConstants.changeVisibility
+import com.sag.todo.list.task.reminder.utils.AppConstants.isSomethingChanged
 
 class TasksRecyclerViewAdapter(
     private val lifecycleOwner: LifecycleOwner,
@@ -34,30 +34,29 @@ class TasksRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-                ToDosRecyclerViewSingleItemLayoutBinding.inflate(LayoutInflater.from(parent.context),
-                        parent, false)
+            ToDosRecyclerViewSingleItemLayoutBinding.inflate(LayoutInflater.from(parent.context),
+                parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val toDoTask = getItem(position)
-
-        with(holder.binding) {
+        holder.binding.apply {
             if (fromWhereInvoked == Tabs.TASKS_TAB.ordinal) {
-                deleteFromCompletedFragmentIV.changeVisibility(Visibility.GONE.ordinal)
-                updateAndDeleteOptionsIV.changeVisibility(Visibility.VISIBLE.ordinal)
+                deleteFromCompletedFragmentIV.changeVisibility(Visibility.GONE)
+                updateAndDeleteOptionsIV.changeVisibility(Visibility.VISIBLE)
                 updateAndDeleteOptionsIV.isEnabled = true
             } else if (fromWhereInvoked == Tabs.COMPLETED_TAB.ordinal) {
-                updateAndDeleteOptionsIV.changeVisibility(Visibility.INVISIBLE.ordinal)
+                updateAndDeleteOptionsIV.changeVisibility(Visibility.INVISIBLE)
                 updateAndDeleteOptionsIV.isEnabled = false
-                deleteFromCompletedFragmentIV.changeVisibility(Visibility.VISIBLE.ordinal)
+                deleteFromCompletedFragmentIV.changeVisibility(Visibility.VISIBLE)
             }
 
-            if (toDoTask.day.length >= 3) {
+            if (toDoTask.day.length >= 3)
                 dayTV.text = toDoTask.day.substring(0, 3)
-            } else {
+            else
                 dayTV.text = toDoTask.day
-            }
+
             dateTV.text = toDoTask.date
             monthTV.text = toDoTask.month
             toDoTaskTitleTV.text = toDoTask.title
@@ -82,7 +81,7 @@ class TasksRecyclerViewAdapter(
         }
     }
 
-    inner class ViewHolder(val binding: ToDosRecyclerViewSingleItemLayoutBinding) : RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ToDosRecyclerViewSingleItemLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
     companion object {
         private val DIFF_CALLBACK: DiffUtil.ItemCallback<ToDoTask> = object : DiffUtil.ItemCallback<ToDoTask>() {

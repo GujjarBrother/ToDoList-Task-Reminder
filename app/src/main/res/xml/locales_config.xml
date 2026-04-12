@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <locale android:name="ur"/>
+    <locale android:name="ar"/>
+    <locale android:name="en"/>
+    <locale android:name="af"/>
+    <locale android:name="bn"/>
+    <locale android:name="bho"/>
+    <locale android:name="bg"/>
+    <locale android:name="my"/>
+    <locale android:name="zh-CN"/>
+    <locale android:name="zh-TW"/>
+    <locale android:name="cs"/>
+    <locale android:name="da"/>
+    <locale android:name="nl"/>
+    <locale android:name="tl"/>
+    <locale android:name="fi"/>
+    <locale android:name="fr"/>
+    <locale android:name="de"/>
+    <locale android:name="el"/>
+    <locale android:name="gn"/>
+    <locale android:name="ha"/>
+    <locale android:name="iw"/>
+    <locale android:name="hi"/>
+    <locale android:name="hu"/>
+    <locale android:name="id"/>
+    <locale android:name="it"/>
+    <locale android:name="ja"/>
+    <locale android:name="ko"/>
+    <locale android:name="ms"/>
+    <locale android:name="mr"/>
+    <locale android:name="om"/>
+    <locale android:name="fa"/>
+    <locale android:name="pl"/>
+    <locale android:name="pt"/>
+    <locale android:name="qu"/>
+    <locale android:name="ro"/>
+    <locale android:name="ru"/>
+    <locale android:name="sr"/>
+    <locale android:name="es"/>
+    <locale android:name="sw"/>
+    <locale android:name="sv"/>
+    <locale android:name="ta"/>
+    <locale android:name="te"/>
+    <locale android:name="th"/>
+    <locale android:name="tr"/>
+    <locale android:name="uk"/>
+    <locale android:name="vi"/>
+    <locale android:name="yo"/>
+    <locale android:name="zu"/>
+
+</locale-config>

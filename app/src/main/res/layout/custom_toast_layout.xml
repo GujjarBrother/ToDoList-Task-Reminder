@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_15sdp"
         android:ellipsize="marquee"
-        android:fontFamily="@font/cabin_medium"
+        app:fontFamily="@font/cabin_medium"
         android:marqueeRepeatLimit="marquee_forever"
         android:singleLine="true"
         android:text="Toast message..."

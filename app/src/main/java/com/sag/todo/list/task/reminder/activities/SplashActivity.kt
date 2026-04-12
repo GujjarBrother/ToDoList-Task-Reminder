@@ -9,19 +9,14 @@ import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.animation.Animation
-import androidx.activity.SystemBarStyle
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.model.ActivityResult.RESULT_IN_APP_UPDATE_FAILED
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.databinding.ActivitySplashBinding
 import com.sag.todo.list.task.reminder.utils.FetchRemoteConfig
@@ -49,26 +44,14 @@ class SplashActivity : BaseActivity() {
     private lateinit var valueAnimator: ValueAnimator
     private val tasksViewModel: TasksViewModel by viewModels()
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
-        /*if (it.resultCode != RESULT_OK) {
-            toastController.showToast(activityContext, "Update not available...!", false)
-        } else {
-            toastController.showToast(activityContext, "Update available...!", true)
-        }*/
+        when (it.resultCode) {
+            RESULT_CANCELED, RESULT_IN_APP_UPDATE_FAILED -> finishAffinity()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val defaultColor = ContextCompat.getColor(activityContext, R.color.defaultColor)
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.dark(defaultColor),
-            navigationBarStyle = SystemBarStyle.dark(defaultColor)
-        )
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.rootLayout)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
         FetchRemoteConfig.fetchRemoteConfigValues {
         }
@@ -77,19 +60,12 @@ class SplashActivity : BaseActivity() {
         checkForAnAppUpdate()
     }
 
-    private fun makeFullScreenActivity(activity: Activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            activity.window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            activity.window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
-    }
-
     override fun onResume() {
         super.onResume()
+        checkAppUpdateAfterMinimize()
+    }
+
+    private fun checkAppUpdateAfterMinimize() {
         val appUpdateManager = AppUpdateManagerFactory.create(this)
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
@@ -105,10 +81,10 @@ class SplashActivity : BaseActivity() {
     private fun checkForAnAppUpdate() {
         val appUpdateManager = AppUpdateManagerFactory.create(activityContext)
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
-        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+        appUpdateInfoTask.addOnSuccessListener {
+            if (it.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
                 try {
-                    appUpdateManager.startUpdateFlowForResult(appUpdateInfo, activityResultLauncher, AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build())
+                    appUpdateManager.startUpdateFlowForResult(it, activityResultLauncher, AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build())
                 } catch (e: Exception) {
                     throw RuntimeException(e)
                 }
@@ -130,7 +106,7 @@ class SplashActivity : BaseActivity() {
 
     private fun ActivitySplashBinding.applyAnimationOnProgressBar() {
         valueAnimator = ValueAnimator.ofInt(0, splashLoadingProgressBar.max)
-        with(valueAnimator) {
+        valueAnimator.apply {
             valueAnimator.duration = 5000
             addUpdateListener {
                 val animatedValue = it.animatedValue
@@ -138,16 +114,28 @@ class SplashActivity : BaseActivity() {
                     splashLoadingProgressBar.progress = animatedValue
                     loadingPercentageTV.text = String.format(Locale.getDefault(), "%d%s", animatedValue, "%")
                     if (animatedValue == 100) {
-                        if (IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN) {
-                            startActivity(Intent(activityContext, if (prefs.isUserSignIn) DashBoardActivity::class.java else SignInActivity::class.java))
-                        } else {
-                            startActivity(Intent(activityContext, DashBoardActivity::class.java))
+                        val goNextIntent = if (IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN)
+                            Intent(activityContext, if (prefs.isUserSignIn) DashBoardActivity::class.java else SignInActivity::class.java)
+                        else
+                            Intent(activityContext, DashBoardActivity::class.java)
+                        goNextIntent.apply {
+                            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(this)
                         }
-                        finish()
                     }
                 }
             }
         }
         valueAnimator.start()
+    }
+
+    private fun makeFullScreenActivity(activity: Activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            activity.window.insetsController?.hide(WindowInsets.Type.statusBars())
+        else
+            activity.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+    }
+
+    override fun handleActivitiesBackPressed() {
     }
 }

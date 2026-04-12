@@ -11,17 +11,19 @@ class FetchRemoteConfig {
         fun fetchRemoteConfigValues(isFetchedCallback: () -> Unit) {
             val remoteConfig = Firebase.remoteConfig
             val remoteConfigSettings = remoteConfigSettings {
-                setMinimumFetchIntervalInSeconds(20)
+                setMinimumFetchIntervalInSeconds(60)
             }
-            remoteConfig.setConfigSettingsAsync(remoteConfigSettings)
-            remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
-            remoteConfig.fetchAndActivate()
-                .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN = remoteConfig.getBoolean("IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN")
+            remoteConfig.apply {
+                setConfigSettingsAsync(remoteConfigSettings)
+                setDefaultsAsync(R.xml.remote_config_defaults)
+                fetchAndActivate()
+                    .addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN = remoteConfig.getBoolean("IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN")
+                        }
+                        isFetchedCallback.invoke()
                     }
-                    isFetchedCallback.invoke()
-                }
+            }
         }
     }
 }
