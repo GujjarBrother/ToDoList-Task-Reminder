@@ -13,7 +13,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/clicked_ripple_background">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dayTV"
@@ -21,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_10sdp"
-            android:fontFamily="@font/cabin_medium"
+            app:fontFamily="@font/cabin_medium"
             android:text="Mon"
             android:textAllCaps="false"
             android:textColor="@color/lightColor"
@@ -36,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_10sdp"
-            android:fontFamily="@font/cabin_medium"
+            app:fontFamily="@font/cabin_medium"
             android:text="06"
             android:textAllCaps="false"
             android:textColor="@color/defaultColor"
@@ -52,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_10sdp"
-            android:fontFamily="@font/cabin_medium"
+            app:fontFamily="@font/cabin_medium"
             android:text="Jan"
             android:textAllCaps="false"
             android:textColor="@color/lightColor"
@@ -79,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_5sdp"
             android:ellipsize="end"
-            android:fontFamily="@font/cabin_medium"
+            app:fontFamily="@font/cabin_medium"
             android:maxLines="1"
             android:text="Title"
             android:textAllCaps="false"
@@ -98,7 +99,7 @@
             android:layout_marginHorizontal="@dimen/_5sdp"
             android:layout_marginVertical="@dimen/_3sdp"
             android:ellipsize="end"
-            android:fontFamily="@font/cabin_medium"
+            app:fontFamily="@font/cabin_medium"
             android:maxLines="1"
             android:text="Description"
             android:textAllCaps="false"
@@ -114,7 +115,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_5sdp"
-            android:fontFamily="@font/cabin_medium"
+            app:fontFamily="@font/cabin_medium"
             android:text="09:00 AM"
             android:textAllCaps="false"
             android:textColor="@color/lightColor"

@@ -23,7 +23,8 @@
 
     <application
         android:name=".application.Application"
-        android:allowBackup="true"
+        android:allowBackup="false"
+        android:localeConfig="@xml/locales_config"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -32,14 +33,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ToDoList"
-        tools:ignore="DiscouragedApi,LockedOrientationActivity"
+        tools:ignore="DiscouragedApi, LockedOrientationActivity, UnusedAttribute"
         tools:targetApi="31">
         <activity
             android:name=".activities.AppLanguageActivity"
             android:exported="false"
+            android:configChanges="uiMode"
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activities.SplashActivity"
+            android:configChanges="uiMode"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,33 +51,34 @@
             </intent-filter>
         </activity>
 
-        <meta-data
+        <!--<meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/appId" />
+            android:value="@string/appId" />-->
 
         <activity
             android:name=".activities.ThankYouActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:configChanges="uiMode" />
         <activity
             android:name=".activities.FeedbackActivity"
             android:exported="false"
+            android:configChanges="uiMode"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".activities.PrivacyPolicyActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="uiMode"/>
         <activity
             android:name=".activities.ToDoTaskDetailActivity"
-            android:configChanges="orientation|screenSize"
-            android:exported="false"
-            android:noHistory="true">
+            android:configChanges="uiMode"
+            android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".activities.DashBoardActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="uiMode"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -83,8 +87,7 @@
         <activity
             android:name=".activities.SignUpActivity"
             android:exported="false"
-            android:noHistory="true"
-            android:screenOrientation="portrait">
+            android:configChanges="uiMode">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -92,22 +95,23 @@
         <activity
             android:name=".activities.SignInActivity"
             android:exported="false"
-            android:noHistory="true"
-            android:screenOrientation="portrait">
+            android:configChanges="uiMode">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".activities.SettingsActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="uiMode"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
 
-        <receiver android:name=".receivers.ReminderReceiver" />
+        <receiver android:name=".receivers.ReminderReceiver"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

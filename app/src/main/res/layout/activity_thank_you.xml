@@ -8,50 +8,58 @@
     tools:context="activities.ThankYouActivity">
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottieAnimationView"
+        android:id="@+id/thankYouLottieAnimationView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/forUsingAnAppTextView"
+        app:layout_constraintBottom_toTopOf="@id/forUsingAnAppTV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"
-        app:lottie_loop="true"
+        app:lottie_loop="false"
         app:lottie_speed="1.5"
         app:lottie_rawRes="@raw/thank_you_animation" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/forUsingAnAppTextView"
+        android:id="@+id/forUsingAnAppTV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:gravity="center"
         android:text="@string/for_using_an_app_text"
         android:textAllCaps="false"
-        android:textColor="@color/blackAndWhiteViewsColor"
+        android:textColor="@color/defaultColor"
         android:textSize="@dimen/_14ssp"
         android:textStyle="bold"
-        android:fontFamily="@font/cabin_medium"
-        app:layout_constraintBottom_toTopOf="@id/descriptionTextView"
+        app:fontFamily="@font/cabin_medium"
+        app:layout_constraintBottom_toTopOf="@id/comeBackTV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lottieAnimationView" />
+        app:layout_constraintTop_toBottomOf="@id/thankYouLottieAnimationView" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/descriptionTextView"
+        android:id="@+id/comeBackTV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:gravity="center"
         android:text="@string/come_back_we_shall_meet_again_text"
         android:textAllCaps="false"
-        android:textColor="@color/blackAndWhiteViewsColor"
+        android:textColor="@color/defaultColor"
         android:textSize="@dimen/_14ssp"
-        android:fontFamily="@font/cabin_medium"
+        app:fontFamily="@font/cabin_medium"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/forUsingAnAppTextView" />
+        app:layout_constraintTop_toBottomOf="@id/forUsingAnAppTV" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/forUsingAnAppAndComeBackAgainGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:constraint_referenced_ids="forUsingAnAppTV, comeBackTV"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

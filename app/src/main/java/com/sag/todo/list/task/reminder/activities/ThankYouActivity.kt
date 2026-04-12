@@ -1,45 +1,50 @@
 package com.sag.todo.list.task.reminder.activities
 
+import android.animation.Animator
 import android.os.Bundle
-import androidx.activity.SystemBarStyle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.sag.todo.list.task.reminder.R
+import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.databinding.ActivityThankYouBinding
-import com.sag.todo.list.task.reminder.utils.CommonFunctions.keepActivityOn
+import com.sag.todo.list.task.reminder.enums.Visibility
+import com.sag.todo.list.task.reminder.utils.AppConstants.changeVisibility
+import com.sag.todo.list.task.reminder.utils.AppConstants.keepActivityOn
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ThankYouActivity : AppCompatActivity() {
+class ThankYouActivity : BaseActivity() {
 
     private val binding by lazy {
         ActivityThankYouBinding.inflate(layoutInflater)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        window.decorView
         super.onCreate(savedInstanceState)
-        val defaultColor = ContextCompat.getColor(this, R.color.defaultColor)
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.dark(defaultColor),
-            navigationBarStyle = SystemBarStyle.dark(defaultColor)
-        )
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
         keepActivityOn(this)
 
-        lifecycleScope.launch {
-            delay(2000)
-            finishAffinity()
+        binding.apply {
+            thankYouLottieAnimationView.addAnimatorListener(object : Animator.AnimatorListener {
+                override fun onAnimationCancel(p0: Animator) {
+                }
+
+                override fun onAnimationEnd(p0: Animator) {
+                    forUsingAnAppAndComeBackAgainGroup.changeVisibility(Visibility.VISIBLE)
+                    lifecycleScope.launch {
+                        delay(2000)
+                        finishAffinity()
+                    }
+                }
+
+                override fun onAnimationRepeat(p0: Animator) {
+                }
+
+                override fun onAnimationStart(p0: Animator) {
+                }
+            })
         }
+    }
+
+    override fun handleActivitiesBackPressed() {
     }
 }

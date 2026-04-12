@@ -1,118 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialog_boxes_background"
-    android:paddingHorizontal="@dimen/_10sdp"
-    android:paddingBottom="@dimen/_15sdp">
+    app:cardBackgroundColor="@color/screensBackgroundColor"
+    app:cardCornerRadius="@dimen/_10sdp"
+    app:strokeColor="@android:color/transparent">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/dismissDialogIV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:layout_constraintBottom_toTopOf="@id/securityQuestionTitleTV"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/cross_image" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/securityQuestionTitleTV"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/cabin_medium"
-        android:gravity="center"
-        android:text="@string/security_questions_text"
-        android:textAllCaps="false"
-        android:textColor="@color/defaultColor"
-        android:textSize="@dimen/_16ssp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dismissDialogIV" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/securityQuestionBtn"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start"
-        android:padding="@dimen/_15sdp"
-        android:text="@string/security_questions_text"
-        android:textColor="@color/subColor"
-        android:textSize="@dimen/_13ssp"
-        app:backgroundTint="@android:color/transparent"
-        app:cornerRadius="@dimen/_5sdp"
-        app:drawableEndCompat="@drawable/drop_down_image"
-        app:drawableTint="@color/defaultColor"
-        app:fontFamily="@font/cabin_medium"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/securityQuestionTitleTV"
-        app:strokeColor="@color/subColor"
-        app:strokeWidth="@dimen/_1sdp" />
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_15sdp">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/securityQuestionAnswerTIL"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:background="@android:color/transparent"
-        android:textColorHint="@color/subColor"
-        app:boxBackgroundColor="@android:color/transparent"
-        app:boxStrokeColor="@null"
-        app:errorEnabled="true"
-        app:layout_constraintBottom_toTopOf="@id/saveButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/securityQuestionTitleTV"
-        app:startIconDrawable="@drawable/security_question_answer_icon"
-        app:startIconTint="@color/defaultColor">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/dismissDialogIV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintBottom_toTopOf="@id/securityQuestionTitleTV"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/cross_image" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/securityQuestionAnswerTIET"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/securityQuestionTitleTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/security_questions_text"
+            android:textAllCaps="false"
+            android:textColor="@color/defaultColor"
+            android:textSize="@dimen/_16ssp"
+            android:textStyle="bold"
+            app:fontFamily="@font/cabin_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dismissDialogIV" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/securityQuestionBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/cabin_medium"
-            android:imeOptions="actionGo"
-            android:inputType="textCapWords"
+            android:gravity="start"
+            android:padding="@dimen/_15sdp"
+            android:text="@string/security_questions_text"
+            android:textColor="@color/subColor"
+            android:textSize="@dimen/_13ssp"
+            app:backgroundTint="@android:color/transparent"
+            app:cornerRadius="@dimen/_5sdp"
+            app:drawableEndCompat="@drawable/drop_down_image"
+            app:drawableTint="@color/defaultColor"
+            app:fontFamily="@font/cabin_medium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/securityQuestionTitleTV"
+            app:strokeColor="@color/subColor"
+            app:strokeWidth="@dimen/_1sdp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/securityQuestionAnswerTIL"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@android:color/transparent"
+            android:textColorHint="@color/subColor"
+            app:boxBackgroundColor="@android:color/transparent"
+            app:boxStrokeColor="@null"
+            app:errorEnabled="true"
+            app:layout_constraintBottom_toTopOf="@id/saveButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/securityQuestionTitleTV"
+            app:startIconDrawable="@drawable/security_question_answer_icon"
+            app:startIconTint="@color/defaultColor">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/securityQuestionAnswerTIET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionGo"
+                android:inputType="textCapWords"
+                android:textAllCaps="false"
+                android:textColor="@color/blackAndWhiteViewsColor"
+                android:textCursorDrawable="@null"
+                app:fontFamily="@font/cabin_medium" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/defaultColor"
+            android:gravity="center"
+            android:minWidth="@dimen/_200sdp"
+            android:minHeight="@dimen/_55sdp"
+            android:padding="@dimen/_10ssp"
+            android:stateListAnimator="@null"
+            android:text="@string/save_button_text"
             android:textAllCaps="false"
-            android:textCursorDrawable="@null"
-            android:textColor="@color/blackAndWhiteViewsColor" />
+            android:textColor="@color/whiteColor"
+            android:textSize="@dimen/_15ssp"
+            android:textStyle="bold"
+            app:cornerRadius="@dimen/_7sdp"
+            app:fontFamily="@font/cabin_medium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/securityQuestionAnswerTIL" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="securityQuestionAnswerTIL, saveButton" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/defaultColor"
-        android:fontFamily="@font/cabin_medium"
-        android:gravity="center"
-        android:minWidth="@dimen/_200sdp"
-        android:minHeight="@dimen/_55sdp"
-        android:padding="@dimen/_10ssp"
-        android:stateListAnimator="@null"
-        android:text="@string/save_button_text"
-        android:textAllCaps="false"
-        android:textColor="@color/whiteColor"
-        android:textSize="@dimen/_15ssp"
-        android:textStyle="bold"
-        app:cornerRadius="@dimen/_7sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/securityQuestionAnswerTIL" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:constraint_referenced_ids="securityQuestionAnswerTIL,
-        saveButton" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

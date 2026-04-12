@@ -1,5 +1,6 @@
 package com.sag.todo.list.task.reminder.adsPlugin.bannerAd
 
+/*
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -21,4 +22,4 @@ class BannerAdController(
     private var lifecycle: Lifecycle? = null
     private var adID: Int = R.string.dashboardScreenBannerAdId
     private lateinit var mContext: AppCompatActivity
-}
+}*/

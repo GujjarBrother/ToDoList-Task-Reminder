@@ -1,14 +1,15 @@
-package com.sag.todo.list.task.reminder.utils
+package com.example.core.utils
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import androidx.core.content.edit
+import com.example.core.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Prefs @Inject constructor(@ApplicationContext applicationContext: Context) {
+class Prefs @Inject constructor(@ApplicationContext val applicationContext: Context) {
 
     private val toDosListSharedPreferences = applicationContext.getSharedPreferences(
         "TO_DO_LIST_APP_PREFS", MODE_PRIVATE
@@ -67,8 +68,7 @@ class Prefs @Inject constructor(@ApplicationContext applicationContext: Context)
         password: String,
         gender: Int,
         selectedSecurityQuestion: Int,
-        securityAnswer: String,
-        check: Boolean
+        securityAnswer: String
     ) {
         toDosListSharedPreferences.edit {
             putString("emailOrUserName", emailOrUserName)
@@ -76,7 +76,6 @@ class Prefs @Inject constructor(@ApplicationContext applicationContext: Context)
             putInt("gender", gender)
             putInt("selectedSecurityQuestion", selectedSecurityQuestion)
             putString("securityAnswer", securityAnswer)
-            putBoolean("check", check)
         }
     }
 
@@ -87,37 +86,38 @@ class Prefs @Inject constructor(@ApplicationContext applicationContext: Context)
             val gender = toDosListSharedPreferences.getInt("gender", 0).toString()
             val securityQuestion = toDosListSharedPreferences.getInt("selectedSecurityQuestion", 0).toString()
             val securityAnswer = toDosListSharedPreferences.getString("securityAnswer", null).toString()
-            val check = toDosListSharedPreferences.getBoolean("check", false).toString()
-            return arrayOf(emailOrUserName, password, gender, securityQuestion, securityAnswer, check)
+            return arrayOf(emailOrUserName, password, gender, securityQuestion, securityAnswer)
         }
 
-    fun saveAllTasksSortingValues(aboveSortedValue: Int, belowSortedValue: Int) {
-        toDosListSharedPreferences.edit {
-            putInt("allTasksAboveSorting", aboveSortedValue)
-            putInt("allTasksBelowSorting", belowSortedValue)
-        }
-    }
-
-    val allTasksSortingValues: IntArray
-        get() {
-            val aboveSortedValue = toDosListSharedPreferences.getInt("allTasksAboveSorting", 1)
-            val belowSortedValue = toDosListSharedPreferences.getInt("allTasksBelowSorting", 7)
-            return intArrayOf(aboveSortedValue, belowSortedValue)
-        }
-
-    fun saveCompletedTasksSortingValues(aboveSortedValue: Int, belowSortedValue: Int) {
-        toDosListSharedPreferences.edit {
-            putInt("completedTasksAboveSorting", aboveSortedValue)
-            putInt("completedTasksBelowSorting", belowSortedValue)
+    fun saveAllTasksSortingValues(sortByValue: String? = null, sortOrderValue: String? = null) {
+        if (sortByValue != null && sortOrderValue != null) {
+            toDosListSharedPreferences.edit {
+                putString("allTasksSortByValue", sortByValue)
+                putString("allTasksSortOrderValue", sortOrderValue)
+            }
         }
     }
 
-    val completedTasksSortingValues: IntArray
+    val getAllTasksSortingValues: Array<String?>
         get() {
-            val aboveSortedValue =
-                toDosListSharedPreferences.getInt("completedTasksAboveSorting", 1)
-            val belowSortedValue =
-                toDosListSharedPreferences.getInt("completedTasksBelowSorting", 7)
-            return intArrayOf(aboveSortedValue, belowSortedValue)
+            val sortByValue = toDosListSharedPreferences.getString("allTasksSortByValue", applicationContext.getString(R.string.title_text))
+            val sortOrderValue = toDosListSharedPreferences.getString("allTasksSortOrderValue", applicationContext.getString(R.string.ascending_a_z_text))
+            return arrayOf(sortByValue, sortOrderValue)
+        }
+
+    fun saveCompletedTasksSortingValues(sortByValue: String? = null, sortOrderValue: String? = null) {
+        if (sortByValue != null && sortOrderValue != null) {
+            toDosListSharedPreferences.edit {
+                putString("completedTasksSortByValue", sortByValue)
+                putString("completedTasksSortOrderValue", sortOrderValue)
+            }
+        }
+    }
+
+    val getCompletedTasksSortingValues: Array<String?>
+        get() {
+            val sortByValue = toDosListSharedPreferences.getString("completedTasksSortByValue", applicationContext.getString(R.string.title_text))
+            val sortOrderValue = toDosListSharedPreferences.getString("completedTasksSortOrderValue", applicationContext.getString(R.string.ascending_a_z_text))
+            return arrayOf(sortByValue, sortOrderValue)
         }
 }
