@@ -120,4 +120,10 @@ class Prefs @Inject constructor(@ApplicationContext val applicationContext: Cont
             val sortOrderValue = toDosListSharedPreferences.getString("completedTasksSortOrderValue", applicationContext.getString(R.string.ascending_a_z_text))
             return arrayOf(sortByValue, sortOrderValue)
         }
+
+    var isLanguageActivityAlreadyAppeared: Boolean
+        get() = toDosListSharedPreferences.getBoolean("isLanguageActivityAlreadyAppeared", false)
+        set(value) = toDosListSharedPreferences.edit {
+            putBoolean("isLanguageActivityAlreadyAppeared", value)
+        }
 }

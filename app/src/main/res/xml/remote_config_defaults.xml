@@ -6,4 +6,9 @@
         <value>true</value>
     </entry>
 
+    <entry>
+        <key>LANGUAGE_ACTIVITY_APPEARANCE_AFTER_SPLASH</key>
+        <value>2</value>
+    </entry>
+
 </defaultsMap>
