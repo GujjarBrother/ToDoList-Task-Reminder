@@ -19,8 +19,9 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.sag.todo.list.task.reminder.base.BaseActivity
 import com.sag.todo.list.task.reminder.databinding.ActivitySplashBinding
-import com.sag.todo.list.task.reminder.utils.FetchRemoteConfig
+import com.sag.todo.list.task.reminder.enums.ScreensAppearance
 import com.sag.todo.list.task.reminder.utils.RemoteConfigValues.IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN
+import com.sag.todo.list.task.reminder.utils.RemoteConfigValues.LANGUAGE_ACTIVITY_APPEARANCE_AFTER_SPLASH
 import com.sag.todo.list.task.reminder.utils.SplashImageAnimation
 import com.sag.todo.list.task.reminder.viewModels.TasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +38,6 @@ class SplashActivity : BaseActivity() {
     private val binding by lazy {
         ActivitySplashBinding.inflate(layoutInflater)
     }
-
     @Inject
     @SplashImageAnimation
     lateinit var animation: Animation
@@ -52,9 +52,6 @@ class SplashActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        FetchRemoteConfig.fetchRemoteConfigValues {
-        }
 
         makeFullScreenActivity(activityContext)
         checkForAnAppUpdate()
@@ -114,19 +111,52 @@ class SplashActivity : BaseActivity() {
                     splashLoadingProgressBar.progress = animatedValue
                     loadingPercentageTV.text = String.format(Locale.getDefault(), "%d%s", animatedValue, "%")
                     if (animatedValue == 100) {
-                        val goNextIntent = if (IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN)
+                        checkLanguageActivityAppearance()
+                        /*val goNextIntent = if (IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN)
                             Intent(activityContext, if (prefs.isUserSignIn) DashBoardActivity::class.java else SignInActivity::class.java)
                         else
                             Intent(activityContext, DashBoardActivity::class.java)
                         goNextIntent.apply {
                             flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                             startActivity(this)
-                        }
+                        }*/
                     }
                 }
             }
         }
         valueAnimator.start()
+    }
+
+    private fun checkLanguageActivityAppearance() {
+        when (LANGUAGE_ACTIVITY_APPEARANCE_AFTER_SPLASH) {
+            ScreensAppearance.NEVER_SHOW.ordinal -> openSignUpOrSignInOrDashBoardActivities()
+            ScreensAppearance.ONLY_ONCE_SHOW.ordinal -> {
+                if (!prefs.isLanguageActivityAlreadyAppeared) {
+                    prefs.isLanguageActivityAlreadyAppeared = true
+                    openLanguageActivity()
+                } else openSignUpOrSignInOrDashBoardActivities()
+            }
+            ScreensAppearance.ALWAYS_SHOW.ordinal -> openLanguageActivity()
+        }
+    }
+
+    private fun openLanguageActivity() {
+        Intent(activityContext, AppLanguageActivity::class.java)
+            .putExtra("isFromSplash", true).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(this)
+        }
+    }
+
+    private fun openSignUpOrSignInOrDashBoardActivities() {
+        val goNextIntent = if (IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN)
+            Intent(activityContext, if (prefs.isUserSignIn) DashBoardActivity::class.java else SignInActivity::class.java)
+        else
+            Intent(activityContext, DashBoardActivity::class.java)
+        goNextIntent.apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(this)
+        }
     }
 
     private fun makeFullScreenActivity(activity: Activity) {

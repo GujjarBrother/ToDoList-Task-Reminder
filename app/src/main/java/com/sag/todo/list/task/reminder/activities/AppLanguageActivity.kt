@@ -1,5 +1,6 @@
 package com.sag.todo.list.task.reminder.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,6 +16,7 @@ import com.sag.todo.list.task.reminder.databinding.ActivityAppLanguageBinding
 import com.sag.todo.list.task.reminder.listeners.AdaptersListener
 import com.sag.todo.list.task.reminder.models.AppLanguage
 import com.sag.todo.list.task.reminder.utils.FabRateUsAndApplyAnimation
+import com.sag.todo.list.task.reminder.utils.RemoteConfigValues.IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -30,6 +32,7 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
     lateinit var animation: Animation
     private var selectedAppLanguage: AppLanguage? = null
     private var isFirstTimeClickedAfterSearchLanguage = true
+    private var isFromSplash = false
     private val appLanguageRVAdapter: AppLanguageRVAdapter by lazy {
         AppLanguageRVAdapter(object : AdaptersListener<AppLanguage, Int, Int> {
             override fun itemClicked(
@@ -111,7 +114,10 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        isFromSplash = intent.extras?.getBoolean("isFromSplash", false) ?: false
+
         binding.apply {
+            backArrowIV.isVisible = !isFromSplash
             applyBtn.startAnimation(animation)
             backArrowIV.setOnClickListener(this@AppLanguageActivity)
             applyBtn.setOnClickListener(this@AppLanguageActivity)
@@ -123,9 +129,7 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     p0?.let {
-                        if (!it.isNotEmpty()) {
-                            isFirstTimeClickedAfterSearchLanguage = true
-                        }
+                        if (!it.isNotEmpty()) isFirstTimeClickedAfterSearchLanguage = true
                         crossIV.isVisible = it.isNotEmpty()
                         val filteredLanguagesList = languagesList.filter { appLanguage ->
                             appLanguage.languageName.contains(it.toString().trim(), true)
@@ -165,8 +169,9 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
                         isFirstTimeClickedAfterSearchLanguage = true
                         if (prefs.selectedLanguageCode != (selectedAppLanguage?.languageCode ?: "en")) {
                             prefs.selectedLanguageCode = selectedAppLanguage?.languageCode ?: "en"
-                            setResult(RESULT_OK)
+                            if (!isFromSplash) setResult(RESULT_OK)
                         }
+                        if (isFromSplash) openSignUpOrSignInOrDashBoardActivities()
                         finish()
                     }
                 }
@@ -174,8 +179,18 @@ class AppLanguageActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
+    private fun openSignUpOrSignInOrDashBoardActivities() {
+        val goNextIntent = if (IS_SHOW_SIGN_IN_SIGN_OUT_SCREEN)
+            Intent(activityContext, if (prefs.isUserSignIn) DashBoardActivity::class.java else SignInActivity::class.java)
+        else
+            Intent(activityContext, DashBoardActivity::class.java)
+        goNextIntent.apply {
+            startActivity(this)
+        }
+    }
+
     override fun handleActivitiesBackPressed() {
         isFirstTimeClickedAfterSearchLanguage = true
-        finish()
+        if (isFromSplash) openSignUpOrSignInOrDashBoardActivities() else finish()
     }
 }

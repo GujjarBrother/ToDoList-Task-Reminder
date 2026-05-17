@@ -14,6 +14,7 @@ import com.sag.todo.list.task.reminder.R
 import com.sag.todo.list.task.reminder.utils.AppConstants.TASK_REMINDER_NOTIFICATION_CHANNEL_ID
 import com.sag.todo.list.task.reminder.utils.AppConstants.TASK_REMINDER_NOTIFICATION_CHANNEL_NAME
 import com.sag.todo.list.task.reminder.utils.AppConstants.changeAppMode
+import com.sag.todo.list.task.reminder.utils.FetchRemoteConfig
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -26,6 +27,9 @@ class Application : Application() {
     @Inject
     lateinit var notificationManager: NotificationManager
 
+    @Inject
+    lateinit var fetchRemoteConfig: FetchRemoteConfig
+
     override fun onCreate() {
         super.onCreate()
 
@@ -33,6 +37,8 @@ class Application : Application() {
             FirebaseApp.initializeApp(this)
         } catch (_: Exception) {
         }
+
+        fetchRemoteConfig.fetchRemoteConfigValues()
 
         changeAppMode(prefs.isDarkModeEnable)
 

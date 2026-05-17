@@ -25,9 +25,7 @@ import androidx.core.net.toUri
 import androidx.core.view.get
 import androidx.core.view.size
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -53,7 +51,6 @@ import com.sag.todo.list.task.reminder.enums.Visibility
 import com.sag.todo.list.task.reminder.listeners.SearchViewVisibilityListener
 import com.sag.todo.list.task.reminder.listeners.StartAndStopFABAnimationListener
 import com.sag.todo.list.task.reminder.models.Sort
-import com.sag.todo.list.task.reminder.models.TasksEvent
 import com.sag.todo.list.task.reminder.models.ToDoTask
 import com.sag.todo.list.task.reminder.receivers.ReminderReceiver
 import com.sag.todo.list.task.reminder.utils.AppConstants.applyCustomFontAndColorToPopupMenuItemsText
@@ -599,14 +596,13 @@ class AllTasksFragment : BaseFragment(), View.OnClickListener {
         isForUpdate: Boolean = false
     ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (alarmManager.canScheduleExactAlarms()) {
+            if (alarmManager.canScheduleExactAlarms())
                 scheduleReminder(completeDateAndTimeDate, toDoTask, isForUpdate)
-            } else {
+            else
                 Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
                     data = "package:${fragmentContext.packageName}".toUri()
                     startActivity(this)
                 }
-            }
         } else {
             scheduleReminder(completeDateAndTimeDate, toDoTask, isForUpdate)
         }
