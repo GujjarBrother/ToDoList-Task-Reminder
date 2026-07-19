@@ -9,11 +9,11 @@ plugins {
 
 android {
     namespace "com.sag.todo.list.task.reminder"
-    compileSdkVersion 36
+    compileSdkVersion 37
 
     defaultConfig {
-//        applicationId "com.sag.todo.list.task.reminder"
-        applicationId "com.example.debug"
+        applicationId "com.todo.list.task.reminder"
+//        applicationId "com.example.debug"
 
         minSdk 24
         targetSdk 35
@@ -91,8 +91,8 @@ dependencies {
     api("com.airbnb.android:lottie:6.7.1")
 
 //    'ViewModel & LiveData' dependency...
-    api("androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0")
-    api("androidx.lifecycle:lifecycle-livedata-ktx:2.10.0")
+    api("androidx.lifecycle:lifecycle-viewmodel-ktx:2.11.0")
+    api("androidx.lifecycle:lifecycle-livedata-ktx:2.11.0")
 
 //    'CircularImageView' dependency...
     api("com.github.AtifSayings:CircularImageView:1.0.2")
@@ -115,10 +115,10 @@ dependencies {
     api("com.google.android.play:app-update-ktx:2.1.0")
 
 //    "Hilt" dependency...
-    api("com.google.dagger:hilt-android:2.59.2")
-    ksp("com.google.dagger:hilt-android-compiler:2.59.2")
+    api("com.google.dagger:hilt-android:2.60.1")
+    ksp("com.google.dagger:hilt-android-compiler:2.60.1")
 
 //    "Firebase" dependencies...
-    api platform("com.google.firebase:firebase-bom:34.13.0")
+    api platform("com.google.firebase:firebase-bom:34.16.0")
     api("com.google.firebase:firebase-config")
 }

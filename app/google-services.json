@@ -26,9 +26,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:51045315453:android:ea6573c48264f69fabd214",
+        "mobilesdk_app_id": "1:51045315453:android:6031df71d54da6fdabd214",
         "android_client_info": {
-          "package_name": "com.sag.todo.list.task.reminder"
+          "package_name": "com.todo.list.task.reminder"
         }
       },
       "oauth_client": [],
