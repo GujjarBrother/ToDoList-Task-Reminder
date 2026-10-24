@@ -1,0 +1,69 @@
+package com.sag.todo.task.reminder.application
+
+import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.media.AudioAttributes
+import android.os.Build
+import androidx.core.net.toUri
+import com.google.firebase.FirebaseApp
+import com.sag.todo.task.reminder.R
+import com.sag.todo.task.reminder.core.utils.Prefs
+import com.sag.todo.task.reminder.utils.AppConstants.TASK_REMINDER_NOTIFICATION_CHANNEL_ID
+import com.sag.todo.task.reminder.utils.AppConstants.TASK_REMINDER_NOTIFICATION_CHANNEL_NAME
+import com.sag.todo.task.reminder.utils.AppConstants.changeAppMode
+import com.sag.todo.task.reminder.utils.FetchRemoteConfig
+import com.sag.todo.task.reminder.utils.controllers.LocalizationHelper
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
+
+@HiltAndroidApp
+class Application : Application() {
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var notificationManager: NotificationManager
+
+    @Inject
+    lateinit var fetchRemoteConfig: FetchRemoteConfig
+
+    override fun onCreate() {
+        super.onCreate()
+
+        try {
+            FirebaseApp.initializeApp(this)
+        } catch (_: Exception) {
+        }
+
+        fetchRemoteConfig.fetchRemoteConfigValues()
+
+        changeAppMode(prefs.isDarkModeEnable)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val soundUri = "android.resource://$packageName/${R.raw.reminder_notification_default_sound}".toUri()
+            val audioAttributes = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
+
+            val taskReminderNotificationChannel = NotificationChannel(
+                TASK_REMINDER_NOTIFICATION_CHANNEL_ID,
+                TASK_REMINDER_NOTIFICATION_CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            taskReminderNotificationChannel.apply {
+                name = TASK_REMINDER_NOTIFICATION_CHANNEL_NAME
+                description = "This channel is for remind about your task's."
+                setSound(soundUri, audioAttributes)
+            }
+            notificationManager.createNotificationChannel(taskReminderNotificationChannel)
+        }
+    }
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(LocalizationHelper.applyLanguage(base))
+    }
+}

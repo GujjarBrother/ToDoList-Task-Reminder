@@ -65,7 +65,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/settings_icon" />
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <!--<androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/signOutIV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/settingsIV"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/sign_out_icon" />
+                app:srcCompat="@drawable/sign_out_icon" />-->
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/searchIV"
@@ -85,7 +85,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="@dimen/_5sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/signOutIV"
+                app:layout_constraintEnd_toStartOf="@id/settingsIV"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/search_image" />
 
@@ -94,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:constraint_referenced_ids="openAndCloseDrawerIV, toolbarTV,
-                signOutIV, settingsIV" />
+                settingsIV" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/searchLayout"

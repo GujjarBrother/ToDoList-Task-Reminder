@@ -1,0 +1,49 @@
+package com.sag.todo.task.reminder.base
+
+import android.content.res.ColorStateList
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import com.sag.todo.task.reminder.core.utils.Prefs
+import com.sag.todo.task.reminder.utils.AppConstants.getColorResource
+import com.sag.todo.task.reminder.utils.toast.ToastController
+import com.sag.todo.task.reminder.core.R as CoreR
+import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import javax.inject.Inject
+
+@AndroidEntryPoint
+open class BaseFragment : Fragment() {
+
+    protected lateinit var fragmentContext: FragmentActivity
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var toastController: ToastController
+
+    protected val simpleDateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+    protected val simpleTimeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+    protected val simpleDateAndTimeFormat = SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.getDefault())
+    protected var calendar: Calendar = Calendar.getInstance()
+    protected lateinit var textInputLayoutDarkModeStrokeColor: ColorStateList
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        fragmentContext = requireActivity()
+
+        textInputLayoutDarkModeStrokeColor = ColorStateList(
+            arrayOf(intArrayOf(android.R.attr.state_focused), intArrayOf()),
+            intArrayOf(
+                // Color when focused
+                fragmentContext.getColorResource(CoreR.color.defaultColor),
+                // Color when not focused
+                fragmentContext.getColorResource(CoreR.color.subColor)
+            )
+        )
+    }
+}
