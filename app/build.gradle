@@ -3,20 +3,21 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+    id("org.jetbrains.kotlin.plugin.parcelize")
 
     id("com.google.gms.google-services")
 }
 
 android {
-    namespace "com.sag.todo.list.task.reminder"
+    namespace "com.sag.todo.task.reminder"
     compileSdkVersion 37
 
     defaultConfig {
-        applicationId "com.todo.list.task.reminder"
+        applicationId "com.sag.todo.task.reminder"
 //        applicationId "com.example.debug"
 
         minSdk 24
-        targetSdk 35
+        targetSdk 37
         versionCode 1
         versionName "1.0.1"
         multiDexEnabled true
@@ -29,6 +30,18 @@ android {
         def versionCode = android.defaultConfig.versionCode.toString().trim()
         def versionName = android.defaultConfig.versionName
         archivesName = "$appName-VC-$versionCode-VN-$versionName"
+    }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
+        density {
+            enableSplit = true
+        }
+        abi {
+            enableSplit = true
+        }
     }
 
     buildTypes {
@@ -71,17 +84,12 @@ android {
 dependencies {
 //    Import module...
     implementation project(":core")
-    implementation project(":localization")
-    implementation project(":notification")
 
     implementation("androidx.appcompat:appcompat:1.8.0")
     implementation("com.google.android.material:material:1.14.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.2")
     implementation("androidx.activity:activity-ktx:1.13.0")
-    implementation("androidx.fragment:fragment-ktx:1.9.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.3.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
+    implementation("androidx.fragment:fragment-ktx:1.9.1")
 
 //    'sdp & ssp' dependencies...
     api("com.intuit.sdp:sdp-android:1.1.1")
@@ -108,8 +116,8 @@ dependencies {
     api("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0")
 
 //    'ROOM database' dependency...
-    api("androidx.room:room-ktx:2.8.4")
-    ksp("androidx.room:room-compiler:2.8.4")
+    api("androidx.room:room-ktx:2.8.5")
+    ksp("androidx.room:room-compiler:2.8.5")
 
 //    'In-App update' dependency...
     api("com.google.android.play:app-update-ktx:2.1.0")
@@ -119,6 +127,6 @@ dependencies {
     ksp("com.google.dagger:hilt-android-compiler:2.60.1")
 
 //    "Firebase" dependencies...
-    api platform("com.google.firebase:firebase-bom:34.17.0")
+    api platform("com.google.firebase:firebase-bom:35.0.2")
     api("com.google.firebase:firebase-config")
 }
